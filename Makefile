@@ -19,10 +19,13 @@ NAME = minishell
 
 INC = -I inc
 
-CC = gcc
+CC = clang
 RM = rm -f
 
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address
+CFLAGS += -Wall
+CFLAGS += -Werror
+CFLAGS += -Wextra
+#CFLAGS += -fsanitize=address
 
 all: $(MLX) $(NAME)
 

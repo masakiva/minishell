@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/12 18:52:16 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 00:33:21 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static int			get_input(t_param *prm)
 {
 	char	*line;
 
+	ft_putstr("$ ");
 	rec_gnl(0, &line);
 	prm->current = ft_split(line, ISSPACE_3);
 	if (prm->current == NULL)

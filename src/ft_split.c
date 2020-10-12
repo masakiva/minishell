@@ -6,11 +6,11 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/05 18:39:55 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/12 18:46:25 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 00:16:41 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "stdlib.h"
+#include <stdlib.h>
 #include "minishell.h"
 
 static size_t	wordlen(char const *s, char *set)
