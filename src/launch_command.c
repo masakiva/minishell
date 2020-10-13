@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 13:23:49 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 14:32:02 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	launch_cd(t_param *prm)
 //		}
 //	}
 	(void)prm;
-	ft_putstr("cd");
+	ft_putstr("cd\n");
 	return (0);
 }
 
@@ -92,14 +92,14 @@ static int	launch_pwd(t_param *prm)
 static int	launch_export(t_param *prm)
 {
 	(void)prm;
-	ft_putstr("export");
+	ft_putstr("export\n");
 	return (0);
 }
 
 static int	launch_unset(t_param *prm)
 {
 	(void)prm;
-	ft_putstr("unset");
+	ft_putstr("unset\n");
 	return (0);
 }
 
@@ -111,15 +111,16 @@ static int	launch_env(t_param *prm)
 
 static int	launch_exit(t_param *prm)
 {
+	ft_putstr("exit\n");
 	prm->state = FT_EXIT;
 	prm->err_code = FALSE;
 	return (0);
 }
 
-static int	launch_else(t_param *prm)
+static int	launch_other(t_param *prm)
 {
 	(void)prm;
-	ft_putstr("else");
+	ft_putstr("other\n");
 	return (0);
 }
 
@@ -127,14 +128,10 @@ int		launch_command(t_param *prm)
 {
 	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
-								launch_exit, launch_else};
+								launch_exit, launch_other};
 
-//	if (prm->command != ECHO && prm->command != PWD)
-//		ft_putstr("Command = ");
 	prm->state = GET_INPUT;
 	if (command[prm->command](prm) == FAILURE)
 		ft_putstr("ERROR\n");;
-//	if (prm->command != ECHO && prm->command != PWD)
-//		ft_putstr("\n");
 	return (0);
 }
