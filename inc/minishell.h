@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 16:16:19 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 19:01:23 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,11 @@
 # define ARG_ERR		1
 # define MALLOC_ERR		2
 
-# define ISSPACE_3 "\f\n\r\t\v "
+# define ISSPACE_3		"\f\n\r\t\v "
 
-# define BUILTINS "echo/cd/pwd/export/unset/env/exit"
+# define METACHAR		"|;()<>"
+
+# define BUILTINS		"echo/cd/pwd/export/unset/env/exit"
 
 /*
 **	**********************************
