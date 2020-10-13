@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 14:27:52 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 14:32:01 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static int	launch_exit(t_param *prm)
 	return (0);
 }
 
-static int	launch_else(t_param *prm)
+static int	launch_ext(t_param *prm)
 {
 	(void)prm;
 	ft_putstr("else");
@@ -127,7 +127,7 @@ int		launch_command(t_param *prm)
 {
 	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
-								launch_exit, launch_else};
+								launch_exit, launch_ext};
 
 	if (prm->command != ECHO && prm->command != PWD)
 		ft_putstr("Command = ");
