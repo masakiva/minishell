@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 14:55:30 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 15:45:36 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 #include <unistd.h>
 #define DISABLED	1
 #define ENABLED		0
-
-#define SUCCESS		0 // or 1 ?
-#define FAILURE		-1 // or 0 ?
 
 // >>> echo
 // error management: stop quand un write fail, ou alors on fait un seul write pour tout
@@ -69,7 +66,7 @@ static int	launch_cd(t_param *prm)
 //	}
 	(void)prm;
 	ft_putstr("command: cd\n");
-	return (0);
+	return (SUCCESS);
 }
 
 static int	launch_pwd(t_param *prm)
@@ -93,55 +90,46 @@ static int	launch_export(t_param *prm)
 {
 	(void)prm;
 	ft_putstr("command: export\n");
-	return (0);
+	return (SUCCESS);
 }
 
 static int	launch_unset(t_param *prm)
 {
 	(void)prm;
 	ft_putstr("command: unset\n");
-	return (0);
+	return (SUCCESS);
 }
 
 static int	launch_env(t_param *prm)
 {
 	ft_lstiter(prm->env, &ft_lstprint);
-	return (0);
+	return (SUCCESS);
 }
 
 static int	launch_exit(t_param *prm)
 {
-	ft_putstr("command: exit\n");
-	prm->state = FT_EXIT;
-	prm->err_code = FALSE;
-	return (0);
+	(void)prm;
+	return (CLEAN_EXIT);
 }
 
 static int	launch_ext(t_param *prm)
 {
 	(void)prm;
 	ft_putstr("command: ext\n");
-	return (0);
+	return (SUCCESS);
 }
 
 int		launch_command(t_param *prm)
 {
 	int				i;
+	int				ret;
 	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
 								launch_exit, launch_ext};
 
 	i = 0;
-	prm->state = GET_INPUT;
-	if (command[prm->command](prm) == FAILURE)
+	if ((ret = command[prm->command](prm)) == FAILURE)
 		ft_putstr("ERROR\n");
-	while (prm->current[i])
-	{
-		free(prm->current[i]);
-		prm->current[i] = NULL;
-		i++;
-	}
-	free(prm->current);
-	prm->current = NULL;
-	return (0);
+	free_str_array(&prm->current);
+	return (ret);
 }

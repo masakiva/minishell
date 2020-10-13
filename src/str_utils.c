@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 12:56:13 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 15:47:54 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,25 @@ char	*ft_strdup(const char *s1)
 	}
 	cpy[i] = '\0';
 	return (cpy);
+}
+
+void	free_str_array(char ***ptr)
+{
+	int		i;
+
+	i = 0;
+	if (ptr != NULL)
+	{
+		if ((*ptr) != NULL)
+		{
+			while ((*ptr)[i] != NULL)
+			{
+				free((*ptr)[i]);
+				(*ptr)[i] = NULL;
+				i++;
+			}
+			free((*ptr));
+			*ptr = NULL;
+		}
+	}
 }

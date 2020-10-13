@@ -6,28 +6,13 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 14:54:47 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 15:45:45 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
-
-static t_command	clean_command_return(t_command cmd_code, char **command)
-{
-	int	i;
-
-	i = 0;
-	while (command[i])
-	{
-		free(command[i]);
-		command[i] = NULL;
-		i++;
-	}
-	free(command);
-	return (cmd_code);
-}	
 
 static t_command	get_command_code(char *arg)
 {
@@ -36,15 +21,19 @@ static t_command	get_command_code(char *arg)
 
 	i = 0;
 	command = ft_split(BUILTINS, "/");
+	if (command == NULL)
+		return (MALLOC_ERR);
 	while (command[i] != NULL)
 	{
 		if (ft_strcmp(arg, command[i]) == 0)
 		{
-			return (clean_command_return(i, command));
+			free_str_array(&command);
+			return (i);
 		}
 		i++;
 	}
-	return (clean_command_return(ELSE, command));
+	free_str_array(&command);
+	return (ELSE);
 }
 
 static int			get_input(t_param *prm)
@@ -53,37 +42,47 @@ static int			get_input(t_param *prm)
 
 	ft_putstr("$ ");
 	rec_gnl(0, &line);
+	if (line == NULL)
+		return (MALLOC_ERR);
 	prm->current = ft_split(line, ISSPACE_3);
-	if (prm->current == NULL)
-	{
-		prm->err_code = MALLOC_ERR;
-		prm->state = FT_EXIT;
-	}
-	prm->command = get_command_code(prm->current[0]);
-	prm->state = LAUNCH;
 	free(line);
+	if (prm->current == NULL)
+		return (MALLOC_ERR);
+	prm->command = get_command_code(prm->current[0]);
 	return (0);
+}
+
+static int			main_loop(t_param *prm)
+{
+	int	ret;
+
+	if ((ret = get_input(prm)) != SUCCESS)
+		return (ret);
+	if ((ret = launch_command(prm)) != SUCCESS)
+		return (ret);
+	return (ret);
 }
 
 int					main(int ac, char **av, char **env)
 {
 	t_param			prm;
-	const t_func	fsm[4] = {prm_init, get_input, launch_command, ft_exit};
+	int				ret;
 
 	(void)av;
-	(void)env;
 	if (ac != 1)
 	{
-		prm.err_code = ARG_ERR;
 		prm.current = NULL;
-		return (ft_exit(&prm));
+		prm.env = NULL;
+		return (ft_exit(ARG_ERR, &prm));
 	}
 	else
 	{
 		prm.current = env;
-		prm.state = PRM_INIT;
+		if ((ret = prm_init(&prm)) != SUCCESS)
+			return (ft_exit(ret, &prm));
 	}
-	while (prm.state != FT_EXIT)
-		fsm[prm.state](&prm);
-	return (ft_exit(&prm));
+	ret = 0;
+	while (ret == SUCCESS)
+		ret = main_loop(&prm);
+	return (ft_exit(ret, &prm));
 }
