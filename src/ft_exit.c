@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:28:37 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/12 18:36:56 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 13:24:26 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int					ft_exit(t_param *prm)
 		free(prm->current);
 		prm->current = NULL;
 	}
+	ft_lstclear(&prm->env, &free);
 	if (prm->err_code != FALSE)
 		return (err_output(err_msg(prm->err_code)));
 	exit(0);

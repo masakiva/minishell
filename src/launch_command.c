@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 00:44:53 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/13 13:23:49 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,14 @@ static int	launch_unset(t_param *prm)
 
 static int	launch_env(t_param *prm)
 {
-	(void)prm;
-	ft_putstr("env");
+	ft_lstiter(prm->env, &ft_lstprint);
 	return (0);
 }
 
 static int	launch_exit(t_param *prm)
 {
-	(void)prm;
-	ft_putstr("exit");
+	prm->state = FT_EXIT;
+	prm->err_code = FALSE;
 	return (0);
 }
 
@@ -130,12 +129,12 @@ int		launch_command(t_param *prm)
 								launch_export, launch_unset, launch_env,
 								launch_exit, launch_else};
 
-	if (prm->command != ECHO && prm->command != PWD)
-		ft_putstr("Command = ");
+//	if (prm->command != ECHO && prm->command != PWD)
+//		ft_putstr("Command = ");
+	prm->state = GET_INPUT;
 	if (command[prm->command](prm) == FAILURE)
 		ft_putstr("ERROR\n");;
-	if (prm->command != ECHO && prm->command != PWD)
-		ft_putstr("\n");
-	prm->state = GET_INPUT;
+//	if (prm->command != ECHO && prm->command != PWD)
+//		ft_putstr("\n");
 	return (0);
 }

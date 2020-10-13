@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 00:33:21 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/13 12:45:20 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,20 @@ static int			get_input(t_param *prm)
 int					main(int ac, char **av, char **env)
 {
 	t_param			prm;
-	const t_func	fsm[3] = {get_input, launch_command, ft_exit};
+	const t_func	fsm[4] = {prm_init, get_input, launch_command, ft_exit};
 
 	(void)av;
 	(void)env;
-	prm.state = GET_INPUT;
-	prm.err_code = FALSE;
-	prm.command = ELSE;
-	prm.current = NULL;
 	if (ac != 1)
 	{
 		prm.err_code = ARG_ERR;
+		prm.current = NULL;
 		return (ft_exit(&prm));
+	}
+	else
+	{
+		prm.current = env;
+		prm.state = PRM_INIT;
 	}
 	while (prm.state != FT_EXIT)
 		fsm[prm.state](&prm);

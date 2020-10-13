@@ -4,8 +4,10 @@ SRC_NAME = main.c
 SRC_NAME += launch_command.c
 SRC_NAME += ft_exit.c
 SRC_NAME += str_utils.c
+SRC_NAME += lst_utils.c
 SRC_NAME += ft_split.c
 SRC_NAME += rec_gnl.c
+SRC_NAME += prm_init.c
 
 SRC = $(addprefix $(SRC_DIR)/,$(SRC_NAME))
 
@@ -25,7 +27,10 @@ RM = rm -f
 CFLAGS += -Wall
 CFLAGS += -Werror
 CFLAGS += -Wextra
-#CFLAGS += -fsanitize=address
+
+ifeq ($(d), 0)
+	CFLAGS += -fsanitize=address
+endif
 
 all: $(MLX) $(NAME)
 
@@ -47,4 +52,3 @@ fclean:		clean
 re:		fclean all
 
 .PHONY:	clean re fclean
-
