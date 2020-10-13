@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 14:43:57 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 14:54:47 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static t_command	clean_command_return(t_command cmd_code, char **command)
 		command[i] = NULL;
 		i++;
 	}
+	free(command);
 	return (cmd_code);
 }	
 

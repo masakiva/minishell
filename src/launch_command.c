@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 14:41:13 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/13 14:55:30 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,22 @@ static int	launch_ext(t_param *prm)
 
 int		launch_command(t_param *prm)
 {
+	int				i;
 	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
 								launch_exit, launch_ext};
 
+	i = 0;
 	prm->state = GET_INPUT;
 	if (command[prm->command](prm) == FAILURE)
-		ft_putstr("ERROR\n");;
+		ft_putstr("ERROR\n");
+	while (prm->current[i])
+	{
+		free(prm->current[i]);
+		prm->current[i] = NULL;
+		i++;
+	}
+	free(prm->current);
+	prm->current = NULL;
 	return (0);
 }
