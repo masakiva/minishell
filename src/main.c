@@ -6,13 +6,27 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 12:45:20 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 14:43:57 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
+
+static t_command	clean_command_return(t_command cmd_code, char **command)
+{
+	int	i;
+
+	i = 0;
+	while (command[i])
+	{
+		free(command[i]);
+		command[i] = NULL;
+		i++;
+	}
+	return (cmd_code);
+}	
 
 static t_command	get_command_code(char *arg)
 {
@@ -24,10 +38,12 @@ static t_command	get_command_code(char *arg)
 	while (command[i] != NULL)
 	{
 		if (ft_strcmp(arg, command[i]) == 0)
-			return (i);
+		{
+			return (clean_command_return(i, command));
+		}
 		i++;
 	}
-	return (ELSE);
+	return (clean_command_return(ELSE, command));
 }
 
 static int			get_input(t_param *prm)

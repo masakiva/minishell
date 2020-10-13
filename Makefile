@@ -29,6 +29,7 @@ CFLAGS += -Werror
 CFLAGS += -Wextra
 
 ifeq ($(d), 0)
+	CFLAGS += -g
 	CFLAGS += -fsanitize=address
 endif
 
