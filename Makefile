@@ -1,55 +1,85 @@
-SRC_DIR = src
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/10/14 00:49:29 by mvidal-a          #+#    #+#              #
+#    Updated: 2020/10/14 01:07:04 by mvidal-a         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SRC_NAME = main.c
-SRC_NAME += launch_command.c
-SRC_NAME += ft_exit.c
-SRC_NAME += str_utils.c
-SRC_NAME += lst_utils.c
-SRC_NAME += ft_split.c
-SRC_NAME += rec_gnl.c
-SRC_NAME += prm_init.c
+NAME		= minishell
 
-SRC = $(addprefix $(SRC_DIR)/,$(SRC_NAME))
+SRC_DIR		= src/
 
-OBJ_DIR = obj
+SRC_NAME	+= main.c
+SRC_NAME	+= launch_command.c
+SRC_NAME	+= ft_exit.c
+SRC_NAME	+= str_utils.c
+SRC_NAME	+= lst_utils.c
+SRC_NAME	+= ft_split.c
+SRC_NAME	+= rec_gnl.c
+SRC_NAME	+= prm_init.c
 
-OBJ_NAME = $(SRC_NAME:.c=.o)
+SRC			= $(addprefix $(SRC_DIR), $(SRC_NAME))
 
-OBJ = $(addprefix $(OBJ_DIR)/,$(OBJ_NAME))
+HDR_NAME	= minishell.h
 
-NAME = minishell
+INC_DIR		= inc/
 
-INC = -I inc
+HDR			= $(addprefix $(INC_DIR), $(HDR_NAME))
 
-CC = clang
-RM = rm -f
+OBJ_DIR		= obj/
 
-CFLAGS += -Wall
-CFLAGS += -Werror
-CFLAGS += -Wextra
+OBJ_NAME	= $(SRC_NAME:.c=.o)
+
+OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_NAME))
+
+LIBFT_DIR	= libft/
+
+CC			= clang
+
+CFLAGS		+= -Wall
+CFLAGS		+= -Werror
+CFLAGS		+= -Wextra
+
+CPPFLAGS	+= -I $(INC_DIR)
+
+LDFLAGS		+= -L $(LIBFT_DIR)
+
+LDLIBS		+= -lft
 
 ifeq ($(d), 0)
-	CFLAGS += -g
-	CFLAGS += -fsanitize=address
+	CFLAGS	+= -g3
+	CFLAGS	+= -fsanitize=address,undefined
+	LDFLAGS	+= -fsanitize=address,undefined
 endif
 
-all: $(MLX) $(NAME)
+all:			$(NAME)
 
-$(OBJ_DIR)/%.o : $(SRC_DIR)/%.c | $(OBJ_DIR)
-	    $(CC) $(INC) $(CFLAGS) $(MLX_DEF) -c $< -o $@
+$(NAME):		$(LIBFT_DIR)libft.a $(OBJ)
+				$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
+
+$(OBJ_DIR)%.o:	$(SRC_DIR)%.c
+				$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
+$(OBJ):			$(HDR) | $(OBJ_DIR)
 
 $(OBJ_DIR):
-		mkdir -p $@
+				mkdir $@
 
-$(NAME): $(OBJ)
-		$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(INC)
+$(LIBFT_DIR)libft.a:
+				$(MAKE) -C $(LIBFT_DIR) bonus custom
 
 clean:
-		$(RM) -r $(OBJ_DIR)
+				$(MAKE) -C $(LIBFT_DIR) fclean
+				$(RM) -r $(OBJ_DIR)
 
-fclean:		clean
-		$(RM) $(NAME)
+fclean:			clean
+				$(RM) $(NAME)
 
-re:		fclean all
+re:				fclean all
 
-.PHONY:	clean re fclean
+.PHONY:			all clean fclean re

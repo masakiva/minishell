@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 15:45:36 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 17:19:07 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 // >>> echo
 // error management: stop quand un write fail, ou alors on fait un seul write pour tout
 // no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
-
 static int	launch_echo(t_param *prm)
 {
 	int		i;

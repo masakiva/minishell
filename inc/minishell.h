@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 16:16:19 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/14 01:16:20 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,15 @@
 
 # define BUILTINS "echo/cd/pwd/export/unset/env/exit"
 
+# define PROMPT		"$ "
+
 /*
 **	**********************************
 **	**	CUSTOM TYPES AND STRUCTURES	**
 **	**********************************
 */
 
-typedef enum		e_command
+enum		e_command
 {
 	ECHO,
 	CD,
@@ -59,7 +61,7 @@ typedef enum		e_command
 	ENV,
 	EXIT,
 	ELSE
-}					t_command;
+};
 
 typedef struct		s_list
 {
@@ -69,11 +71,27 @@ typedef struct		s_list
 
 typedef struct		s_param
 {
-	t_command	command;
-	t_list		*env;
-	t_list		*stack;
-	char		**current;
+	enum e_command	command;
+	t_list			*env;
+	t_list			*stack;
+	char			**current;
 }					t_param;
+
+enum e_state
+{
+	NOQUOTE,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE,
+	ERROR,
+	END
+};
+
+typedef struct		s_state_machine
+{
+	enum e_state	state;
+}					t_state_machine;
+
+typedef int			(*t_function)(char *, t_state_machine *);
 
 typedef int			(*t_func)(t_param *prm);
 

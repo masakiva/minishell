@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 15:45:45 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 18:48:35 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static t_command	get_command_code(char *arg)
+static enum e_command	get_command_code(char *arg)
 {
 	char	**command;
 	int		i;
@@ -40,10 +40,10 @@ static int			get_input(t_param *prm)
 {
 	char	*line;
 
-	ft_putstr("$ ");
-	rec_gnl(0, &line);
+	rec_gnl(STDIN_FILENO, &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
+	//prm->current = split_command(line);;
 	prm->current = ft_split(line, ISSPACE_3);
 	free(line);
 	if (prm->current == NULL)
@@ -56,6 +56,7 @@ static int			main_loop(t_param *prm)
 {
 	int	ret;
 
+	ft_putstr(PROMPT); // err
 	if ((ret = get_input(prm)) != SUCCESS)
 		return (ret);
 	if ((ret = launch_command(prm)) != SUCCESS)
@@ -63,13 +64,13 @@ static int			main_loop(t_param *prm)
 	return (ret);
 }
 
-int					main(int ac, char **av, char **env)
+int					main(int argc, char **argv, char **env)
 {
 	t_param			prm;
 	int				ret;
 
-	(void)av;
-	if (ac != 1)
+	(void)argv;
+	if (argc != 1)
 	{
 		prm.current = NULL;
 		prm.env = NULL;

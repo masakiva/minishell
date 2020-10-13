@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 15:47:54 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 23:47:25 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,25 @@ char	*ft_strdup(const char *s1)
 	}
 	cpy[i] = '\0';
 	return (cpy);
+}
+
+char	*ft_substr(char const *s, size_t len)
+{
+	char	*sub;
+	size_t	i;
+
+	sub = (char *)malloc(sizeof(char) * (len + 1));
+	if (sub != NULL)
+	{
+		i = 0;
+		while (i < len)
+		{
+			sub[i] = s[i];
+			i++;
+		}
+		sub[i] = '\0';
+	}
+	return (sub);
 }
 
 void	free_str_array(char ***ptr)

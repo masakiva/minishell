@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:28:37 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 15:45:28 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 17:58:08 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int			err_output(const char *str)
 	ft_putstr("Error: ");
 	ft_putstr(str);
 	ft_putstr("\n");
-	exit (-1);
+	exit (EXIT_FAILURE);
 }
 
 static const char	*err_msg(int err_code)
@@ -36,5 +36,5 @@ int					ft_exit(int err_code, t_param *prm)
 	ft_lstclear(&prm->env, &free);
 	if (err_code != CLEAN_EXIT)
 		return (err_output(err_msg(err_code)));
-	exit(0);
+	exit(EXIT_SUCCESS);
 }

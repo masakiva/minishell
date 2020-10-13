@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 12:01:34 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 16:17:15 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/13 16:50:11 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	*ft_lstpop(t_list **lst)
 		return (NULL);
 	if (*lst == NULL)
 		return (NULL);
-	ret = (*lst)->content
+	ret = (*lst)->content;
 	ptr = (*lst)->next;
 	free(*lst);
 	*lst = ptr;
