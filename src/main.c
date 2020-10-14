@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 18:48:35 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/14 01:49:17 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static enum e_command	get_command_code(char *arg)
+/*static*/ enum e_command	get_command_code(char *arg)
 {
 	char	**command;
 	int		i;
@@ -40,15 +40,15 @@ static int			get_input(t_param *prm)
 {
 	char	*line;
 
-	rec_gnl(STDIN_FILENO, &line);
+	get_next_line(STDIN_FILENO, &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
-	//prm->current = split_command(line);;
-	prm->current = ft_split(line, ISSPACE_3);
+	prm->current = split_command(line);;
+	//prm->current = ft_split(line, ISSPACE_3);
 	free(line);
-	if (prm->current == NULL)
-		return (MALLOC_ERR);
-	prm->command = get_command_code(prm->current[0]);
+	//if (prm->current == NULL)
+	//	return (MALLOC_ERR);
+	//prm->command = get_command_code(prm->current[0]);
 	return (0);
 }
 
@@ -56,11 +56,11 @@ static int			main_loop(t_param *prm)
 {
 	int	ret;
 
-	ft_putstr(PROMPT); // err
+	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	if ((ret = get_input(prm)) != SUCCESS)
 		return (ret);
-	if ((ret = launch_command(prm)) != SUCCESS)
-		return (ret);
+//	if ((ret = launch_command(prm)) != SUCCESS)
+//		return (ret);
 	return (ret);
 }
 

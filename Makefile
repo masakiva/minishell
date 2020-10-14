@@ -6,7 +6,7 @@
 #    By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/14 00:49:29 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/10/14 01:07:04 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/10/14 01:43:10 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRC_NAME	+= lst_utils.c
 SRC_NAME	+= ft_split.c
 SRC_NAME	+= rec_gnl.c
 SRC_NAME	+= prm_init.c
+SRC_NAME	+= parse_command.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_NAME))
 
@@ -46,6 +47,7 @@ CFLAGS		+= -Werror
 CFLAGS		+= -Wextra
 
 CPPFLAGS	+= -I $(INC_DIR)
+CPPFLAGS	+= -I $(LIBFT_DIR)
 
 LDFLAGS		+= -L $(LIBFT_DIR)
 

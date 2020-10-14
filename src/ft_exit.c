@@ -6,18 +6,19 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:28:37 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 17:58:08 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/14 01:38:48 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 static int			err_output(const char *str)
 {
-	ft_putstr("Error: ");
-	ft_putstr(str);
-	ft_putstr("\n");
+	ft_putstr_fd("Error: ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
 	exit (EXIT_FAILURE);
 }
 

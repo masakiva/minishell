@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 23:47:25 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/14 02:20:00 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 #include <stdlib.h>
 #define ISNUM "0123456789"
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
-void	ft_putstr(const char *str)
-{
-	while (*str)
-	{
-		ft_putchar(*str);
-		str++;
-	}
-}
+//void	ft_putchar(char c)
+//{
+//	write(1, &c, 1);
+//}
+//
+//void	ft_putstr(const char *str)
+//{
+//	while (*str)
+//	{
+//		ft_putchar(*str);
+//		str++;
+//	}
+//}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -80,24 +80,24 @@ char	*ft_strdup(const char *s1)
 	return (cpy);
 }
 
-char	*ft_substr(char const *s, size_t len)
-{
-	char	*sub;
-	size_t	i;
-
-	sub = (char *)malloc(sizeof(char) * (len + 1));
-	if (sub != NULL)
-	{
-		i = 0;
-		while (i < len)
-		{
-			sub[i] = s[i];
-			i++;
-		}
-		sub[i] = '\0';
-	}
-	return (sub);
-}
+//char	*ft_substr(char const *s, size_t len)
+//{
+//	char	*sub;
+//	size_t	i;
+//
+//	sub = (char *)malloc(sizeof(char) * (len + 1));
+//	if (sub != NULL)
+//	{
+//		i = 0;
+//		while (i < len)
+//		{
+//			sub[i] = s[i];
+//			i++;
+//		}
+//		sub[i] = '\0';
+//	}
+//	return (sub);
+//}
 
 void	free_str_array(char ***ptr)
 {
