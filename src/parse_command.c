@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 18:21:17 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/14 02:19:14 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 01:29:09 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,86 +15,126 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int		error(char *line, t_state_machine *machine)
+int		error(char *line, t_list *tokens, t_state_machine *machine)
 {
 	(void)line;
+	(void)tokens;
 	(void)machine;
 	return (0);
 }
 
-int		end(char  *line, t_state_machine *machine)
+int		end(char *line, t_list *tokens, t_state_machine *machine)
 {
 	(void)line;
+	(void)tokens;
 	machine->state = END;
 	return (0);
 }
 
-int		double_quote(char *line, t_state_machine *machine)
+char	*quote(char *line, t_list *tokens, t_state_machine *machine)
 {
-	size_t	len;
+	char	quote_style;
+	char	*ending_quote;
+	char	*quoted_elem;
 
-	len = 0;
-	while (line[len] != '"' && line[len] != '\0')
-		len++;
-	if (line[len] != '\0')
+	quote_style = line[-1]; // allowed?
+	ending_quote = ft_strchr(line, quote_style);
+	if (ending_quote != NULL)
 	{
-		ft_substr(line, 0, len);
-		machine->state = NOQUOTE;
+		quoted_elem = ft_substr(line, 0, ending_quote - line);
+		if (quoted_elem == NULL)
+			return (NULL); // malloc error
 	}
 	else
-		machine->state = ERR;
-	return (len + 1);
-}
-#include <stdio.h>
-
-int		single_quote(char *line, t_state_machine *machine)
-{
-	size_t	len;
-	char	*contents;
-
-	len = 0;
-	while (line[len] != '\'' && line[len] != '\0')
-		len++;
-	if (line[len] != '\0')
-	{
-		contents = ft_substr(line, 0, len);
-		printf("len = %zu, str = %s\n", len, contents);
-		free(contents);
-		machine->state = NOQUOTE;
-	}
-	else
-		machine->state = ERR;
-	return (len + 1);
+		return (NULL); // no ending_quote error
+	return (quoted_elem);
 }
 
-int		noquote(char *line, t_state_machine *machine)
+int		noquote(char *line, t_list *tokens, t_state_machine *machine)
 {
-	if (*line == '"')
-		machine->state = DOUBLE_QUOTE;
-	else if (*line == '\'')
-	{
-		machine->state = SINGLE_QUOTE;
-		printf("SINGLE\n");
-	}
-	else
+	while (ft_isset(*line, QUOTES + METACHARS + SPACES + END) != -1)
+}
+
+int		space(char *line, t_list *tokens, t_state_machine *machine)
+{
+	if (*line == '"') // SQ
+		machine->state = QUOTE;
+	else if (*line == '\0') // SE
 		machine->state = END;
+	else if (ft_isset(*line, ISSPACE_3) == -1) // SL
+		machine->state = LETTER;
+	return (1);
+}
+
+int		quote(char *line, t_list *tokens, t_state_machine *machine)
+{ // seulement double quote pour l'instant
+	size_t	inside_quotes_len;
+
+	inside_quotes_len = 0;
+	while (*line != '"' && *line != '\0') // on va jusqu'au ending quote
+	{
+		add_to_buf(*line++, machine);
+		inside_quotes_len++;
+	}
+	if (*line == '\0')
+		return (FAILURE); // pas d'ending quote
+	else
+		line++;
+	if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // QE QS
+	{
+		if (reset_buf(machine) == FAILURE)
+			return (FAILURE); // malloc error
+		if (link_token(&tokens, machine->cur_token) == FAILURE)
+			return (FAILURE); // malloc error
+		if (*line == '\0')
+			machine->state = END;
+		else
+			machine->state = SPACE;
+	}
+	else // QL
+		machine->state = LETTER;
+	return (inside_quotes_len); // +1?
+}
+
+int		letter(char *line, t_list *tokens, t_state_machine *machine)
+{
+	if (*line == '"') // LQ
+		machine->state = QUOTE;
+	if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // LE LS
+	{
+		if (reset_buf(machine) == FAILURE)
+			return (FAILURE); // malloc error
+		if (link_token(&tokens, machine->cur_token) == FAILURE) // sauf si la ligne est vide ou commence par un espace mais on peut peut-etre retirer le token plus tard
+			return (FAILURE); // malloc error
+		if (*line == '\0')
+			machine->state = END;
+		else
+			machine->state = SPACE;
+	}
+	else // LL
+		add_to_buf(*line, machine);
 	return (1);
 }
 
 char			**split_command(char *line)
 {
-	static t_function	process[NB_STATES] = {noquote, single_quote, double_quote, error};
+	static t_function	process[NB_STATES] = {letter, quote, space, error, end};
 	t_state_machine		machine;
 	size_t				elem_len;
+	t_list				*tokens;
 
-	machine.state = NOQUOTE;
-	while (*line != '\0')
+	machine.state = LETTER;
+	machine.len = 0;
+	machine.token = NULL;
+	ft_bzero(&machine.buf, BUF_SIZE);
+	tokens = NULL;
+	while (machine.state != END)
 	{
-		printf("current = %c\n", *line);
-		elem_len = process[machine.state](line, &machine);
+		//printf("current = %c\n", *line);
+		elem_len = process[machine.state](line, tokens, &machine);
 		line += elem_len;
-		if (machine.state == END)
-			break ;
 	}
+	//printf("END\n");
+	//ft_lstiter(tokens, print_token);
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 01:47:42 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 00:55:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,31 +76,63 @@ enum		e_command
 typedef struct		s_param
 {
 	enum e_command	command;
+	uint8_t			pad[4];
 	t_list			*env;
 	t_list			*stack;
 	char			**current;
 }					t_param;
 
+typedef int			(*t_func)(t_param *prm);
+
+#include <stdio.h>
 char			**split_command(char *line);
+
+void	print_token(void *token);
+int		link_token(t_list *tokens, t_state_machine *machine);
+int		reset_buf(t_state_machine *machine);
+int		add_to_buf(char c, t_state_machine *machine);
 
 enum e_state
 {
-	NOQUOTE,
-	SINGLE_QUOTE,
-	DOUBLE_QUOTE,
+	LETTER,
+	QUOTE,
+	SPACE,
+	//METACHAR,
 	ERR,
 	END,
 	NB_STATES
 };
 
+# define METACHARS	"><|;"
+
+# define BUF_SIZE	1024
+
 typedef struct		s_state_machine
 {
 	enum e_state	state;
+	char			buf[BUF_SIZE];
+	size_t			len;
+	char			*cur_token;
 }					t_state_machine;
 
-typedef int			(*t_function)(char *, t_state_machine *);
+# define FLAG_FILEIN	0b00000001 // <
+# define FLAG_FILEOUT	0b00000010 // >
+# define FLAG_APPEND	0b00000100 // >>
+# define FLAG_PIPE		0b00001000 // |
 
-typedef int			(*t_func)(t_param *prm);
+//typedef struct		s_command
+//{
+//	t_list		*tokens; // liste de char *
+//	//t_byte		flags;
+//	//char		*file; // pour les flags > < ou >>
+//}					t_command;
+
+//typedef struct		s_all
+//{
+//	t_list		*commands; // separees par ;
+//}					t_all;
+
+typedef int			(*t_function)(char *, t_list *, t_state_machine *);
 
 /*
 **	**********************************

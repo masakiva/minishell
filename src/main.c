@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 01:49:17 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/14 17:20:14 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int			get_input(t_param *prm)
 	char	*line;
 
 	get_next_line(STDIN_FILENO, &line);
+	printf("got one line\n");
 	if (line == NULL)
 		return (MALLOC_ERR);
 	prm->current = split_command(line);;
@@ -49,7 +50,7 @@ static int			get_input(t_param *prm)
 	//if (prm->current == NULL)
 	//	return (MALLOC_ERR);
 	//prm->command = get_command_code(prm->current[0]);
-	return (0);
+	return (SUCCESS);
 }
 
 static int			main_loop(t_param *prm)
@@ -82,7 +83,7 @@ int					main(int argc, char **argv, char **env)
 		if ((ret = prm_init(&prm)) != SUCCESS)
 			return (ft_exit(ret, &prm));
 	}
-	ret = 0;
+	ret = SUCCESS;
 	while (ret == SUCCESS)
 		ret = main_loop(&prm);
 	return (ft_exit(ret, &prm));
