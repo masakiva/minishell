@@ -6,27 +6,14 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 15:15:19 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 02:20:00 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 15:41:36 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
+#include "libft.h"
 #define ISNUM "0123456789"
-
-//void	ft_putchar(char c)
-//{
-//	write(1, &c, 1);
-//}
-//
-//void	ft_putstr(const char *str)
-//{
-//	while (*str)
-//	{
-//		ft_putchar(*str);
-//		str++;
-//	}
-//}
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -60,26 +47,6 @@ int		ft_isset(char c, char *set)
 	return (-1);
 }
 
-char	*ft_strdup(const char *s1)
-{
-	size_t	i;
-	char	*cpy;
-
-	i = 0;
-	while (s1[i])
-		i++;
-	if (!(cpy = malloc((i + 1) * sizeof(char))))
-		return (NULL);
-	i = 0;
-	while (s1[i])
-	{
-		cpy[i] = s1[i];
-		i++;
-	}
-	cpy[i] = '\0';
-	return (cpy);
-}
-
 //char	*ft_substr(char const *s, size_t len)
 //{
 //	char	*sub;
@@ -98,6 +65,30 @@ char	*ft_strdup(const char *s1)
 //	}
 //	return (sub);
 //}
+//
+
+void	ft_printarray_fd(char **array, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (array[i] != NULL)
+	{
+		ft_putstr_fd(array[i], fd);
+		ft_putchar_fd('\n', fd);
+		i++;
+	}
+}
+
+size_t	ft_arraylen(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+		i++;
+	return (i);
+}
 
 void	free_str_array(char ***ptr)
 {

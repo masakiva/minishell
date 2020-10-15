@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 14:54:46 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 15:58:07 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,24 @@ static int	launch_pwd(t_all *all)
 
 static int	launch_export(t_all *all)
 {
-	(void)all;
-	ft_putstr_fd("command: export\n", all->fd[1]);
+	size_t	i;
+	size_t	size;
+	char	**new;
+
+	size = ft_arraylen(all->env);
+	if (!(new = malloc((size + 2) * sizeof(char*))))
+		return (MALLOC_ERR);
+	i = 0;
+	while (i <= size)
+	{
+		new[i] = all->env[i];
+		i++;
+	}
+	new[i] = all->current[1];
+	ft_putstr_fd(all->current[1], all->fd[1]);
+	new[i+1] = NULL;
+	free_str_array(&(all->env));
+	all->env = new;
 	return (SUCCESS);
 }
 
@@ -102,17 +118,7 @@ static int	launch_unset(t_all *all)
 
 static int	launch_env(t_all *all)
 {
-	t_list	*ptr;
-	char	*str;
-
-	ptr = all->env;
-	while (ptr != NULL)
-	{
-		str = ptr->content;
-		ft_putstr_fd(str, all->fd[1]);
-		ft_putstr_fd("\n", all->fd[1]);
-		ptr = ptr->next;
-	}
+	ft_printarray_fd(all->env, all->fd[1]);
 	return (SUCCESS);
 }
 
@@ -125,7 +131,7 @@ static int	launch_exit(t_all *all)
 static int	launch_ext(t_all *all)
 {
 	(void)all;
-	execve("/bin/ls", NULL, all->env);
+	execve("/bin/ls", &all->current[1], all->env);
 	return (SUCCESS);
 }
 

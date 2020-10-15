@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 15:05:19 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 15:39:14 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,10 @@ int					all_init(t_all *all);
 /*
 **	str_utils.c
 */
-//void				ft_putchar(char c);
-//void				ft_putstr(const char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isset(char c, char *set);
-//char				*ft_strdup(const char *s1);
+void				ft_printarray_fd(char **array, int fd);
+size_t				ft_arraylen(char **array);
 void				free_str_array(char ***array);
 
 /*
