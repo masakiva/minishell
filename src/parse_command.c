@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 18:21:17 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/15 14:52:33 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 15:24:45 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ ssize_t		quote(char *line, t_list **tokens, t_state_machine *machine)
 		else
 			machine->state = SPACE;
 	}
-	else // QL
+	else if (*line != '"' && *line != '\'') // QL
 		machine->state = LETTER;
-	return (inside_quotes_len + 2); // +1?
+	return (inside_quotes_len + 2);
 }
 
 ssize_t		letter(char *line, t_list **tokens, t_state_machine *machine)
