@@ -147,11 +147,10 @@ int					all_init(t_all *all);
 /*
 **	str_utils.c
 */
-//void				ft_putchar(char c);
-//void				ft_putstr(const char *str);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isset(char c, char *set);
-//char				*ft_strdup(const char *s1);
+void				ft_printarray_fd(char **array, int fd);
+size_t				ft_arraylen(char **array);
 void				free_str_array(char ***array);
 
 /*

@@ -1,22 +1,20 @@
 #include <unistd.h>
+#include <stdlib.h>
 #include "minishell.h"
 
 static int	extract_env(t_all *all)
 {
 	int		i;
-	char	*buff;
 
+	if (!(all->env = malloc((ft_arraylen(all->current) + 1) * sizeof(char*))))
+		return (MALLOC_ERR);
 	i = 0;
-	all->env = NULL;
-	if (all->current == NULL)
-		return (-1);
-	while ((all->current)[i])
+	while (all->current[i])
 	{
-		if ((buff = ft_strdup((all->current)[i])) == NULL)
-			return (MALLOC_ERR);
-		ft_lstadd_back(&all->env, ft_lstnew(buff));
+		all->env[i] = ft_strdup(all->current[i]);
 		i++;
 	}
+	all->env[i] = NULL;
 	all->current = NULL;
 	return (SUCCESS);
 }
