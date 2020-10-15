@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 15:39:14 by abenoit          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -77,7 +65,6 @@ typedef struct		s_param
 {
 	int				fd[3];
 	enum e_command	command;
-	uint8_t			pad[4];
 	char			**env;
 	t_list			*stack;
 	char			**current;
@@ -101,11 +88,12 @@ enum e_state
 
 # define METACHARS	"><|;"
 
-# define BUF_SIZE	1024
+# define BUF_SIZE	4096
 
 typedef struct		s_state_machine
 {
 	enum e_state	state;
+	uint8_t			pad[4];
 	char			buf[BUF_SIZE];
 	size_t			len;
 	char			*cur_token;
