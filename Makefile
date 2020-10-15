@@ -6,7 +6,7 @@
 #    By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/10/14 00:49:29 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/10/15 01:30:28 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/10/15 14:10:34 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ SRC_NAME	+= main.c
 SRC_NAME	+= launch_command.c
 SRC_NAME	+= ft_exit.c
 SRC_NAME	+= str_utils.c
-SRC_NAME	+= lst_utils.c
 SRC_NAME	+= ft_split.c
 SRC_NAME	+= rec_gnl.c
 SRC_NAME	+= prm_init.c

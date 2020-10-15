@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 12:53:37 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:10:15 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,9 +81,9 @@ typedef struct		s_param
 	t_list			*env;
 	t_list			*stack;
 	char			**current;
-}					t_param;
+}					t_all;
 
-typedef int			(*t_func)(t_param *prm);
+typedef int			(*t_func)(t_all *all);
 
 #include <stdio.h>
 char			**split_command(char *line);
@@ -144,12 +144,12 @@ typedef ssize_t		(*t_function)(char *, t_list **, t_state_machine *);
 /*
 **	launch_command.c
 */
-int					launch_command(t_param *prm);
+int					launch_command(t_all *all);
 
 /*
-**	prm_init.c
+**	all_init.c
 */
-int					prm_init(t_param *prm);
+int					all_init(t_all *all);
 
 /*
 **	rec_gnl.c
@@ -167,18 +167,6 @@ int					ft_isset(char c, char *set);
 void				free_str_array(char ***array);
 
 /*
-**	lst_utils.c
-*/
-//t_list				*ft_lstnew(void *content);
-//void				ft_lstadd_front(t_list **alst, t_list *new);
-//void				ft_lstadd_back(t_list **alst, t_list *new);
-//int					ft_lstsize(t_list *lst);
-void				ft_lstprint(void *content);
-//void				ft_lstiter(t_list *lst, void (*f)(void *));
-//void				ft_lstclear(t_list **lst, void (*del)(void*));
-//void				ft_lstdelone(t_list *lst, void (*del)(void *));
-
-/*
 **	ft_split.c
 */
 char				**ft_split(char const *s, char *set);
@@ -186,6 +174,6 @@ char				**ft_split(char const *s, char *set);
 /*
 **	ft_exit.c
 */
-int					ft_exit(int err_code, t_param *prm);
+int					ft_exit(int err_code, t_all *all);
 
 #endif
