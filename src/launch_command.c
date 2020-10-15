@@ -6,11 +6,12 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 14:13:23 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:54:46 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <pthread.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -124,7 +125,7 @@ static int	launch_exit(t_all *all)
 static int	launch_ext(t_all *all)
 {
 	(void)all;
-	ft_putstr_fd("command: ext\n", all->fd[1]);
+	execve("/bin/ls", NULL, all->env);
 	return (SUCCESS);
 }
 
