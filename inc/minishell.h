@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 00:55:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:41:43 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,6 @@ typedef int			(*t_func)(t_param *prm);
 #include <stdio.h>
 char			**split_command(char *line);
 
-void	print_token(void *token);
-int		link_token(t_list *tokens, t_state_machine *machine);
-int		reset_buf(t_state_machine *machine);
-int		add_to_buf(char c, t_state_machine *machine);
-
 enum e_state
 {
 	LETTER,
@@ -115,6 +110,11 @@ typedef struct		s_state_machine
 	char			*cur_token;
 }					t_state_machine;
 
+void	print_token(void *token);
+int		link_token(t_list **tokens, t_state_machine *machine);
+int		reset_buf(t_state_machine *machine);
+int		add_to_buf(char c, t_state_machine *machine);
+
 # define FLAG_FILEIN	0b00000001 // <
 # define FLAG_FILEOUT	0b00000010 // >
 # define FLAG_APPEND	0b00000100 // >>
@@ -132,7 +132,7 @@ typedef struct		s_state_machine
 //	t_list		*commands; // separees par ;
 //}					t_all;
 
-typedef int			(*t_function)(char *, t_list *, t_state_machine *);
+typedef ssize_t		(*t_function)(char *, t_list **, t_state_machine *);
 
 /*
 **	**********************************

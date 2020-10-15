@@ -6,11 +6,12 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 22:36:58 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/15 01:27:14 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:43:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdlib.h>
 
 void	print_token(void *token)
 {
@@ -26,7 +27,7 @@ int		link_token(t_list **tokens, t_state_machine *machine)
 
 	link = ft_lstnew(machine->cur_token);
 	if (link != NULL)
-		ft_lstadd_back(&tokens, link);
+		ft_lstadd_back(tokens, link);
 	else
 		return (FAILURE);
 	machine->cur_token = NULL;
@@ -36,7 +37,6 @@ int		link_token(t_list **tokens, t_state_machine *machine)
 int		reset_buf(t_state_machine *machine) // ou return res
 {
 	char	*res;
-	size_t	total_len;
 	
 	if (machine->cur_token == NULL)
 		res = ft_strdup(machine->buf); // on a la len de buf
