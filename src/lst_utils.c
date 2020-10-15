@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 12:01:34 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 01:39:17 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:59:21 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	ft_lstprint(void *content)
 	char	*str;
 
 	str = ((char*)content);
-	ft_putstr_fd(str, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	ft_putstr_fd(str, prm->fd[1]);
+	ft_putstr_fd("\n", prm->fd[1]);
 }
 
 

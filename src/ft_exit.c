@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:28:37 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 01:38:48 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:58:54 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 static int			err_output(const char *str)
 {
-	ft_putstr_fd("Error: ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
+	ft_putstr_fd("Error: ", prm->fd[2]);
+	ft_putstr_fd(str, prm->fd[2]);
+	ft_putstr_fd("\n", prm->fd[2]);
 	exit (EXIT_FAILURE);
 }
 

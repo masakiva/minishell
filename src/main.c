@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 17:20:14 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:56:28 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int			get_input(t_param *prm)
 {
 	char	*line;
 
-	get_next_line(STDIN_FILENO, &line);
+	get_next_line(fd[0], &line);
 	printf("got one line\n");
 	if (line == NULL)
 		return (MALLOC_ERR);
@@ -57,7 +57,7 @@ static int			main_loop(t_param *prm)
 {
 	int	ret;
 
-	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
+	ft_putstr_fd(PROMPT, prm->fd[1]); // err
 	if ((ret = get_input(prm)) != SUCCESS)
 		return (ret);
 //	if ((ret = launch_command(prm)) != SUCCESS)

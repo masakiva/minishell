@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 15:29:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 12:41:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:53:37 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ enum		e_command
 
 typedef struct		s_param
 {
+	int				fd[3];
 	enum e_command	command;
 	uint8_t			pad[4];
 	t_list			*env;

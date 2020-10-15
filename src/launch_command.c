@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/12 16:58:22 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/14 01:37:38 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:57:29 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,22 @@ static int	launch_echo(t_param *prm)
 		n_option = ft_strcmp(prm->current[1], "-n");
 		if (n_option != ENABLED)
 		{
-			ft_putstr_fd(prm->current[1], STDOUT_FILENO);
+			ft_putstr_fd(prm->current[1], prm->fd[1]);
 			if (prm->current[2] != NULL)
-				ft_putchar_fd(' ', STDOUT_FILENO);
+				ft_putchar_fd(' ', prm->fd[1]);
 		}
 		if (prm->current[2] != NULL)
-			ft_putstr_fd(prm->current[2], STDOUT_FILENO);
+			ft_putstr_fd(prm->current[2], prm->fd[1]);
 		i = 3;
 		while (prm->current[i] != NULL)
 		{
-			ft_putchar_fd(' ', STDOUT_FILENO);
-			ft_putstr_fd(prm->current[i], STDOUT_FILENO);
+			ft_putchar_fd(' ', prm->fd[1]);
+			ft_putstr_fd(prm->current[i], prm->fd[1]);
 			i++;
 		}
 	}
 	if (n_option != ENABLED || prm->current[1] == NULL)
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		ft_putchar_fd('\n', prm->fd[1]);
 	return (SUCCESS);
 }
 
@@ -64,7 +64,7 @@ static int	launch_cd(t_param *prm)
 //		}
 //	}
 	(void)prm;
-	ft_putstr_fd("command: cd\n", STDOUT_FILENO);
+	ft_putstr_fd("command: cd\n", prm->fd[1]);
 	return (SUCCESS);
 }
 
@@ -79,8 +79,8 @@ static int	launch_pwd(t_param *prm)
 		//free(buf);
 		return (FAILURE);
 	}
-	ft_putstr_fd(buf, STDOUT_FILENO);
-	ft_putchar_fd('\n', STDOUT_FILENO);
+	ft_putstr_fd(buf, prm->fd[1]);
+	ft_putchar_fd('\n', prm->fd[1]);
 	free(buf);
 	return (SUCCESS);
 }
@@ -88,14 +88,14 @@ static int	launch_pwd(t_param *prm)
 static int	launch_export(t_param *prm)
 {
 	(void)prm;
-	ft_putstr_fd("command: export\n", STDOUT_FILENO);
+	ft_putstr_fd("command: export\n", prm->fd[1]);
 	return (SUCCESS);
 }
 
 static int	launch_unset(t_param *prm)
 {
 	(void)prm;
-	ft_putstr_fd("command: unset\n", STDOUT_FILENO);
+	ft_putstr_fd("command: unset\n", prm->fd[1]);
 	return (SUCCESS);
 }
 
@@ -114,7 +114,7 @@ static int	launch_exit(t_param *prm)
 static int	launch_ext(t_param *prm)
 {
 	(void)prm;
-	ft_putstr_fd("command: ext\n", STDOUT_FILENO);
+	ft_putstr_fd("command: ext\n", prm->fd[1]);
 	return (SUCCESS);
 }
 
@@ -128,7 +128,7 @@ int		launch_command(t_param *prm)
 
 	i = 0;
 	if ((ret = command[prm->command](prm)) == FAILURE)
-		ft_putstr_fd("ERROR\n", STDOUT_FILENO);
+		ft_putstr_fd("ERROR\n", prm->fd[1]);
 	free_str_array(&prm->current);
 	return (ret);
 }

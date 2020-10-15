@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 12:05:20 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/13 15:17:14 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 12:55:21 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ static int	extract_env(t_param *prm)
 
 	i = 0;
 	prm->env = NULL;
+	prm->fd[0] = STDIN_FILENO;
+	prm->fd[1] = STDOUT_FILENO;
+	prm->fd[2] = STDERR_FILENO;
 	if (prm->current == NULL)
 		return (-1);
 	while ((prm->current)[i])
