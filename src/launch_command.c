@@ -1,6 +1,8 @@
 #include "minishell.h"
 #include <pthread.h>
 
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #define DISABLED	1
