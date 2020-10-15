@@ -149,6 +149,8 @@ int					all_init(t_all *all);
 */
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_isset(char c, char *set);
+char				*get_var_content(char **env, char *name);
+ssize_t				get_var_pos(char **env, char *name);
 void				ft_printarray_fd(char **array, int fd);
 size_t				ft_arraylen(char **array);
 void				free_str_array(char ***array);

@@ -84,23 +84,47 @@ static int	launch_export(t_all *all)
 	if (!(new = malloc((size + 2) * sizeof(char*))))
 		return (MALLOC_ERR);
 	i = 0;
-	while (i <= size)
+	while (i < size)
 	{
 		new[i] = all->env[i];
 		i++;
 	}
-	new[i] = all->current[1];
-	ft_putstr_fd(all->current[1], all->fd[1]);
-	new[i+1] = NULL;
-	free_str_array(&(all->env));
+	new[i] = ft_strdup(all->current[1]);
+	new[i + 1] = NULL;
+	free(all->env);
 	all->env = new;
 	return (SUCCESS);
 }
 
 static int	launch_unset(t_all *all)
 {
-	(void)all;
-	ft_putstr_fd("command: unset\n", all->fd[1]);
+	ssize_t	i;
+	ssize_t	j;
+	ssize_t	size;
+	ssize_t	pos;
+	char	**new;
+
+	size = ft_arraylen(all->env);
+	if ((pos = get_var_pos(all->env, all->current[1])) == -1)
+		return (SUCCESS);
+	if (!(new = malloc((size) * sizeof(char*))))
+		return (MALLOC_ERR);
+	i = 0;
+	j = 0;
+	while (i < size - 1 && j < size)
+	{
+		if (j != pos)
+		{
+			new[i] = all->env[j];
+		i++;
+		j++;
+		}
+		else
+			j++;
+	}
+	new[i] = NULL;
+	free(all->env);
+	all->env = new;
 	return (SUCCESS);
 }
 
@@ -118,8 +142,23 @@ static int	launch_exit(t_all *all)
 
 static int	launch_ext(t_all *all)
 {
+	pid_t	pid;
+	char	*ext;
+	char	**path;
+
 	(void)all;
-	execve("/bin/ls", &all->current[1], all->env);
+	ext = get_var_content(all->env, "PATH");
+	path = ft_split(ext, ":");
+	ft_printarray_fd(path, all->fd[1]);
+	pid = fork();
+	if (pid == 0)
+	{
+	//	ext = ft_strjoin("/bin/", all->current[0]);
+	//	execve(ext, &all->current[1], all->env);
+		printf("%s\n", ext);
+	}
+	else
+		wait(NULL);
 	return (SUCCESS);
 }
 

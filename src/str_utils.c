@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "libft.h"
+#include "minishell.h"
 #define ISNUM "0123456789"
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -54,6 +55,46 @@ int		ft_isset(char c, char *set)
 //	return (sub);
 //}
 //
+//
+char	*get_var_content(char **env, char *name)
+{
+	ssize_t		i;
+	char	**tmp;
+
+	i = 0;
+	while (env[i])
+	{
+		tmp = ft_split(env[i], "=");
+		if (ft_strcmp(tmp[0], name) == 0)
+		{
+			free(tmp[0]);
+			return (tmp[1]);
+		}
+		free_str_array(&tmp);
+		i++;
+	}
+	return (NULL);
+}
+
+ssize_t	get_var_pos(char **env, char *name)
+{
+	ssize_t		i;
+	char	**tmp;
+
+	i = 0;
+	while (env[i])
+	{
+		tmp = ft_split(env[i], "=");
+		if (ft_strcmp(tmp[0], name) == 0)
+		{
+			free_str_array(&tmp);
+			return (i);
+		}
+		free_str_array(&tmp);
+		i++;
+	}
+	return (-1);
+}
 
 void	ft_printarray_fd(char **array, int fd)
 {
