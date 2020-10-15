@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/14 22:36:58 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/15 12:43:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 12:57:34 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 void	print_token(void *token)
 {
-	static size_t	i = 0;
+	size_t	i = 0;
 
 	printf("%zu = %s\n", i, (char *)token);
 	i++;

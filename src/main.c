@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/30 14:53:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/15 14:14:08 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/15 14:46:32 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ static int			get_input(t_all *all)
 	char	*line;
 
 	get_next_line(all->fd[0], &line);
-	printf("got one line\n");
 	if (line == NULL)
 		return (MALLOC_ERR);
 	all->current = split_command(line);;

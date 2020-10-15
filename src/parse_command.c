@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/13 18:21:17 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/15 12:51:28 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/15 14:52:33 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ ssize_t		error(char *line, t_list **tokens, t_state_machine *machine)
 	(void)line;
 	(void)tokens;
 	(void)machine;
-	return (0);
-}
-
-ssize_t		end(char *line, t_list **tokens, t_state_machine *machine)
-{
-	(void)line;
-	(void)tokens;
-	machine->state = END;
 	return (0);
 }
 //
@@ -55,26 +47,43 @@ ssize_t		end(char *line, t_list **tokens, t_state_machine *machine)
 //	while (ft_isset(*line, QUOTES + METACHARS + SPACES + END) != -1)
 //}
 
+ssize_t		end(char *line, t_list **tokens, t_state_machine *machine)
+{
+	(void)line;
+	(void)tokens;
+	machine->state = END;
+	return (0);
+}
+
 ssize_t		space(char *line, t_list **tokens, t_state_machine *machine)
 {
-	if (*line == '"') // SQ
+	ssize_t		elem_len;
+
+	(void)tokens;
+	elem_len = 0;
+	if (*line == '"' || *line == '\'') // SQ
 		machine->state = QUOTE;
 	else if (*line == '\0') // SE
 		machine->state = END;
 	else if (ft_isset(*line, ISSPACE_3) == -1) // SL
 		machine->state = LETTER;
-	(void)tokens;
-	return (1);
+	else // SS
+		elem_len = 1;
+	return (elem_len);
 }
 
 ssize_t		quote(char *line, t_list **tokens, t_state_machine *machine)
-{ // seulement double quote pour l'instant
+{
+	char	quote_style;
 	size_t	inside_quotes_len;
 
+	quote_style = *line;
+	line++;
 	inside_quotes_len = 0;
-	while (*line != '"' && *line != '\0') // on va jusqu'au ending quote
+	while (*line != quote_style && *line != '\0') // on va jusqu'au ending quote
 	{
-		add_to_buf(*line++, machine);
+		add_to_buf(*line, machine);
+		line++;
 		inside_quotes_len++;
 	}
 	if (*line == '\0')
@@ -94,27 +103,36 @@ ssize_t		quote(char *line, t_list **tokens, t_state_machine *machine)
 	}
 	else // QL
 		machine->state = LETTER;
-	return (inside_quotes_len); // +1?
+	return (inside_quotes_len + 2); // +1?
 }
 
 ssize_t		letter(char *line, t_list **tokens, t_state_machine *machine)
 {
-	if (*line == '"') // LQ
+	ssize_t		elem_len;
+
+	elem_len = 0;
+	if (*line == '"' || *line == '\'') // LQ
 		machine->state = QUOTE;
-	if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // LE LS
+	else if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // LE LS
 	{
 		if (reset_buf(machine) == ERROR)
 			return (ERROR); // malloc error
-		if (link_token(tokens, machine) == ERROR) // sauf si la ligne est vide ou commence par un espace mais on peut peut-etre retirer le token plus tard
+		if (link_token(tokens, machine) == ERROR) // si la ligne est vide ou commence par un space on doit retirer le token plus tard
 			return (ERROR); // malloc error
 		if (*line == '\0')
 			machine->state = END;
 		else
+		{
 			machine->state = SPACE;
+			elem_len = 1;
+		}
 	}
 	else // LL
+	{
 		add_to_buf(*line, machine);
-	return (1);
+		elem_len = 1;
+	}
+	return (elem_len);
 }
 
 char			**split_command(char *line)
