@@ -49,7 +49,7 @@ static int	launch_cd(t_all *all)
 //		if (chdir("/HOME_DIR/USER") != SUCCESS)
 //		{
 //			perror("chdir");
-//			return (FAILURE);
+//			return (ERROR);
 //		}
 //	}
 	(void)all;
@@ -66,7 +66,7 @@ static int	launch_pwd(t_all *all)
 	if (buf == NULL)
 	{
 		//free(buf);
-		return (FAILURE);
+		return (ERROR);
 	}
 	ft_putstr_fd(buf, all->fd[1]);
 	ft_putchar_fd('\n', all->fd[1]);
@@ -126,7 +126,7 @@ int		launch_command(t_all *all)
 								launch_exit, launch_ext};
 
 	i = 0;
-	if ((ret = command[all->command](all)) == FAILURE)
+	if ((ret = command[all->command](all)) == ERROR)
 		ft_putstr_fd("ERROR\n", all->fd[1]);
 	free_str_array(&all->current);
 	return (ret);

@@ -24,8 +24,8 @@
 */
 
 # define CLEAN_EXIT		42// or 1 ?
-# define FAILURE		-1 // or 0 ?
 # define SUCCESS		0 // or 1 ?
+// # define ERROR	-1 dans libft.h
 # define ARG_ERR		1
 # define MALLOC_ERR		2
 

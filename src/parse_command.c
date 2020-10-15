@@ -10,30 +10,6 @@ ssize_t		error(char *line, t_list **tokens, t_state_machine *machine)
 	(void)machine;
 	return (0);
 }
-//
-//char	*quote(char *line, t_list **tokens, t_state_machine *machine)
-//{
-//	char	quote_style;
-//	char	*ending_quote;
-//	char	*quoted_elem;
-//
-//	quote_style = line[-1]; // allowed?
-//	ending_quote = ft_strchr(line, quote_style);
-//	if (ending_quote != NULL)
-//	{
-//		quoted_elem = ft_substr(line, 0, ending_quote - line);
-//		if (quoted_elem == NULL)
-//			return (NULL); // malloc error
-//	}
-//	else
-//		return (NULL); // no ending_quote error
-//	return (quoted_elem);
-//}
-//
-//ssize_t		noquote(char *line, t_list **tokens, t_state_machine *machine)
-//{
-//	while (ft_isset(*line, QUOTES + METACHARS + SPACES + END) != -1)
-//}
 
 ssize_t		end(char *line, t_list **tokens, t_state_machine *machine)
 {
@@ -80,8 +56,6 @@ ssize_t		quote(char *line, t_list **tokens, t_state_machine *machine)
 		line++;
 	if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // QE QS
 	{
-		if (reset_buf(machine) == ERROR)
-			return (ERROR); // malloc error
 		if (link_token(tokens, machine) == ERROR)
 			return (ERROR); // malloc error
 		if (*line == '\0')
@@ -103,9 +77,7 @@ ssize_t		letter(char *line, t_list **tokens, t_state_machine *machine)
 		machine->state = QUOTE;
 	else if (*line == '\0' || ft_isset(*line, ISSPACE_3) != -1) // LE LS
 	{
-		if (reset_buf(machine) == ERROR)
-			return (ERROR); // malloc error
-		if (link_token(tokens, machine) == ERROR) // si la ligne est vide ou commence par un space on doit retirer le token plus tard
+		if (link_token(tokens, machine) == ERROR) //si la ligne est vide ou commence par un space on devra retirer le token
 			return (ERROR); // malloc error
 		if (*line == '\0')
 			machine->state = END;
