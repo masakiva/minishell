@@ -14,7 +14,7 @@ int		link_token(t_list **tokens, t_state_machine *machine)
 	t_list	*link; // "maillon"
 
 	if (reset_buf(machine) == ERROR)
-		return (ERROR); // malloc error
+		return (ERROR);
 	link = ft_lstnew(machine->cur_token);
 	if (link != NULL)
 		ft_lstadd_back(tokens, link);

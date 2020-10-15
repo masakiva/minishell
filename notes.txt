@@ -1,0 +1,2 @@
+to do:
+	escape quotes avec backslash (et d'autres choses? par ex espaces...)

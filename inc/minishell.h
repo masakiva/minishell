@@ -11,6 +11,7 @@
 **	# include <sys/wait.h>
 */
 
+# include <errno.h>
 # include "libft.h"
 
 /*
@@ -61,7 +62,7 @@ enum		e_command
 //	struct s_list	*next;
 //}					t_list;
 
-typedef struct		s_param
+typedef struct		s_all
 {
 	int				fd[3];
 	enum e_command	command;
@@ -164,5 +165,6 @@ char				**ft_split(char const *s, char *set);
 **	ft_exit.c
 */
 int					ft_exit(int err_code, t_all *all);
+int					err_bis(int err_code);
 
 #endif
