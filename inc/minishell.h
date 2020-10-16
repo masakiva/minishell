@@ -80,11 +80,19 @@ enum e_state
 {
 	LETTER,
 	QUOTE,
+	BACKSLASH,
 	SPACE,
 	//METACHAR,
 	ERR,
 	END,
 	NB_STATES
+};
+
+enum e_parsing_error
+{
+	SQUOTE_MISSING,
+	DQUOTE_MISSING,
+	NB_PARSING_ERRORS
 };
 
 # define METACHARS	"><|;"
@@ -93,12 +101,12 @@ enum e_state
 
 typedef struct		s_state_machine
 {
-	enum e_state	state;
-	uint8_t			pad[4];
-	char			buf[BUF_SIZE];
-	size_t			len;
-	char			*cur_token;
-}					t_state_machine;
+	enum e_state			state;
+	enum e_parsing_error	error;
+	char					buf[BUF_SIZE];
+	size_t					len;
+	char					*cur_token;
+}							t_state_machine;
 
 void	print_token(void *token);
 int		link_token(t_list **tokens, t_state_machine *machine);
@@ -122,7 +130,7 @@ int		add_to_buf(char c, t_state_machine *machine);
 //	t_list		*commands; // separees par ;
 //}					t_all;
 
-typedef ssize_t		(*t_function)(char *, t_list **, t_state_machine *);
+typedef size_t		(*t_function)(char *, t_list **, t_state_machine *);
 
 /*
 **	**********************************
