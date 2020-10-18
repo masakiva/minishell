@@ -100,7 +100,11 @@ typedef struct		s_state_machine
 	t_token					*cur_token;
 }							t_state_machine;
 
-void	print_tokens(t_list *tokens);
+void		free_elem(void *content); // temp
+void		free_token(void *content); // temp
+void		print_tokens(t_list *tokens); // temp
+int		add_variable(t_list **variables, size_t start, size_t end);
+char	*parse_variable(char *line, t_state_machine *machine);
 int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
 int		add_to_buf(char c, t_state_machine *machine);
@@ -112,7 +116,7 @@ int		add_to_buf(char c, t_state_machine *machine);
 
 void	parse_input(char *line);
 
-typedef size_t		(*t_function)(char *, t_list **, t_state_machine *);
+typedef char	*(*t_function)(char *, t_list **, t_state_machine *);
 
 enum		e_command
 {

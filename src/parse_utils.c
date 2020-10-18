@@ -1,6 +1,21 @@
 #include "minishell.h"
 #include <stdlib.h>
 
+void		free_elem(void *content)
+{
+	free(content);
+}
+
+void		free_token(void *content)
+{
+	t_token		*token;
+
+	token = (t_token *)content;
+	free(token->str);
+	ft_lstclear(&token->vars, free_elem);
+	free(content);
+}
+
 void	print_tokens(t_list *tokens)
 {
 	size_t		i;
@@ -28,6 +43,52 @@ void	print_tokens(t_list *tokens)
 		tokens = tokens->next;
 		i++;
 	}
+}
+
+int		add_variable(t_list **variables, size_t start, size_t end)
+{
+	t_list		*link;
+	t_variable	*variable;
+
+	variable = (t_variable *)malloc(sizeof(t_variable));
+	if (variable == NULL)
+		return (ERROR);
+	variable->start = start;
+	variable->end = end;
+	link = ft_lstnew(variable);
+	if (link != NULL)
+		ft_lstadd_back(variables, link);
+	else
+		return (ERROR);
+	return (SUCCESS);
+}
+
+char	*parse_variable(char *line, t_state_machine *machine)
+{
+	size_t		var_len;
+	size_t		var_end;
+
+	var_len = 0;
+	if (*line == '?' || ft_isdigit(*line)) // second condition to keep?
+	{
+		add_to_buf(*line, machine);
+		var_len++;
+		line++;
+	}
+	else
+	{
+		while (ft_isalnum(*line))
+		{
+			add_to_buf(*line, machine);
+			var_len++;
+			line++;
+		}
+	}
+	if (reset_buf(machine) == ERROR)
+		err_bis(MALLOC_ERR);
+	var_end = ft_strlen(machine->cur_token->str) - 1;
+	add_variable(&machine->cur_token->vars, var_end - var_len + 1, var_end);
+	return (line);
 }
 
 int		link_token(t_list **tokens, t_state_machine *machine)
