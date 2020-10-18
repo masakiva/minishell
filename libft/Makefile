@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/10/14 01:10:48 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/10/17 23:50:59 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,8 +55,9 @@ SRCS_BONUS	+= ft_lstmap.c
 SRCS_BONUS	+= ft_lstnew.c
 SRCS_BONUS	+= ft_lstsize.c
 
-SRCS_CUSTOM	+= ft_index.c
 SRCS_CUSTOM	+= get_next_line.c
+SRCS_CUSTOM	+= ft_index.c
+SRCS_CUSTOM	+= ft_isspace.c
 
 VPATH		= part_1:part_2:bonus:custom
 

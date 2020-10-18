@@ -44,6 +44,76 @@
 **	**********************************
 */
 
+#include <stdio.h>
+
+enum e_state
+{
+	LETTER,
+	QUOTE,
+	BACKSLASH,
+	DOLLAR,
+	SPACE,
+	ANGLE_BRACKET,
+	//METACHAR,
+	ERR,
+	END,
+	NB_STATES
+};
+
+enum e_parsing_error
+{
+	SQUOTE_MISSING,
+	DQUOTE_MISSING,
+	ESCAPE_NL,
+	NB_PARSING_ERRORS
+};
+
+# define METACHARS	"><|;"
+
+# define FLAG_VARIABLE	0b00000001 // $
+# define FLAG_FILEIN	0b00000010 // <
+# define FLAG_FILEOUT	0b00000100 // >
+# define FLAG_APPEND	0b00001000 // >>
+# define FLAG_PIPE		0b00010000 // |
+
+typedef struct		s_variable
+{
+	size_t	start;
+	size_t	end;
+}					t_variable;
+
+typedef struct		s_token
+{
+	char	*str;
+	t_list	*vars;
+	//t_byte	flags;
+}					t_token;
+
+# define BUF_SIZE	4096
+
+typedef struct		s_state_machine
+{
+	enum e_state			state;
+	enum e_parsing_error	error;
+	char					buf[BUF_SIZE];
+	size_t					len;
+	t_token					*cur_token;
+}							t_state_machine;
+
+void	print_tokens(t_list *tokens);
+int		link_token(t_list **tokens, t_state_machine *machine);
+int		reset_buf(t_state_machine *machine);
+int		add_to_buf(char c, t_state_machine *machine);
+
+//typedef struct		s_all
+//{
+//	t_list		*commands; // separees par ;
+//}					t_all;
+
+void	parse_input(char *line);
+
+typedef size_t		(*t_function)(char *, t_list **, t_state_machine *);
+
 enum		e_command
 {
 	ECHO,
@@ -72,65 +142,6 @@ typedef struct		s_all
 }					t_all;
 
 typedef int			(*t_func)(t_all *all);
-
-#include <stdio.h>
-char			**split_command(char *line);
-
-enum e_state
-{
-	LETTER,
-	QUOTE,
-	BACKSLASH,
-	SPACE,
-	//METACHAR,
-	ERR,
-	END,
-	NB_STATES
-};
-
-enum e_parsing_error
-{
-	SQUOTE_MISSING,
-	DQUOTE_MISSING,
-	NB_PARSING_ERRORS
-};
-
-# define METACHARS	"><|;"
-
-# define BUF_SIZE	4096
-
-typedef struct		s_state_machine
-{
-	enum e_state			state;
-	enum e_parsing_error	error;
-	char					buf[BUF_SIZE];
-	size_t					len;
-	char					*cur_token;
-}							t_state_machine;
-
-void	print_token(void *token);
-int		link_token(t_list **tokens, t_state_machine *machine);
-int		reset_buf(t_state_machine *machine);
-int		add_to_buf(char c, t_state_machine *machine);
-
-# define FLAG_FILEIN	0b00000001 // <
-# define FLAG_FILEOUT	0b00000010 // >
-# define FLAG_APPEND	0b00000100 // >>
-# define FLAG_PIPE		0b00001000 // |
-
-//typedef struct		s_command
-//{
-//	t_list		*tokens; // liste de char *
-//	//t_byte		flags;
-//	//char		*file; // pour les flags > < ou >>
-//}					t_command;
-
-//typedef struct		s_all
-//{
-//	t_list		*commands; // separees par ;
-//}					t_all;
-
-typedef size_t		(*t_function)(char *, t_list **, t_state_machine *);
 
 /*
 **	**********************************

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/14 01:31:30 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/17 23:51:20 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 		void (*del)(void *));
 
-ssize_t			ft_index(char *haystack, char needle);
 int				get_next_line(int fd, char **line);
+ssize_t			ft_index(char *haystack, char needle);
+int				ft_isspace(int c);
 
 #endif

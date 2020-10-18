@@ -26,12 +26,12 @@
 
 static int			get_input(t_all *all)
 {
-	char	*line;
+	char		*line;
 
 	get_next_line(all->fd[0], &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
-	all->current = split_command(line);;
+	parse_input(line);;
 	//all->current = ft_split(line, ISSPACE_3);
 	free(line);
 	//if (all->current == NULL)

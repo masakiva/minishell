@@ -1,2 +1,9 @@
-to do:
-	escape quotes avec backslash (et d'autres choses? par ex espaces...)
+man bash -> QUOTING
+	non-quoted \ : écrit littéralement le caractère qui suit, à l’exception de <newline>
+	'' : - écrit littéralement ce qui est entre single quotes
+		 - ' ou \' ne peuvent pas apparaitre entre single quotes
+	"" : - écrit littéralement sauf pour $, `, \ et ! si history expansion est activé
+		 - $ et ` gardent leur special meaning
+		 - \ reste un escape char seulement pour $, `, ", \, ou <newline>
+		 - * et @ ont un special meaning entre double quotes
+tricky: echo $PWD"g" or $PWD$PWD or $PWD"$PWD"
