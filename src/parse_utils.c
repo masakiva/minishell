@@ -34,12 +34,14 @@ void	print_tokens(t_list *tokens)
 			while (vars != NULL)
 			{
 				var = vars->content;
-				printf("var starts at %zu ('%c') and ends at %zu ('%c')\n",
+				printf("...var starts at %zu ('%c') and ends at %zu ('%c')\n",
 						var->start, token->str[var->start],
 						var->end, token->str[var->end]);
 				vars = vars->next;
 			}
 		}
+		if (token->redir > 0)
+			printf("...redir %d\n", token->redir);
 		tokens = tokens->next;
 		i++;
 	}
@@ -115,7 +117,8 @@ int		reset_buf(t_state_machine *machine) // ou return res
 		machine->cur_token = (t_token *)malloc(sizeof(t_token));
 		if (machine->cur_token == NULL)
 			return (ERROR);
-		machine->cur_token->vars = NULL;
+		machine->cur_token->vars = NULL; // bzero?
+		machine->cur_token->redir = NO_REDIR; // bzero?
 		res = ft_strdup(machine->buf); // on a la len de buf
 	}
 	else

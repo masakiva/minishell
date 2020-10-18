@@ -65,16 +65,19 @@ enum e_parsing_error
 	SQUOTE_MISSING,
 	DQUOTE_MISSING,
 	ESCAPE_NL,
+	REDIR_TOKEN,
 	NB_PARSING_ERRORS
 };
 
 # define METACHARS	"><|;"
 
-# define FLAG_VARIABLE	0b00000001 // $
-# define FLAG_FILEIN	0b00000010 // <
-# define FLAG_FILEOUT	0b00000100 // >
-# define FLAG_APPEND	0b00001000 // >>
-# define FLAG_PIPE		0b00010000 // |
+enum e_redir
+{
+	NO_REDIR,
+	FILEIN,
+	FILEOUT,
+	APPEND
+};
 
 typedef struct		s_variable
 {
@@ -84,9 +87,10 @@ typedef struct		s_variable
 
 typedef struct		s_token
 {
-	char	*str;
-	t_list	*vars;
-	//t_byte	flags;
+	char			*str;
+	t_list			*vars;
+	enum e_redir	redir;
+	uint8_t			pad[4];
 }					t_token;
 
 # define BUF_SIZE	4096

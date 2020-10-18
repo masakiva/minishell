@@ -1,3 +1,5 @@
+https://brennan.io/2015/01/16/write-a-shell-in-c/
+
 man bash -> QUOTING
 	non-quoted \ : écrit littéralement le caractère qui suit, à l’exception de <newline>
 	'' : - écrit littéralement ce qui est entre single quotes
@@ -6,4 +8,6 @@ man bash -> QUOTING
 		 - $ et ` gardent leur special meaning
 		 - \ reste un escape char seulement pour $, `, ", \, ou <newline>
 		 - * et @ ont un special meaning entre double quotes
-tricky: echo $PWD"g" or $PWD$PWD or $PWD"$PWD"
+	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
+
+multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
