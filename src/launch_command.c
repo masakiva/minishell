@@ -46,17 +46,19 @@ static int	launch_echo(t_all *all)
 //# define USER		"mvidal-a" // "abenoit"
 static int	launch_cd(t_all *all)
 {
-//	if (all->current[1] == NULL)
-//	{
-//		errno = 0;
-//		if (chdir("/HOME_DIR/USER") != SUCCESS)
-//		{
-//			perror("chdir");
-//			return (ERROR);
-//		}
-//	}
-	(void)all;
-	ft_putstr_fd("command: cd\n", all->fd[1]);
+	char	*path;
+
+	if (all->current[1] == NULL)
+		path = get_var_content(all->env, "HOME");
+	else
+		path = all->current[1];
+	if (chdir(path) != SUCCESS)
+	{
+		perror("cd");
+		free(path);
+		return (ERROR);
+	}
+	free(path);
 	return (SUCCESS);
 }
 

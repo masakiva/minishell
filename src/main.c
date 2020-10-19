@@ -32,11 +32,11 @@ static int			get_input(t_all *all)
 	if (line == NULL)
 		return (MALLOC_ERR);
 	parse_input(line);;
-	//all->current = ft_split(line, ISSPACE_3);
+	all->current = ft_split(line, ' ');
 	free(line);
 	//if (all->current == NULL)
 	//	return (MALLOC_ERR);
-	//all->command = get_command_code(all->current[0]);
+	all->command = get_command_code(all->current[0]);
 	return (SUCCESS);
 }
 
@@ -47,8 +47,8 @@ static int			main_loop(t_all *all)
 	ft_putstr_fd(PROMPT, all->fd[1]); // err
 	if ((ret = get_input(all)) != SUCCESS)
 		return (ret);
-	//if ((ret = launch_command(all)) != SUCCESS)
-		//return (ret);
+	if ((ret = launch_command(all)) != SUCCESS)
+		return (ret);
 	return (ret);
 }
 
