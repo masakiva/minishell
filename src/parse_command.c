@@ -7,8 +7,8 @@
 char	*error(char *line, t_list **commands, t_state_machine *machine)
 {
 	static char		*err_msg[NB_PARSING_ERRORS] = {
-		"No maching single quote",
-		"No maching double quote",
+		"No matching single quote",
+		"No matching double quote",
 		"Multiline inputs are currently not supported", // mais en fait si je pense
 		"Token after redirection operator invalid"};
 	(void)commands;

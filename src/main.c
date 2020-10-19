@@ -31,7 +31,7 @@ static int			get_input(t_all *all)
 	get_next_line(all->fd[0], &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
-	parse_input(line);;
+//	parse_input(line);;
 	all->current = ft_split(line, ' ');
 	free(line);
 	//if (all->current == NULL)

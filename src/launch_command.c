@@ -84,7 +84,9 @@ static int	launch_export(t_all *all)
 	size_t	i;
 	size_t	size;
 	char	**new;
-
+	
+	if (ft_strchr(all->current[1], '=') == NULL)
+		return (SUCCESS);
 	size = ft_arraylen(all->env);
 	if (!(new = malloc((size + 2) * sizeof(char*))))
 		return (MALLOC_ERR);
@@ -116,7 +118,7 @@ static int	launch_unset(t_all *all)
 		return (MALLOC_ERR);
 	i = 0;
 	j = 0;
-	while (i < size - 1 && j < size)
+	while (all->env[j])
 	{
 		if (j != pos)
 		{
@@ -127,6 +129,7 @@ static int	launch_unset(t_all *all)
 		else
 		{
 			free(all->env[j]);
+			all->env[j] = NULL;
 			j++;
 		}
 	}
