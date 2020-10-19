@@ -32,11 +32,19 @@
 
 # define ISSPACE_3		"\f\n\r\t\v "
 
-# define METACHAR		"|;()<>"
-
 # define BUILTINS		"echo/cd/pwd/export/unset/env/exit"
 
 # define PROMPT			"$ "
+
+/*
+**
+**	SHELL METACHARS AND OPERATORS
+**
+**	# define METACHARS		"|&;()<> \t\n"
+**	# define CTRL_OPS		"||/&&/&/;/;;/;&/;;&/|/|&/(/)"
+**	# define REDIR_OPS		"</>/>|/>>/&>/>&/<<"
+**	# define DQUOTES_ESC	"$`\"\\\n"
+*/
 
 /*
 **	**********************************
@@ -68,8 +76,6 @@ enum e_parsing_error
 	REDIR_TOKEN,
 	NB_PARSING_ERRORS
 };
-
-# define METACHARS	"><|;"
 
 enum e_redir
 {
