@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "libft.h"
 
 static int			err_output(t_all *all, const char *str)
 {

@@ -180,8 +180,8 @@ void				free_str_array(char ***array);
 
 /*
 **	ft_split.c
+**	char				**ft_split(char const *s, char set);
 */
-char				**ft_split(char const *s, char *set);
 
 /*
 **	ft_exit.c

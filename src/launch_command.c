@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "libft.h"
 #include <pthread.h>
 
 #include <sys/types.h>
@@ -67,7 +68,7 @@ static int	launch_pwd(t_all *all)
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
 	{
-		//free(buf);
+		free(buf);
 		return (ERROR);
 	}
 	ft_putstr_fd(buf, all->fd[1]);
@@ -122,7 +123,10 @@ static int	launch_unset(t_all *all)
 		j++;
 		}
 		else
+		{
+			free(all->env[j]);
 			j++;
+		}
 	}
 	new[i] = NULL;
 	free(all->env);
@@ -150,7 +154,7 @@ static int	launch_ext(t_all *all)
 
 	(void)all;
 	ext = get_var_content(all->env, "PATH");
-	path = ft_split(ext, ":");
+	path = ft_split(ext, ':');
 	ft_printarray_fd(path, all->fd[1]);
 	pid = fork();
 	if (pid == 0)

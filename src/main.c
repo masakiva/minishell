@@ -8,7 +8,7 @@
 	int		i;
 
 	i = 0;
-	command = ft_split(BUILTINS, "/");
+	command = ft_split(BUILTINS, '/');
 	if (command == NULL)
 		return (MALLOC_ERR);
 	while (command[i] != NULL)

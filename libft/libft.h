@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/17 23:51:20 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/10/19 13:53:10 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char			*ft_strdup(const char *s1);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_strtrim(char const *s1, char const *set);
-//char			**ft_split(char const *s, char c);
+char			**ft_split(char const *s, char c);
 char			*ft_itoa(int n);
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 ssize_t			ft_putchar_fd(char c, int fd);
@@ -78,5 +78,14 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 int				get_next_line(int fd, char **line);
 ssize_t			ft_index(char *haystack, char needle);
 int				ft_isspace(int c);
+
+int				ft_strcmp(const char *s1, const char *s2);
+int				ft_isset(char c, char *set);
+
+char			*get_var_content(char **array, char *name);
+ssize_t			get_var_pos(char **array, char *name);
+void			ft_printarray_fd(char **array, int fd);
+size_t			ft_arraylen(char **array);
+void			free_str_array(char ***ptr);
 
 #endif
