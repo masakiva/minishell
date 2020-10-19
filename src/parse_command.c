@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char	*error(char *line, t_list **tokens, t_state_machine *machine)
+char	*error(char *line, t_list **commands, t_state_machine *machine)
 {
 	static char		*err_msg[NB_PARSING_ERRORS] = {
 		"No maching single quote",
 		"No maching double quote",
 		"Multiline inputs are currently not supported", // mais en fait si je pense
 		"Token after redirection operator invalid"};
-	(void)tokens;
+	(void)commands;
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);// ou all->fd[2]?
 	ft_putchar_fd('\n', STDERR_FILENO);
@@ -23,9 +23,9 @@ char	*error(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*space(char *line, t_list **tokens, t_state_machine *machine)
+char	*space(char *line, t_list **commands, t_state_machine *machine)
 {
-	(void)tokens;
+	(void)commands;
 	if (*line == '\0')
 		machine->state = END;
 	else if (ft_isspace(*line))
@@ -37,9 +37,9 @@ char	*space(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*backslash(char *line, t_list **tokens, t_state_machine *machine)
+char	*backslash(char *line, t_list **commands, t_state_machine *machine)
 {
-	(void)tokens;
+	(void)commands;
 	if (*line != '\0')
 	{
 		add_to_buf(*line, machine);
@@ -54,9 +54,9 @@ char	*backslash(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*dollar(char *line, t_list **tokens, t_state_machine *machine)
+char	*dollar(char *line, t_list **commands, t_state_machine *machine)
 {
-	(void)tokens;
+	(void)commands;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
 	else if (*line == '?' || ft_isalnum(*line))
@@ -72,11 +72,11 @@ char	*dollar(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*quote(char *line, t_list **tokens, t_state_machine *machine)
+char	*quote(char *line, t_list **commands, t_state_machine *machine)
 {
 	char	quote_style;
 
-	(void)tokens;
+	(void)commands;
 	quote_style = *line;
 	line++;
 	while (*line != quote_style && *line != '\0')
@@ -111,9 +111,9 @@ char	*quote(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*angle_bracket(char *line, t_list **tokens, t_state_machine *machine)
+char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 {
-	(void)tokens;
+	(void)commands;
 	if (reset_buf(machine) == ERROR)
 		err_bis(MALLOC_ERR);
 	if (machine->cur_token->redir != NO_REDIR)
@@ -138,8 +138,11 @@ char	*angle_bracket(char *line, t_list **tokens, t_state_machine *machine)
 	return (line);
 }
 
-char	*letter(char *line, t_list **tokens, t_state_machine *machine)
+char	*letter(char *line, t_list **commands, t_state_machine *machine)
 {
+	t_list		**tokens;
+
+	tokens = (t_list **)(*commands)->content;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
 	else if (*line == '>' || *line == '<')
@@ -183,6 +186,7 @@ void	parse_input(char *line)
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
 		dollar, space, angle_bracket, error};
 	t_state_machine		machine;
+	t_list				*commands;
 	t_list				*tokens;
 
 	errno = 0;
@@ -191,11 +195,12 @@ void	parse_input(char *line)
 	machine.cur_token = NULL;
 	ft_bzero(&machine.buf, BUF_SIZE);
 	tokens = NULL;
+	commands = ft_lstnew(&tokens);
 	if (line[0] == '.' && line[1] == '\0')
 		exit(EXIT_SUCCESS);
 	while (machine.state != END)
 	{
-		line = process[machine.state](line, &tokens, &machine);
+		line = process[machine.state](line, &commands, &machine);
 		//printf("current = %c ; state = %d\n", *line, machine.state);
 	}
 	if (machine.cur_token != NULL && machine.cur_token->redir != NO_REDIR)
@@ -207,4 +212,5 @@ void	parse_input(char *line)
 	printf("################# lstsize = %zu\n", ft_lstsize(tokens));
 	print_tokens(tokens);
 	ft_lstclear(&tokens, free_token);
+	free(commands);
 }

@@ -93,6 +93,12 @@ typedef struct		s_token
 	uint8_t			pad[4];
 }					t_token;
 
+typedef struct		s_command
+{
+	t_list	*tokens;
+	t_byte	pipe_flag;
+}					t_command;
+
 # define BUF_SIZE	4096
 
 typedef struct		s_state_machine
@@ -113,11 +119,6 @@ int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
 int		add_to_buf(char c, t_state_machine *machine);
 
-//typedef struct		s_all
-//{
-//	t_list		*commands; // separees par ;
-//}					t_all;
-
 void	parse_input(char *line);
 
 typedef char	*(*t_function)(char *, t_list **, t_state_machine *);
@@ -133,12 +134,6 @@ enum		e_command
 	EXIT,
 	ELSE
 };
-
-//typedef struct		s_list
-//{
-//	char			*content;
-//	struct s_list	*next;
-//}					t_list;
 
 typedef struct		s_all
 {

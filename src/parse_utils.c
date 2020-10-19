@@ -117,8 +117,7 @@ int		reset_buf(t_state_machine *machine) // ou return res
 		machine->cur_token = (t_token *)malloc(sizeof(t_token));
 		if (machine->cur_token == NULL)
 			return (ERROR);
-		machine->cur_token->vars = NULL; // bzero?
-		machine->cur_token->redir = NO_REDIR; // bzero?
+		ft_bzero(machine->cur_token, sizeof(t_token));
 		res = ft_strdup(machine->buf); // on a la len de buf
 	}
 	else
