@@ -33,6 +33,8 @@ char	*space(char *line, t_list **commands, t_state_machine *machine)
 		line++;
 	else if (*line == '>' || *line == '<')
 		machine->state = ANGLE_BRACKET;
+	else if (*line == ';')
+		machine->state = SEMICOLON;
 	else
 		machine->state = LETTER;
 	return (line);
@@ -60,7 +62,7 @@ char	*dollar(char *line, t_list **commands, t_state_machine *machine)
 	(void)commands;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
-	else if (*line == '?' || ft_isalnum(*line))
+	else if (*line == '?' || ft_isalnum(*line) || *line == '_')
 	{
 		line = parse_variable(line, machine);
 		machine->state = LETTER;
@@ -85,7 +87,7 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 		if (quote_style == '"' && *line == '$')
 		{
 			line++;
-			if (*line == '?' || ft_isalnum(*line))
+			if (*line == '?' || ft_isalnum(*line) || *line == '_')
 				line = parse_variable(line, machine);
 			else
 				add_to_buf('$', machine);
@@ -139,11 +141,20 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
+char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
+{
+	if (new_command(commands) == ERROR)
+		err_bis(MALLOC_ERR);
+	line++;
+	machine->state = SPACE;
+	return (line);
+}
+
 char	*letter(char *line, t_list **commands, t_state_machine *machine)
 {
 	t_list		**tokens;
 
-	tokens = (t_list **)(*commands)->content;
+	tokens = (t_list **)&(ft_lstlast(*commands))->content;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
 	else if (*line == '>' || *line == '<')
@@ -161,6 +172,12 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	{
 		machine->state = BACKSLASH;
 		line++;
+	}
+	else if (*line == ';')
+	{
+		if (link_token(tokens, machine) == ERROR)
+			err_bis(MALLOC_ERR);
+		machine->state = SEMICOLON;
 	}
 	else if (*line == '\0' || ft_isspace(*line))
 	{
@@ -182,23 +199,25 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
+
+
 void	parse_input(char *line)
 {
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
-		dollar, space, angle_bracket, error};
+		dollar, space, angle_bracket, semicolon, error};
 	t_state_machine		machine;
 	t_list				*commands;
-	t_list				*tokens;
 
+	if (line[0] == '.' && line[1] == '\0')
+		exit(EXIT_SUCCESS);
 	errno = 0;
 	machine.state = SPACE;
 	machine.len = 0;
 	machine.cur_token = NULL;
 	ft_bzero(&machine.buf, BUF_SIZE);
-	tokens = NULL;
-	commands = ft_lstnew(&tokens);
-	if (line[0] == '.' && line[1] == '\0')
-		exit(EXIT_SUCCESS);
+	commands = NULL;
+	if (new_command(&commands) == ERROR)
+		err_bis(MALLOC_ERR);
 	while (machine.state != END)
 	{
 		line = process[machine.state](line, &commands, &machine);
@@ -210,8 +229,8 @@ void	parse_input(char *line)
 		free(machine.cur_token->str);
 		free(machine.cur_token);
 	}
-	printf("################# lstsize = %zu\n", ft_lstsize(tokens));
-	print_tokens(tokens);
-	ft_lstclear(&tokens, free_token);
-	free(commands);
+
+	print_tokens(commands);
+	free_tokens(commands);
+	ft_lstclear(&commands, free_elem);
 }

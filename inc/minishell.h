@@ -62,6 +62,7 @@ enum e_state
 	DOLLAR,
 	SPACE,
 	ANGLE_BRACKET,
+	SEMICOLON,
 	//METACHAR,
 	ERR,
 	END,
@@ -118,7 +119,9 @@ typedef struct		s_state_machine
 
 void		free_elem(void *content); // temp
 void		free_token(void *content); // temp
+void		free_tokens(t_list *commands); // temp
 void		print_tokens(t_list *tokens); // temp
+int		new_command(t_list **commands);
 int		add_variable(t_list **variables, size_t start, size_t end);
 char	*parse_variable(char *line, t_state_machine *machine);
 int		link_token(t_list **tokens, t_state_machine *machine);

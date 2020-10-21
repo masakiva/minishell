@@ -16,35 +16,67 @@ void		free_token(void *content)
 	free(content);
 }
 
-void	print_tokens(t_list *tokens)
+void		free_tokens(t_list *commands)
+{
+	while (commands != NULL)
+	{
+		ft_lstclear((t_list **)&commands->content, free_token);
+		commands = commands->next;
+	}
+}
+
+void	print_tokens(t_list *commands)
 {
 	size_t		i;
+	size_t		j;
+	t_list		*tokens;
 	t_token		*token;
 	t_list		*vars;
 	t_variable	*var;
 
-	i = 0;
-	while (tokens != NULL)
+	j = 0;
+	while (commands != NULL)
 	{
-		token = (t_token *)tokens->content;
-		printf("%zu = %s\n", i, token->str);
-		if (token->vars != NULL)
+		tokens = commands->content;
+		printf("################# command %zu: %zu tokens\n", j, ft_lstsize(tokens));
+		i = 0;
+		while (tokens != NULL)
 		{
-			vars = token->vars;
-			while (vars != NULL)
+			token = (t_token *)tokens->content;
+			printf("%zu = %s\n", i, token->str);
+			if (token->vars != NULL)
 			{
-				var = vars->content;
-				printf("...var starts at %zu ('%c') and ends at %zu ('%c')\n",
-						var->start, token->str[var->start],
-						var->end, token->str[var->end]);
-				vars = vars->next;
+				vars = token->vars;
+				while (vars != NULL)
+				{
+					var = vars->content;
+					printf("...var starts at %zu ('%c') and ends at %zu ('%c')\n",
+							var->start, token->str[var->start],
+							var->end, token->str[var->end]);
+					vars = vars->next;
+				}
 			}
+			if (token->redir > 0)
+				printf("...redir %d\n", token->redir);
+			tokens = tokens->next;
+			i++;
 		}
-		if (token->redir > 0)
-			printf("...redir %d\n", token->redir);
-		tokens = tokens->next;
-		i++;
+		commands = commands->next;
+		j++;
 	}
+	printf("\n");
+}
+
+int		new_command(t_list **commands)
+{
+	t_list		*link;
+
+	link = ft_lstnew(NULL);
+	if (link == NULL)
+		return (ERROR);
+	else
+		ft_lstadd_back(commands, link);
+	return (SUCCESS);
 }
 
 int		add_variable(t_list **variables, size_t start, size_t end)
@@ -79,7 +111,7 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	}
 	else
 	{
-		while (ft_isalnum(*line))
+		while (ft_isalnum(*line) || *line == '_')
 		{
 			add_to_buf(*line, machine);
 			var_len++;
