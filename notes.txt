@@ -1,5 +1,8 @@
 https://brennan.io/2015/01/16/write-a-shell-in-c/
 
+Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
+man bash https://www.gnu.org/software/bash/manual/html_node/index.html
+
 man bash -> QUOTING
 	non-quoted \ : écrit littéralement le caractère qui suit, à l’exception de <newline>
 	'' : - écrit littéralement ce qui est entre single quotes

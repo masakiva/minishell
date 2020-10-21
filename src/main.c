@@ -47,26 +47,26 @@ static int			get_input(t_all *all)
 	char	*line;
 
 	ret = 1;
-	signal(SIGINT, sig_int);
-	signal(SIGQUIT, sig_kill);
+//	signal(SIGINT, sig_int);
+//	signal(SIGQUIT, sig_kill);
 	ft_putstr_fd(PROMPT, all->fd[1]); // err
 	ret = get_next_line(all->fd[0], &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
-	if (line[0] == '\0')
-	{
-		ft_putstr_fd("\n", 1);
-	}
-//	parse_input(line);;
-	all->current = ft_split(line, ' ');
+//	if (line[0] == '\0')
+//	{
+//		ft_putstr_fd("\n", 1);
+//	}
+	parse_input(line);;
+//	all->current = ft_split(line, ' ');
 	free(line);
 //	if (all->current == NULL)
 //		return (MALLOC_ERR);
-	all->command = get_command_code(all->current[0]);
-	if (ret == 1)
+//	all->command = get_command_code(all->current[0]);
+//	if (ret == 1)
 		return (SUCCESS);
-	else
-		return (CLEAN_EXIT);
+//	else
+//		return (CLEAN_EXIT);
 }
 
 static int			main_loop(t_all *all)
@@ -75,8 +75,8 @@ static int			main_loop(t_all *all)
 
 	if ((ret = get_input(all)) != SUCCESS)
 		return (ret);
-	if ((ret = launch_command(all)) != SUCCESS)
-		return (ret);
+//	if ((ret = launch_command(all)) != SUCCESS)
+//		return (ret);
 	return (ret);
 }
 
