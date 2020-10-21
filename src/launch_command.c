@@ -154,19 +154,19 @@ static int	launch_exit(t_all *all)
 static int	launch_ext(t_all *all)
 {
 	pid_t	pid;
-	char	*ext;
+	char	*cmd;
 	char	**path;
 
 	(void)all;
-	ext = get_var_content(all->env, "PATH");
-	path = ft_split(ext, ':');
+	cmd = get_var_content(all->env, "PATH");
+	path = ft_split(cmd, ':');
 	ft_printarray_fd(path, all->fd[1]);
 	pid = fork();
 	if (pid == 0)
 	{
-	//	ext = ft_strjoin("/bin/", all->current[0]);
-	//	execve(ext, &all->current[1], all->env);
-		printf("%s\n", ext);
+	//	cmd = ft_strjoin("/bin/", all->current[0]);
+	//	execve(cmd, &all->current[1], all->env);
+		printf("%s\n", cmd);
 	}
 	else
 		wait(NULL);

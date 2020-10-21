@@ -49,14 +49,15 @@ static int			get_input(t_all *all)
 	ret = 1;
 //	signal(SIGINT, sig_int);
 //	signal(SIGQUIT, sig_kill);
-	ft_putstr_fd(PROMPT, all->fd[1]); // err
-	ret = get_next_line(all->fd[0], &line);
+	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
+	ret = get_next_line(STDIN_FILENO, &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
 //	if (line[0] == '\0')
 //	{
 //		ft_putstr_fd("\n", 1);
 //	}
+	(void)all;
 	parse_input(line);;
 //	all->current = ft_split(line, ' ');
 	free(line);

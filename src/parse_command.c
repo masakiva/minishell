@@ -35,6 +35,8 @@ char	*space(char *line, t_list **commands, t_state_machine *machine)
 		machine->state = ANGLE_BRACKET;
 	else if (*line == ';')
 		machine->state = SEMICOLON;
+	else if (*line == '|')
+		machine->state = PIPE;
 	else
 		machine->state = LETTER;
 	return (line);
@@ -150,11 +152,21 @@ char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
+char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
+{
+	((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
+	if (new_command(commands) == ERROR)
+		err_bis(MALLOC_ERR);
+	line++;
+	machine->state = SPACE;
+	return (line);
+}
+
 char	*letter(char *line, t_list **commands, t_state_machine *machine)
 {
 	t_list		**tokens;
 
-	tokens = (t_list **)&(ft_lstlast(*commands))->content;
+	tokens =(t_list **)&((t_command *)(ft_lstlast(*commands))->content)->tokens;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
 	else if (*line == '>' || *line == '<')
@@ -179,6 +191,12 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 			err_bis(MALLOC_ERR);
 		machine->state = SEMICOLON;
 	}
+	else if (*line == '|')
+	{
+		if (link_token(tokens, machine) == ERROR)
+			err_bis(MALLOC_ERR);
+		machine->state = PIPE;
+	}
 	else if (*line == '\0' || ft_isspace(*line))
 	{
 		if (link_token(tokens, machine) == ERROR)
@@ -199,12 +217,10 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
-
-
 void	parse_input(char *line)
 {
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
-		dollar, space, angle_bracket, semicolon, error};
+		dollar, space, angle_bracket, semicolon, pipe_, error};
 	t_state_machine		machine;
 	t_list				*commands;
 
@@ -231,6 +247,6 @@ void	parse_input(char *line)
 	}
 
 	print_tokens(commands);
-	free_tokens(commands);
-	ft_lstclear(&commands, free_elem);
+	//free_tokens(commands);
+	//ft_lstclear(&commands, free_elem);
 }

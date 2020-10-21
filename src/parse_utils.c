@@ -37,8 +37,10 @@ void	print_tokens(t_list *commands)
 	j = 0;
 	while (commands != NULL)
 	{
-		tokens = commands->content;
+		tokens = ((t_command *)commands->content)->tokens;
 		printf("################# command %zu: %zu tokens\n", j, ft_lstsize(tokens));
+		if (((t_command *)commands->content)->pipe_flag == TRUE)
+			printf("PIPE FLAG\n");
 		i = 0;
 		while (tokens != NULL)
 		{
@@ -69,9 +71,15 @@ void	print_tokens(t_list *commands)
 
 int		new_command(t_list **commands)
 {
+	t_command	*command;
 	t_list		*link;
 
-	link = ft_lstnew(NULL);
+	command = (t_command *)malloc(sizeof(t_command));
+	if (command == NULL)
+		return (ERROR);
+	command->tokens = NULL;
+	command->pipe_flag = FALSE;
+	link = ft_lstnew(command);
 	if (link == NULL)
 		return (ERROR);
 	else

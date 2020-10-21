@@ -63,6 +63,7 @@ enum e_state
 	SPACE,
 	ANGLE_BRACKET,
 	SEMICOLON,
+	PIPE,
 	//METACHAR,
 	ERR,
 	END,
@@ -100,10 +101,13 @@ typedef struct		s_token
 	uint8_t			pad[4];
 }					t_token;
 
+# define	TRUE	1
+# define	FALSE	0
 typedef struct		s_command
 {
 	t_list	*tokens;
 	t_byte	pipe_flag;
+	uint8_t	pad[7];
 }					t_command;
 
 # define BUF_SIZE	4096
@@ -146,11 +150,13 @@ enum		e_command
 
 typedef struct		s_all
 {
-	int				fd[3];
-	enum e_command	command;
+	int				fd[3]; // a laisser ici?
+	enum e_command	command; // a retirer
+	int				cmd_ret;
+	uint8_t			pad[4];
 	char			**env;
-	t_list			*stack;
-	char			**current;
+	t_list			**commands;
+	char			**current; // a retirer
 }					t_all;
 
 typedef int			(*t_func)(t_all *all);
