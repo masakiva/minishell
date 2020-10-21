@@ -1,3 +1,7 @@
+trop bizarre la len d'un token ne peut pas etre superieure a 4095
+
+
+
 https://brennan.io/2015/01/16/write-a-shell-in-c/
 
 Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html

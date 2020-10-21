@@ -75,8 +75,8 @@ enum e_parsing_error
 	SQUOTE_MISSING,
 	DQUOTE_MISSING,
 	ESCAPE_NL,
-	REDIR_TOKEN,
-	REDIR_PATH,
+	REDIR_PATH_INVALID,
+	REDIR_PATH_MISSING,
 	NB_PARSING_ERRORS
 };
 
@@ -111,7 +111,7 @@ typedef struct		s_command
 	uint8_t	pad[7];
 }					t_command;
 
-# define BUF_SIZE	4096
+# define BUF_SIZE	16
 
 typedef struct		s_state_machine
 {
@@ -122,10 +122,9 @@ typedef struct		s_state_machine
 	t_token					*cur_token;
 }							t_state_machine;
 
-void		free_elem(void *content); // temp
-void		free_token(void *content); // temp
-void		free_tokens(t_list *commands); // temp
 void		print_tokens(t_list *tokens); // temp
+void	free_token(void *content);
+void	free_commands(t_list **commands);
 int		new_command(t_list **commands);
 int		add_variable(t_list **variables, size_t start, size_t end);
 char	*parse_variable(char *line, t_state_machine *machine);

@@ -9,18 +9,18 @@ char	*error(char *line, t_list **commands, t_state_machine *machine)
 	static char		*err_msg[NB_PARSING_ERRORS] = {
 		"No matching single quote",
 		"No matching double quote",
-		"Multiline inputs are currently not supported", // mais en fait si je pense
-		"Token after redirection operator invalid",
+		"Multiline inputs are currently not supported",
+		"Redirection path invalid",
 		"No redirection path specified"};
-	(void)commands;
+
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);// ou all->fd[2]?
+	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
-//	if (machine->cur_token != NULL)
-//	{
-//		free(machine->cur_token->str);
-//		free(machine->cur_token);
-//	}
+	if (machine->cur_token != NULL)
+	{
+		free_token(machine->cur_token);
+		free_commands(commands);
+	}
 	machine->state = END;
 	return (line);
 }
@@ -68,6 +68,8 @@ char	*dollar(char *line, t_list **commands, t_state_machine *machine)
 	else if (*line == '?' || ft_isalnum(*line) || *line == '_')
 	{
 		line = parse_variable(line, machine);
+		if (line == NULL)
+			return (NULL);
 		machine->state = LETTER;
 	}
 	else
@@ -91,7 +93,11 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 		{
 			line++;
 			if (*line == '?' || ft_isalnum(*line) || *line == '_')
+			{
 				line = parse_variable(line, machine);
+				if (line == NULL)
+					return (NULL);
+			}
 			else
 				add_to_buf('$', machine);
 		}
@@ -125,7 +131,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 	if (machine->cur_token->redir != NO_REDIR)
 	{
 		machine->state = ERR;
-		machine->error = REDIR_TOKEN;
+		machine->error = REDIR_PATH_INVALID;
 	}
 	else
 	{
@@ -167,7 +173,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 {
 	t_list		**tokens;
 
-	tokens =(t_list **)&((t_command *)(ft_lstlast(*commands))->content)->tokens;
+	tokens = (t_list **)&((t_command *)(ft_lstlast(*commands))->content)->tokens;
 	if (*line == '"' || *line == '\'')
 		machine->state = QUOTE;
 	else if (*line == '>' || *line == '<')
@@ -223,10 +229,10 @@ t_list	*parse_input(char *line)
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
 		dollar, space, angle_bracket, semicolon, pipe_, error};
 	t_state_machine		machine;
-	t_list				*commands;
+	t_list				*commands; // a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token?
 
-	if (line[0] == '.' && line[1] == '\0')
-		exit(EXIT_SUCCESS);
+	if (line[0] == '.' && line[1] == '\0')// temp
+		exit(EXIT_SUCCESS);// temp
 	errno = 0;
 	machine.state = SPACE;
 	machine.len = 0;
@@ -240,20 +246,15 @@ t_list	*parse_input(char *line)
 		line = process[machine.state](line, &commands, &machine);
 		if (line == NULL)
 		{
-		//	free_tokens(commands);
+			free_commands(&commands);
 			return (NULL);
 		}
 	}
 	if (machine.cur_token != NULL && machine.cur_token->redir != NO_REDIR)
 	{
-		machine.error = REDIR_PATH;
+		machine.error = REDIR_PATH_MISSING;
 		error(line, &commands, &machine);
-		free(machine.cur_token->str);
-		free(machine.cur_token);
 	}
-
-	//print_tokens(commands);
-	//free_tokens(commands);
-	//ft_lstclear(&commands, free_elem);
+	print_tokens(commands);
 	return (commands);
 }

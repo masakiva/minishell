@@ -31,23 +31,23 @@ static int			get_input(t_all *all)
 	char	*line;
 
 	ret = 1;
-	signal_handler();
+//	signal_handler();
 	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
-	if (line == NULL)
-		return (MALLOC_ERR);
-	if (line[0] == '\0')
-	{
-		ft_putstr_fd("\n", 1);
-	}
-	(void)all;
+	if (ret == ERROR)
+		return (MALLOC_ERR); // or read(2) error
+//	if (line[0] == '\0')
+//		ft_putstr_fd("\n", 1);//?
 	all->commands = parse_input(line);
-	parse_commands(&all->commands);
+	if (all->commands == NULL)
+		return (MALLOC_ERR);
 	free(line);
-	if (ret == 1)
+	//parse_commands(&all->commands);
+	free_commands(&all->commands);
+//	if (ret == 1)
 		return (SUCCESS);
-	else
-		return (CLEAN_EXIT);
+//	else
+//		return (CLEAN_EXIT);
 }
 
 static int			main_loop(t_all *all)

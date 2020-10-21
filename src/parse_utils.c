@@ -1,30 +1,6 @@
 #include "minishell.h"
 #include <stdlib.h>
 
-void		free_elem(void *content)
-{
-	free(content);
-}
-
-void		free_token(void *content)
-{
-	t_token		*token;
-
-	token = (t_token *)content;
-	free(token->str);
-	ft_lstclear(&token->vars, free_elem);
-	free(content);
-}
-
-void		free_tokens(t_list *commands)
-{
-	while (commands != NULL)
-	{
-		ft_lstclear((t_list **)&commands->content, free_token);
-		commands = commands->next;
-	}
-}
-
 void	print_tokens(t_list *commands)
 {
 	size_t		i;
@@ -46,6 +22,7 @@ void	print_tokens(t_list *commands)
 		{
 			token = (t_token *)tokens->content;
 			printf("%zu = %s\n", i, token->str);
+			printf("token len = %zu\n", ft_strlen(token->str));
 			if (token->vars != NULL)
 			{
 				vars = token->vars;
@@ -69,6 +46,35 @@ void	print_tokens(t_list *commands)
 	printf("\n");
 }
 
+void		free_content(void *content)
+{
+	free(content);
+}
+
+void		free_token(void *content)
+{
+	t_token		*token;
+
+	token = (t_token *)content;
+	free(token->str);
+	ft_lstclear(&token->vars, free_content);
+	free(token);
+}
+
+void		free_command(void *content)
+{
+	t_command	*command;
+
+	command = (t_command *)content;
+	ft_lstclear(&command->tokens, free_token);
+	free(command);
+}
+
+void		free_commands(t_list **commands)
+{
+	ft_lstclear(commands, free_command);
+}
+
 int		new_command(t_list **commands)
 {
 	t_command	*command;
@@ -80,10 +86,13 @@ int		new_command(t_list **commands)
 	command->tokens = NULL;
 	command->pipe_flag = FALSE;
 	link = ft_lstnew(command);
-	if (link == NULL)
-		return (ERROR);
-	else
+	if (link != NULL)
 		ft_lstadd_back(commands, link);
+	else
+	{
+		free(command);
+		return (ERROR);
+	}
 	return (SUCCESS);
 }
 
@@ -101,7 +110,10 @@ int		add_variable(t_list **variables, size_t start, size_t end)
 	if (link != NULL)
 		ft_lstadd_back(variables, link);
 	else
+	{
+		free(variable);
 		return (ERROR);
+	}
 	return (SUCCESS);
 }
 
@@ -127,15 +139,19 @@ char	*parse_variable(char *line, t_state_machine *machine)
 		}
 	}
 	if (reset_buf(machine) == ERROR)
-		err_bis(MALLOC_ERR);
+		return (NULL);
 	var_end = ft_strlen(machine->cur_token->str) - 1;
-	add_variable(&machine->cur_token->vars, var_end - var_len + 1, var_end);
+	if (add_variable(&machine->cur_token->vars, var_end - var_len + 1, var_end) == ERROR)
+	{
+		free_token(machine->cur_token);
+		return (NULL);
+	}
 	return (line);
 }
 
 int		link_token(t_list **tokens, t_state_machine *machine)
 {
-	t_list	*link; // "maillon"
+	t_list	*link;
 
 	if (reset_buf(machine) == ERROR) // laisser en dehors de la func?
 		return (ERROR);
@@ -143,12 +159,15 @@ int		link_token(t_list **tokens, t_state_machine *machine)
 	if (link != NULL)
 		ft_lstadd_back(tokens, link);
 	else
+	{
+		free_token(machine->cur_token);
 		return (ERROR);
+	}
 	machine->cur_token = NULL;
 	return (SUCCESS);
 }
 
-int		reset_buf(t_state_machine *machine) // ou return res
+int		reset_buf(t_state_machine *machine)
 {
 	char	*res;
 
@@ -166,7 +185,11 @@ int		reset_buf(t_state_machine *machine) // ou return res
 		free(machine->cur_token->str);
 	}
 	if (res == NULL)
+	{
+		ft_lstclear(&machine->cur_token->vars, free_content);
+		free(machine->cur_token);
 		return (ERROR);
+	}
 	machine->cur_token->str = res;
 	if (machine->len > 0)
 	{
@@ -178,7 +201,7 @@ int		reset_buf(t_state_machine *machine) // ou return res
 
 int		add_to_buf(char c, t_state_machine *machine)
 {
-	if (machine->len == BUF_SIZE) // ou BUF_SIZE - 1
+	if (machine->len == BUF_SIZE - 1)
 	{
 		if (reset_buf(machine) == ERROR)
 			return (ERROR);
