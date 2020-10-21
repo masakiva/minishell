@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/10/19 13:51:32 by abenoit          ###   ########.fr        #
+#    Updated: 2020/10/21 17:46:06 by abenoit          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ SRCS_CUSTOM	+= ft_get_var_pos.c
 SRCS_CUSTOM	+= ft_printarray_fd.c
 SRCS_CUSTOM	+= ft_arraylen.c
 SRCS_CUSTOM	+= ft_free_str_array.c
+SRCS_CUSTOM	+= ft_lstpop.c
 
 VPATH		= part_1:part_2:bonus:custom
 

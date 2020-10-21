@@ -76,6 +76,7 @@ enum e_parsing_error
 	DQUOTE_MISSING,
 	ESCAPE_NL,
 	REDIR_TOKEN,
+	REDIR_PATH,
 	NB_PARSING_ERRORS
 };
 
@@ -132,11 +133,13 @@ int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
 int		add_to_buf(char c, t_state_machine *machine);
 
-void	parse_input(char *line);
+t_list	*parse_input(char *line);
+
+int		parse_commands(t_list **commands);
 
 typedef char	*(*t_function)(char *, t_list **, t_state_machine *);
 
-enum		e_command
+typedef enum		e_cmd_code
 {
 	ECHO,
 	CD,
@@ -146,18 +149,26 @@ enum		e_command
 	ENV,
 	EXIT,
 	ELSE
-};
+}					t_cmd_code;
 
 typedef struct		s_all
 {
-	int				fd[3]; // a laisser ici?
-	enum e_command	command; // a retirer
+	int				fd[3]; // a laisser ici
+	t_cmd_code		command; // a retirer
 	int				cmd_ret;
 	uint8_t			pad[4];
 	char			**env;
-	t_list			**commands;
+	t_list			*commands;
 	char			**current; // a retirer
 }					t_all;
+
+
+typedef struct		s_exe
+{
+	t_cmd_code		cmd_code;
+	uint8_t			pad[4];
+	char**			args;
+}					t_exe;
 
 typedef int			(*t_func)(t_all *all);
 

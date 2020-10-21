@@ -10,7 +10,8 @@ char	*error(char *line, t_list **commands, t_state_machine *machine)
 		"No matching single quote",
 		"No matching double quote",
 		"Multiline inputs are currently not supported", // mais en fait si je pense
-		"Token after redirection operator invalid"};
+		"Token after redirection operator invalid",
+		"No redirection path specified"};
 	(void)commands;
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);// ou all->fd[2]?
@@ -120,7 +121,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 {
 	(void)commands;
 	if (reset_buf(machine) == ERROR)
-		err_bis(MALLOC_ERR);
+		return(NULL);
 	if (machine->cur_token->redir != NO_REDIR)
 	{
 		machine->state = ERR;
@@ -146,7 +147,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 {
 	if (new_command(commands) == ERROR)
-		err_bis(MALLOC_ERR);
+		return(NULL);
 	line++;
 	machine->state = SPACE;
 	return (line);
@@ -156,7 +157,7 @@ char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
 {
 	((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
 	if (new_command(commands) == ERROR)
-		err_bis(MALLOC_ERR);
+		return (NULL);
 	line++;
 	machine->state = SPACE;
 	return (line);
@@ -172,7 +173,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	else if (*line == '>' || *line == '<')
 	{
 		if (link_token(tokens, machine) == ERROR)
-			err_bis(MALLOC_ERR);
+			return (NULL);
 		machine->state = ANGLE_BRACKET;
 	}
 	else if (*line == '$')
@@ -188,19 +189,19 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	else if (*line == ';')
 	{
 		if (link_token(tokens, machine) == ERROR)
-			err_bis(MALLOC_ERR);
+			return (NULL);
 		machine->state = SEMICOLON;
 	}
 	else if (*line == '|')
 	{
 		if (link_token(tokens, machine) == ERROR)
-			err_bis(MALLOC_ERR);
+			return (NULL);
 		machine->state = PIPE;
 	}
 	else if (*line == '\0' || ft_isspace(*line))
 	{
 		if (link_token(tokens, machine) == ERROR)
-			err_bis(MALLOC_ERR);
+			return (NULL);
 		if (*line == '\0')
 			machine->state = END;
 		else
@@ -217,7 +218,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
-void	parse_input(char *line)
+t_list	*parse_input(char *line)
 {
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
 		dollar, space, angle_bracket, semicolon, pipe_, error};
@@ -233,20 +234,26 @@ void	parse_input(char *line)
 	ft_bzero(&machine.buf, BUF_SIZE);
 	commands = NULL;
 	if (new_command(&commands) == ERROR)
-		err_bis(MALLOC_ERR);
+		return (NULL);
 	while (machine.state != END)
 	{
 		line = process[machine.state](line, &commands, &machine);
-		//printf("current = %c ; state = %d\n", *line, machine.state);
+		if (line == NULL)
+		{
+		//	free_tokens(commands);
+			return (NULL);
+		}
 	}
 	if (machine.cur_token != NULL && machine.cur_token->redir != NO_REDIR)
 	{
-		printf("ERROR NO REDIR PATH\n");
+		machine.error = REDIR_PATH;
+		error(line, &commands, &machine);
 		free(machine.cur_token->str);
 		free(machine.cur_token);
 	}
 
-	print_tokens(commands);
+	//print_tokens(commands);
 	//free_tokens(commands);
 	//ft_lstclear(&commands, free_elem);
+	return (commands);
 }

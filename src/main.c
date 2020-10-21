@@ -3,28 +3,6 @@
 #include <stdlib.h>
 #include <signal.h>
 
-/*static*/ enum e_command	get_command_code(char *arg)
-{
-	char	**command;
-	int		i;
-
-	i = 0;
-	command = ft_split(BUILTINS, '/');
-	if (command == NULL)
-		return (MALLOC_ERR);
-	while (command[i] != NULL)
-	{
-		if (ft_strcmp(arg, command[i]) == 0)
-		{
-			free_str_array(&command);
-			return (i);
-		}
-		i++;
-	}
-	free_str_array(&command);
-	return (ELSE);
-}
-
 void	sig_int(int signum)
 {
 	(void)signum;
@@ -41,33 +19,35 @@ void	sig_kill(int signum)
 	exit(0);
 }
 
+void				signal_handler(void)
+{
+	signal(SIGINT, sig_int);
+	signal(SIGQUIT, sig_kill);
+}
+
 static int			get_input(t_all *all)
 {
 	int		ret;
 	char	*line;
 
 	ret = 1;
-//	signal(SIGINT, sig_int);
-//	signal(SIGQUIT, sig_kill);
+	signal_handler();
 	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
 	if (line == NULL)
 		return (MALLOC_ERR);
-//	if (line[0] == '\0')
-//	{
-//		ft_putstr_fd("\n", 1);
-//	}
+	if (line[0] == '\0')
+	{
+		ft_putstr_fd("\n", 1);
+	}
 	(void)all;
-	parse_input(line);;
-//	all->current = ft_split(line, ' ');
+	all->commands = parse_input(line);
+	parse_commands(&all->commands);
 	free(line);
-//	if (all->current == NULL)
-//		return (MALLOC_ERR);
-//	all->command = get_command_code(all->current[0]);
-//	if (ret == 1)
+	if (ret == 1)
 		return (SUCCESS);
-//	else
-//		return (CLEAN_EXIT);
+	else
+		return (CLEAN_EXIT);
 }
 
 static int			main_loop(t_all *all)
@@ -76,8 +56,6 @@ static int			main_loop(t_all *all)
 
 	if ((ret = get_input(all)) != SUCCESS)
 		return (ret);
-//	if ((ret = launch_command(all)) != SUCCESS)
-//		return (ret);
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/19 13:53:10 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/21 17:41:19 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,7 @@ ssize_t			get_var_pos(char **array, char *name);
 void			ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char ***ptr);
+
+void			*ft_lstpop(t_list **lst);
 
 #endif

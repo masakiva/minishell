@@ -8,7 +8,8 @@ SRC_NAME	+= ft_exit.c
 #SRC_NAME	+= ft_split.c
 SRC_NAME	+= rec_gnl.c
 SRC_NAME	+= prm_init.c
-SRC_NAME	+= parse_command.c
+SRC_NAME	+= parse_input.c
+SRC_NAME	+= parse_commands.c
 SRC_NAME	+= parse_utils.c
 
 SRC			= $(addprefix $(SRC_DIR), $(SRC_NAME))
