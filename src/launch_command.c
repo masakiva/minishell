@@ -42,8 +42,6 @@ static int	launch_echo(t_exe *exe)
 	return (SUCCESS);
 }
 
-//# define HOME_DIR	"Users"
-//# define USER		"mvidal-a" // "abenoit"
 static int	launch_cd(t_exe *exe)
 {
 	char	*path;
@@ -51,7 +49,9 @@ static int	launch_cd(t_exe *exe)
 	if (exe->args[1] == NULL)
 		path = get_var_content(*(exe->env), "HOME");
 	else
-		path = exe->args[1];
+	{
+		path = ft_strdup(exe->args[1]);
+	}
 	if (chdir(path) != SUCCESS)
 	{
 		perror("cd");
