@@ -255,6 +255,6 @@ t_list	*parse_input(char *line)
 		machine.error = REDIR_PATH_MISSING;
 		error(line, &commands, &machine);
 	}
-	print_tokens(commands);
+//	print_tokens(commands);
 	return (commands);
 }

@@ -12,46 +12,46 @@
 // >>> echo
 // error management: stop quand un write fail, ou alors on fait un seul write pour tout
 // no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
-static int	launch_echo(t_all *all)
+static int	launch_echo(t_exe *exe)
 {
 	int		i;
 	int		n_option;
 
 	n_option = DISABLED;
-	if (all->current[1] != NULL)
+	if (exe->args[1] != NULL)
 	{
-		n_option = ft_strcmp(all->current[1], "-n");
+		n_option = ft_strcmp(exe->args[1], "-n");
 		if (n_option != ENABLED)
 		{
-			ft_putstr_fd(all->current[1], all->fd[1]);
-			if (all->current[2] != NULL)
-				ft_putchar_fd(' ', all->fd[1]);
+			ft_putstr_fd(exe->args[1], STDOUT_FILENO);
+			if (exe->args[2] != NULL)
+				ft_putchar_fd(' ', STDOUT_FILENO);
 		}
-		if (all->current[2] != NULL)
-			ft_putstr_fd(all->current[2], all->fd[1]);
+		if (exe->args[2] != NULL)
+			ft_putstr_fd(exe->args[2], STDOUT_FILENO);
 		i = 3;
-		while (all->current[i] != NULL)
+		while (exe->args[i] != NULL)
 		{
-			ft_putchar_fd(' ', all->fd[1]);
-			ft_putstr_fd(all->current[i], all->fd[1]);
+			ft_putchar_fd(' ', STDOUT_FILENO);
+			ft_putstr_fd(exe->args[i], STDOUT_FILENO);
 			i++;
 		}
 	}
-	if (n_option != ENABLED || all->current[1] == NULL)
-		ft_putchar_fd('\n', all->fd[1]);
+	if (n_option != ENABLED || exe->args[1] == NULL)
+		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (SUCCESS);
 }
 
 //# define HOME_DIR	"Users"
 //# define USER		"mvidal-a" // "abenoit"
-static int	launch_cd(t_all *all)
+static int	launch_cd(t_exe *exe)
 {
 	char	*path;
 
-	if (all->current[1] == NULL)
-		path = get_var_content(all->env, "HOME");
+	if (exe->args[1] == NULL)
+		path = get_var_content(*(exe->env), "HOME");
 	else
-		path = all->current[1];
+		path = exe->args[1];
 	if (chdir(path) != SUCCESS)
 	{
 		perror("cd");
@@ -62,48 +62,48 @@ static int	launch_cd(t_all *all)
 	return (SUCCESS);
 }
 
-static int	launch_pwd(t_all *all)
+static int	launch_pwd(t_exe *exe)
 {
 	char	*buf;
 
-	(void)all;
+	(void)exe;
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
 	{
 		free(buf);
 		return (ERROR);
 	}
-	ft_putstr_fd(buf, all->fd[1]);
-	ft_putchar_fd('\n', all->fd[1]);
+	ft_putstr_fd(buf, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	free(buf);
 	return (SUCCESS);
 }
 
-static int	launch_export(t_all *all)
+static int	launch_export(t_exe *exe)
 {
 	size_t	i;
 	size_t	size;
 	char	**new;
 	
-	if (ft_strchr(all->current[1], '=') == NULL)
+	if (ft_strchr(exe->args[1], '=') == NULL)
 		return (SUCCESS);
-	size = ft_arraylen(all->env);
+	size = ft_arraylen(*(exe->env));
 	if (!(new = malloc((size + 2) * sizeof(char*))))
 		return (MALLOC_ERR);
 	i = 0;
 	while (i < size)
 	{
-		new[i] = all->env[i];
+		new[i] = (*(exe->env))[i];
 		i++;
 	}
-	new[i] = ft_strdup(all->current[1]);
+	new[i] = ft_strdup(exe->args[1]);
 	new[i + 1] = NULL;
-	free(all->env);
-	all->env = new;
+	free(*(exe->env));
+	*(exe->env) = new;
 	return (SUCCESS);
 }
 
-static int	launch_unset(t_all *all)
+static int	launch_unset(t_exe *exe)
 {
 	ssize_t	i;
 	ssize_t	j;
@@ -111,61 +111,61 @@ static int	launch_unset(t_all *all)
 	ssize_t	pos;
 	char	**new;
 
-	size = ft_arraylen(all->env);
-	if ((pos = get_var_pos(all->env, all->current[1])) == -1)
+	size = ft_arraylen(*(exe->env));
+	if ((pos = get_var_pos(*(exe->env), exe->args[1])) == -1)
 		return (SUCCESS);
 	if (!(new = malloc((size) * sizeof(char*))))
 		return (MALLOC_ERR);
 	i = 0;
 	j = 0;
-	while (all->env[j])
+	while ((*(exe->env))[j])
 	{
 		if (j != pos)
 		{
-			new[i] = all->env[j];
+			new[i] = (*(exe->env))[j];
 		i++;
 		j++;
 		}
 		else
 		{
-			free(all->env[j]);
-			all->env[j] = NULL;
+			free((*(exe->env))[j]);
+			(*(exe->env))[j] = NULL;
 			j++;
 		}
 	}
 	new[i] = NULL;
-	free(all->env);
-	all->env = new;
+	free(*(exe->env));
+	*(exe->env) = new;
 	return (SUCCESS);
 }
 
-static int	launch_env(t_all *all)
+static int	launch_env(t_exe *exe)
 {
-	ft_printarray_fd(all->env, all->fd[1]);
+	ft_printarray_fd(*(exe->env), STDOUT_FILENO);
 	return (SUCCESS);
 }
 
-static int	launch_exit(t_all *all)
+static int	launch_exit(t_exe *exe)
 {
-	(void)all;
+	(void)exe;
 	return (CLEAN_EXIT);
 }
 
-static int	launch_ext(t_all *all)
+static int	launch_ext(t_exe *exe)
 {
 	pid_t	pid;
 	char	*cmd;
 	char	**path;
 
-	(void)all;
-	cmd = get_var_content(all->env, "PATH");
+	(void)exe;
+	cmd = get_var_content(*(exe->env), "PATH");
 	path = ft_split(cmd, ':');
-	ft_printarray_fd(path, all->fd[1]);
+	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
-	//	cmd = ft_strjoin("/bin/", all->current[0]);
-	//	execve(cmd, &all->current[1], all->env);
+	//	cmd = ft_strjoin("/bin/", exe->args[0]);
+	//	execve(cmd, &exe->args[1], *(exe->env));
 		printf("%s\n", cmd);
 	}
 	else
@@ -173,7 +173,7 @@ static int	launch_ext(t_all *all)
 	return (SUCCESS);
 }
 
-int		launch_command(t_all *all)
+int		launch_command(t_exe *exe)
 {
 	int				i;
 	int				ret;
@@ -182,8 +182,8 @@ int		launch_command(t_all *all)
 								launch_exit, launch_ext};
 
 	i = 0;
-	if ((ret = command[all->command](all)) == ERROR)
-		ft_putstr_fd("ERROR\n", all->fd[1]);
-	free_str_array(&all->current);
+	if ((ret = command[exe->cmd_code](exe)) == ERROR)
+		ft_putstr_fd("ERROR\n", 1);
+	free_str_array(&exe->args);
 	return (ret);
 }

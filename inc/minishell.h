@@ -134,7 +134,8 @@ int		add_to_buf(char c, t_state_machine *machine);
 
 t_list	*parse_input(char *line);
 
-int		parse_commands(t_list **commands);
+
+int		parse_commands(t_list **commands, char ***env);
 
 typedef char	*(*t_function)(char *, t_list **, t_state_machine *);
 
@@ -166,10 +167,11 @@ typedef struct		s_exe
 {
 	t_cmd_code		cmd_code;
 	uint8_t			pad[4];
-	char**			args;
+	char			**args;
+	char			***env;
 }					t_exe;
 
-typedef int			(*t_func)(t_all *all);
+typedef int			(*t_func)(t_exe *exe);
 
 /*
 **	**********************************
@@ -180,7 +182,7 @@ typedef int			(*t_func)(t_all *all);
 /*
 **	launch_command.c
 */
-int					launch_command(t_all *all);
+int					launch_command(t_exe *exe);
 
 /*
 **	all_init.c

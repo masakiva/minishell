@@ -42,7 +42,7 @@ static int			get_input(t_all *all)
 	if (all->commands == NULL)
 		return (MALLOC_ERR);
 	free(line);
-	//parse_commands(&all->commands);
+	parse_commands(&all->commands, &all->env);
 	free_commands(&all->commands);
 //	if (ret == 1)
 		return (SUCCESS);
