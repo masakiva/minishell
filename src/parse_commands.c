@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 17:10:03 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/22 17:54:57 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/27 20:01:31 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,15 @@ size_t	resize_token(char *str, t_list *lst)
 
 char	*remake_and_subs(t_token *token, char **env)
 {
-	char	**buf;
-	char	*ret;
-	size_t	size;
-	size_t	i;
-	size_t	j;
-	size_t	k;
+	char		**buf;
+	char		*ret;
+	size_t		size;
+	t_list		*ptr;
+	t_variable	*var;
+	size_t		i;
+	size_t		j;
+	size_t		k;
+	size_t		l;
 
 	size = resize_token(token->str, token->vars);
 	buf = extract_vars(token->str, token->vars, env);
@@ -113,18 +116,43 @@ char	*remake_and_subs(t_token *token, char **env)
 	while (buf[k] != NULL)
 	{
 		size += ft_strlen(buf[k]);
-		i++;
+		k++;
 	}
 	if (!(ret = malloc((size + 1) * sizeof(char))))
 		return (NULL);
 	i = 0;
 	j = 0;
-	k = 0;
+	l = 0;
+	ptr = token->vars;
 	while (i < size)
 	{
-		ret[i] = 
+		if (ptr != NULL) 
+			var = ptr->content;
+		if (var != NULL && j == var->start)
+		{
+			k = 0;
+			if (buf[l] != NULL)
+			{
+				while (buf[l][k])
+				{
+					ret[i] = buf[l][k];
+					k++;
+					i++;
+				}
+			}
+			j = var->end;
+			ptr = ptr->next;
+			l++;
+		}
+		else
+		{
+			ret[i] = token->str[j];
+			i++;
+			j++;
+		}
 	}
-	ft_printarray_fd(buf, 1);
+	ret[i] = '\0';
+	return (ret);
 }
 
 int		parse_commands(t_list **commands, char ***env)
@@ -133,33 +161,34 @@ int		parse_commands(t_list **commands, char ***env)
 	t_list		*ptr;
 	t_token		*token;
 	t_exe		exe;
+	char		*str;
+	int			ret;
 	size_t		size;
-//	int			ret;
-//	size_t		i;
+	size_t		i;
 
-	cmd = ft_lstpop(commands);
-	ptr = cmd->tokens;
-	size = ft_lstsize(ptr);
-	exe.args = malloc((size + 1) * sizeof(char*));
-//	i = 0;
-	token = ft_lstpop(&ptr);
-	remake_and_subs(token, *env);
-//	while (ptr != NULL)
-//	{
-//		token = ft_lstpop(&ptr);
+  cmd = ft_lstpop(commands);
+  ptr = cmd->tokens;
+  size = ft_lstsize(ptr);
+  exe.args = malloc((size + 1) * sizeof(char*));
+	i = 0;
+	while (ptr != NULL)
+	{
+		token = ft_lstpop(&ptr);
+  		str = remake_and_subs(token, *env);
 //		 do checks here for pipes, redir, etc...
-//		remake_and_subs(token, *env);
-//		free(token->str);
-//		exe.args[i] = str;
-//		free(token);
-//		i++;
-//	}
-//	exe.args[i] = NULL;
+		remake_and_subs(token, *env);
+		free(token->str);
+		exe.args[i] = str;
+		free(token);
+		i++;
+	}
+	exe.args[i] = NULL;
+//	ft_printarray_fd(exe.args, 1);
 //	print_tokens(*commands);
 	exe.cmd_code = get_cmd_code(exe.args[0]);
-//	exe.env = &(*env);
-//	if ((ret = launch_command(&exe)) != SUCCESS)
-//		return (ret);
+	exe.env = &(*env);
+	if ((ret = launch_command(&exe)) != SUCCESS)
+		return (ret);
 //	ft_printarray_fd(exe.args, 1);
 	return (0);
 }

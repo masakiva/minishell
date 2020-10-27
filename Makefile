@@ -42,7 +42,7 @@ LDFLAGS		+= -L $(LIBFT_DIR)
 LDLIBS		+= -lft
 
 ifeq ($(d), 0)
-	CFLAGS	+= -Wpadded
+#	CFLAGS	+= -Wpadded
 	CFLAGS	+= -g3
 	CFLAGS	+= -fsanitize=address,undefined
 	LDFLAGS	+= -fsanitize=address,undefined
