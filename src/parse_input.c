@@ -169,6 +169,24 @@ char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
+char	*tilde(char *line, t_list **commands, t_state_machine *machine)
+{
+	(void)commands;
+	add_to_buf('~', machine);
+	if (reset_buf(machine) == ERROR)
+		return (NULL);
+	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|") != -1 || ft_isspace(*line) || *line == '\0'))
+	{
+		if (add_variable(&machine->cur_token->vars, 0, 1, 1) == ERROR)
+		{
+			free_token(machine->cur_token);
+			return (NULL);
+		}
+	}
+	machine->state = LETTER;
+	return (line);
+}
+
 char	*letter(char *line, t_list **commands, t_state_machine *machine)
 {
 	t_list		**tokens;
@@ -185,6 +203,11 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	else if (*line == '$')
 	{
 		machine->state = DOLLAR;
+		line++;
+	}
+	else if (*line == '~')
+	{
+		machine->state = TILDE;
 		line++;
 	}
 	else if (*line == '\\')
@@ -227,7 +250,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 t_list	*parse_input(char *line)
 {
 	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
-		dollar, space, angle_bracket, semicolon, pipe_, error};
+		dollar, tilde, space, angle_bracket, semicolon, pipe_, error};
 	t_state_machine		machine;
 	t_list				*commands; // a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token?
 

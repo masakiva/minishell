@@ -31,7 +31,7 @@ void	print_tokens(t_list *commands)
 					var = vars->content;
 					printf("...var starts at %zu ('%c') and ends at %zu ('%c')\n",
 							var->start, token->str[var->start],
-							var->end, token->str[var->end]);
+							var->start + var->len - 1, token->str[var->start + var->len - 1]);
 					vars = vars->next;
 				}
 			}
@@ -96,7 +96,7 @@ int		new_command(t_list **commands)
 	return (SUCCESS);
 }
 
-int		add_variable(t_list **variables, size_t start, size_t end)
+int		add_variable(t_list **variables, size_t start, size_t end, size_t len)
 {
 	t_list		*link;
 	t_variable	*variable;
@@ -105,6 +105,7 @@ int		add_variable(t_list **variables, size_t start, size_t end)
 	if (variable == NULL)
 		return (ERROR);
 	variable->start = start;
+	variable->len = len;
 	variable->end = end;
 	link = ft_lstnew(variable);
 	if (link != NULL)
@@ -119,6 +120,7 @@ int		add_variable(t_list **variables, size_t start, size_t end)
 
 char	*parse_variable(char *line, t_state_machine *machine)
 {
+	size_t		var_start;
 	size_t		var_len;
 	size_t		var_end;
 
@@ -140,8 +142,9 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	}
 	if (reset_buf(machine) == ERROR)
 		return (NULL);
+	var_start = ft_strlen(machine->cur_token->str) - var_len;
 	var_end = ft_strlen(machine->cur_token->str) - 1;
-	if (add_variable(&machine->cur_token->vars, var_end - var_len + 1, var_end) == ERROR)
+	if (add_variable(&machine->cur_token->vars, var_start, var_end, var_len) == ERROR)
 	{
 		free_token(machine->cur_token);
 		return (NULL);
