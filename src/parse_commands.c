@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 17:10:03 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/27 20:01:31 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/28 13:14:51 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ char	*remake_and_subs(t_token *token, char **env)
 		size += ft_strlen(buf[k]);
 		k++;
 	}
-	if (!(ret = malloc((size + 1) * sizeof(char))))
+	if (!(ret = malloc((size + 2) * sizeof(char))))
 		return (NULL);
 	i = 0;
 	j = 0;
@@ -166,10 +166,10 @@ int		parse_commands(t_list **commands, char ***env)
 	size_t		size;
 	size_t		i;
 
-  cmd = ft_lstpop(commands);
-  ptr = cmd->tokens;
-  size = ft_lstsize(ptr);
-  exe.args = malloc((size + 1) * sizeof(char*));
+	cmd = ft_lstpop(commands);
+	ptr = cmd->tokens;
+	size = ft_lstsize(ptr);
+	exe.args = malloc((size + 1) * sizeof(char*));
 	i = 0;
 	while (ptr != NULL)
 	{

@@ -18,18 +18,20 @@ static int	launch_echo(t_exe *exe)
 	int		n_option;
 
 	n_option = DISABLED;
-	if (exe->args[1] != NULL)
+	i = 1;
+	if (exe->args[i] != NULL)
 	{
-		n_option = ft_strcmp(exe->args[1], "-n");
+		n_option = ft_strcmp(exe->args[i], "-n");
 		if (n_option != ENABLED)
 		{
-			ft_putstr_fd(exe->args[1], STDOUT_FILENO);
-			if (exe->args[2] != NULL)
+			ft_putstr_fd(exe->args[i], STDOUT_FILENO);
+			i++;
+			if (exe->args[i] != NULL)
+			{
 				ft_putchar_fd(' ', STDOUT_FILENO);
+				i++;
+			}
 		}
-		if (exe->args[2] != NULL)
-			ft_putstr_fd(exe->args[2], STDOUT_FILENO);
-		i = 3;
 		while (exe->args[i] != NULL)
 		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
