@@ -153,22 +153,64 @@ static int	launch_exit(t_exe *exe)
 	return (CLEAN_EXIT);
 }
 
+#include <dirent.h>
+
+static int	search_path(DIR *dirp, char *name)
+{
+	struct dirent	*buf;
+
+	while ((buf = readdir(dirp)) != NULL)
+	{
+		if (ft_strcmp(buf->d_name, name) == 0)
+			return (SUCCESS);
+	}
+	return (ERROR);
+}
+
+int	search_exec(char **path, char *name)
+{
+	DIR				*dirp;
+	int				i;
+
+	i = 0;
+	while (path[i] != NULL)
+	{
+		if ((dirp = opendir(path[i])) != NULL)
+		{
+			if (search_path(dirp, name) == SUCCESS)
+			{
+				closedir(dirp);
+				return (i);
+			}
+			closedir(dirp);
+			i++;
+		}
+		else
+			i++;
+	}
+	closedir(dirp);
+	return (-1);
+}
+
 static int	launch_ext(t_exe *exe)
 {
 	pid_t	pid;
 	char	*cmd;
 	char	**path;
+	int		ref;
 
-	(void)exe;
 	cmd = get_var_content(*(exe->env), "PATH");
 	path = ft_split(cmd, ':');
-	ft_printarray_fd(path, STDOUT_FILENO);
+//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
-	//	cmd = ft_strjoin("/bin/", exe->args[0]);
-	//	execve(cmd, &exe->args[1], *(exe->env));
-		printf("%s\n", cmd);
+		ref = search_exec(path, exe->args[0]);
+		if (ref < 0)
+			return (ERROR);
+		cmd = ft_strjoin(path[ref], "/");
+		cmd = ft_strjoin(cmd, exe->args[0]);
+		execve(cmd, exe->args, *(exe->env));
 	}
 	else
 		wait(NULL);
