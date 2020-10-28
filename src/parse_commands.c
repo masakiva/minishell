@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 17:10:03 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/28 17:34:50 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/28 17:40:47 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,10 @@ char	**extract_vars(char *str, t_list *lst, char **env)
 	{
 		var = ptr->content;
 		buf = get_var(str, var->start, var->end);
-		ret[i] = get_var_content(env, buf);
+		if (*buf == '~')
+			ret[i] = get_var_content(env, "HOME");
+		else
+			ret[i] = get_var_content(env, buf);
 		if (ret[i] == NULL)
 			ret[i] = "";
 		i++;
@@ -120,7 +123,7 @@ char	*remake_and_subs(t_token *token, char **env)
 		size += ft_strlen(buf[k]);
 		k++;
 	}
-	if (!(ret = malloc((size + 2) * sizeof(char))))
+	if (!(ret = (char *)malloc((size + 2) * sizeof(char))))
 		return (NULL);
 	i = 0;
 	j = 0;
@@ -170,20 +173,19 @@ int		parse_commands(t_list **commands, char ***env)
 	t_exe		exe;
 	char		*str;
 	int			ret;
-	size_t		size;
+	size_t		size;// only used once
 	size_t		i;
 
 	cmd = ft_lstpop(commands);
 	ptr = cmd->tokens;
 	size = ft_lstsize(ptr);
-	exe.args = malloc((size + 1) * sizeof(char*));
+	exe.args = (char **)malloc(sizeof(char *) * (size + 1));
 	i = 0;
 	while (ptr != NULL)
 	{
 		token = ft_lstpop(&ptr);
   		str = remake_and_subs(token, *env);
 //		 do checks here for pipes, redir, etc...
-		remake_and_subs(token, *env);
 		free(token->str);
 		exe.args[i] = str;
 		free(token);

@@ -60,6 +60,7 @@ enum e_state
 	QUOTE,
 	BACKSLASH,
 	DOLLAR,
+	TILDE,
 	SPACE,
 	ANGLE_BRACKET,
 	SEMICOLON,
@@ -91,6 +92,7 @@ enum e_redir
 typedef struct		s_variable
 {
 	size_t	start;
+	size_t	len;
 	size_t	end;
 }					t_variable;
 
@@ -126,7 +128,7 @@ void		print_tokens(t_list *tokens); // temp
 void	free_token(void *content);
 void	free_commands(t_list **commands);
 int		new_command(t_list **commands);
-int		add_variable(t_list **variables, size_t start, size_t end);
+int		add_variable(t_list **variables, size_t start, size_t end, size_t len);
 char	*parse_variable(char *line, t_state_machine *machine);
 int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
