@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 17:10:03 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/28 13:50:08 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/28 14:37:54 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ char	*remake_and_subs(t_token *token, char **env)
 						k++;
 						i++;
 					}
-					j = var->end;
+					j = var->end + 1;
 				}
 			}
 			ptr = ptr->next;
