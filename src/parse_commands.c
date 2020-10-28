@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/21 17:10:03 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/28 13:14:51 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/10/28 13:50:08 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char	**extract_vars(char *str, t_list *lst, char **env)
 		var = ptr->content;
 		buf = get_var(str, var->start, var->end);
 		ret[i] = get_var_content(env, buf);
+		if (ret[i] == NULL)
+			ret[i] = "";
 		i++;
 		ptr = ptr->next;
 	}
@@ -133,14 +135,19 @@ char	*remake_and_subs(t_token *token, char **env)
 			k = 0;
 			if (buf[l] != NULL)
 			{
-				while (buf[l][k])
+				if (ft_strlen(buf[l]) == 0)
+					j = var->end + 1;
+				else
 				{
-					ret[i] = buf[l][k];
-					k++;
-					i++;
+					while (buf[l][k])
+					{
+						ret[i] = buf[l][k];
+						k++;
+						i++;
+					}
+					j = var->end;
 				}
 			}
-			j = var->end;
 			ptr = ptr->next;
 			l++;
 		}
