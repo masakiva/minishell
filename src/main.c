@@ -5,18 +5,20 @@
 
 void	sig_int(int signum)
 {
-	(void)signum;
-	ft_putstr_fd("SIGINT", 1);
-	ft_putstr_fd("\n", 1);
-	exit(0);
+//	ft_putstr_fd("SIGINT", 1);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+//	kill(0, signum);
+	exit(signum);
+//	signal(signum, SIG_DFL);
 }
 
 void	sig_kill(int signum)
 {
-	(void)signum;
-	ft_putstr_fd("SIGQUIT", 1);
-	ft_putstr_fd("\n", 1);
-	exit(0);
+//	ft_putstr_fd("SIGQUIT", 1);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+//	kill(0, signum);
+	exit(signum);
+//	signal(signum, SIG_DFL);
 }
 
 void				signal_handler(void)
@@ -31,23 +33,22 @@ static int			get_input(t_all *all)
 	char	*line;
 
 	ret = 1;
-//	signal_handler();
 	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
 	if (ret == ERROR)
 		return (MALLOC_ERR); // or read(2) error
-//	if (line[0] == '\0')
-//		ft_putstr_fd("\n", 1);//?
+	if (line[0] == '\0')
+		ft_putstr_fd("\n", 1);//?
 	all->commands = parse_input(line);
 	if (all->commands == NULL)
 		return (MALLOC_ERR);
 	free(line);
 	parse_commands(&all->commands, &all->env);
 	free_commands(&all->commands);
-//	if (ret == 1)
+	if (ret == 1)
 		return (SUCCESS);
-//	else
-//		return (CLEAN_EXIT);
+	else
+		return (CLEAN_EXIT);
 }
 
 static int			main_loop(t_all *all)
@@ -78,6 +79,7 @@ int					main(int argc, char **argv, char **env)
 			return (ft_exit(ret, &all));
 	}
 	ret = SUCCESS;
+	signal_handler();
 	while (ret == SUCCESS)
 		ret = main_loop(&all);
 	return (ft_exit(ret, &all));

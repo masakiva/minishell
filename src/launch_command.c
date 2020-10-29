@@ -1,6 +1,5 @@
 #include "minishell.h"
 #include "libft.h"
-#include <pthread.h>
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -198,6 +197,7 @@ static int	launch_ext(t_exe *exe)
 	char	*cmd;
 	char	**path;
 	int		ref;
+	int		ret;
 
 	cmd = get_var_content(*(exe->env), "PATH");
 	path = ft_split(cmd, ':');
@@ -205,6 +205,8 @@ static int	launch_ext(t_exe *exe)
 	pid = fork();
 	if (pid == 0)
 	{
+		if ((ret = execve(exe->args[0], exe->args, *(exe->env))) == 0)
+			return (SUCCESS);
 		ref = search_exec(path, exe->args[0]);
 		if (ref < 0)
 			return (ERROR);
@@ -213,7 +215,12 @@ static int	launch_ext(t_exe *exe)
 		execve(cmd, exe->args, *(exe->env));
 	}
 	else
-		wait(NULL);
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		waitpid(pid, &stat_loc, 0);
+		signal_handler();
+	}
 	return (SUCCESS);
 }
 

@@ -14,9 +14,12 @@
 # include <errno.h>
 # include "libft.h"
 
-/*
-**	# define _XOPEN_SOURCE
-*/
+int		stat_loc;
+pid_t	gpid;
+
+
+# define _XOPEN_SOURCE
+
 
 /*
 **	**********************************
@@ -51,6 +54,7 @@
 **	**	CUSTOM TYPES AND STRUCTURES	**
 **	**********************************
 */
+
 
 #include <stdio.h>
 
@@ -135,6 +139,8 @@ int		reset_buf(t_state_machine *machine);
 int		add_to_buf(char c, t_state_machine *machine);
 
 t_list	*parse_input(char *line);
+
+void				signal_handler(void);
 
 
 int		parse_commands(t_list **commands, char ***env);
