@@ -1,8 +1,9 @@
-trop bizarre la len d'un token ne peut pas etre superieure a 4095
-
-!!Gnl recursif limite par la taille de la stack ? -> verifier ulimit -a !!
+trop bizarre la len d'un token ne peut pas etre superieure a 4095 sur linux
+et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
+>>!!Gnl recursif limite par la taille de la stack ? -> verifier ulimit -a !!
 
 https://brennan.io/2015/01/16/write-a-shell-in-c/
+redirections https://catonmat.net/bash-one-liners-explained-part-three
 
 Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 man bash https://www.gnu.org/software/bash/manual/html_node/index.html

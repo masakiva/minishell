@@ -11,47 +11,48 @@
 // >>> echo
 // error management: stop quand un write fail, ou alors on fait un seul write pour tout
 // no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
-static int	launch_echo(t_exe *exe)
+static int	launch_echo(char **args, char **env)
 {
 	int		i;
 	int		n_option;
 
+	(void)env;
 	n_option = DISABLED;
 	i = 1;
-	if (exe->args[i] != NULL)
+	if (args[i] != NULL)
 	{
-		n_option = ft_strcmp(exe->args[i], "-n");
+		n_option = ft_strcmp(args[i], "-n");
 		if (n_option != ENABLED)
 		{
-			ft_putstr_fd(exe->args[i], STDOUT_FILENO);
+			ft_putstr_fd(args[i], STDOUT_FILENO);
 			i++;
-			if (exe->args[i] != NULL)
+			if (args[i] != NULL)
 			{
 				ft_putchar_fd(' ', STDOUT_FILENO);
 				i++;
 			}
 		}
-		while (exe->args[i] != NULL)
+		while (args[i] != NULL)
 		{
 			ft_putchar_fd(' ', STDOUT_FILENO);
-			ft_putstr_fd(exe->args[i], STDOUT_FILENO);
+			ft_putstr_fd(args[i], STDOUT_FILENO);
 			i++;
 		}
 	}
-	if (n_option != ENABLED || exe->args[1] == NULL)
+	if (n_option != ENABLED || args[1] == NULL)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (SUCCESS);
 }
 
-static int	launch_cd(t_exe *exe)
+static int	launch_cd(char **args, char **env)
 {
 	char	*path;
 
-	if (exe->args[1] == NULL)
-		path = get_var_content(*(exe->env), "HOME");
+	if (args[1] == NULL)
+		path = get_var_content(env, "HOME");
 	else
 	{
-		path = ft_strdup(exe->args[1]);
+		path = ft_strdup(args[1]);
 	}
 	if (chdir(path) != SUCCESS)
 	{
@@ -63,11 +64,12 @@ static int	launch_cd(t_exe *exe)
 	return (SUCCESS);
 }
 
-static int	launch_pwd(t_exe *exe)
+static int	launch_pwd(char **args, char **env)
 {
 	char	*buf;
 
-	(void)exe;
+	(void)args;
+	(void)env;
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
 	{
@@ -80,31 +82,31 @@ static int	launch_pwd(t_exe *exe)
 	return (SUCCESS);
 }
 
-static int	launch_export(t_exe *exe)
+static int	launch_export(char **args, char **env)
 {
 	size_t	i;
 	size_t	size;
 	char	**new;
 	
-	if (ft_strchr(exe->args[1], '=') == NULL)
+	if (ft_strchr(args[1], '=') == NULL)
 		return (SUCCESS);
-	size = ft_arraylen(*(exe->env));
+	size = ft_arraylen(env);
 	if (!(new = malloc((size + 2) * sizeof(char*))))
 		return (MALLOC_ERR);
 	i = 0;
 	while (i < size)
 	{
-		new[i] = (*(exe->env))[i];
+		new[i] = (env)[i];
 		i++;
 	}
-	new[i] = ft_strdup(exe->args[1]);
+	new[i] = ft_strdup(args[1]);
 	new[i + 1] = NULL;
-	free(*(exe->env));
-	*(exe->env) = new;
+	free(env);
+	env = new;
 	return (SUCCESS);
 }
 
-static int	launch_unset(t_exe *exe)
+static int	launch_unset(char **args, char **env)
 {
 	ssize_t	i;
 	ssize_t	j;
@@ -112,43 +114,45 @@ static int	launch_unset(t_exe *exe)
 	ssize_t	pos;
 	char	**new;
 
-	size = ft_arraylen(*(exe->env));
-	if ((pos = get_var_pos(*(exe->env), exe->args[1])) == -1)
+	size = ft_arraylen(env);
+	if ((pos = get_var_pos(env, args[1])) == -1)
 		return (SUCCESS);
 	if (!(new = malloc((size) * sizeof(char*))))
 		return (MALLOC_ERR);
 	i = 0;
 	j = 0;
-	while ((*(exe->env))[j])
+	while ((env)[j])
 	{
 		if (j != pos)
 		{
-			new[i] = (*(exe->env))[j];
+			new[i] = (env)[j];
 		i++;
 		j++;
 		}
 		else
 		{
-			free((*(exe->env))[j]);
-			(*(exe->env))[j] = NULL;
+			free((env)[j]);
+			(env)[j] = NULL;
 			j++;
 		}
 	}
 	new[i] = NULL;
-	free(*(exe->env));
-	*(exe->env) = new;
+	free(env);
+	env = new;
 	return (SUCCESS);
 }
 
-static int	launch_env(t_exe *exe)
+static int	launch_env(char **args, char **env)
 {
-	ft_printarray_fd(*(exe->env), STDOUT_FILENO);
+	(void)args;
+	ft_printarray_fd(env, STDOUT_FILENO);
 	return (SUCCESS);
 }
 
-static int	launch_exit(t_exe *exe)
+static int	launch_exit(char **args, char **env)
 {
-	(void)exe;
+	(void)args;
+	(void)env;
 	return (CLEAN_EXIT);
 }
 
@@ -191,7 +195,7 @@ int	search_exec(char **path, char *name)
 	return (-1);
 }
 
-static int	launch_ext(t_exe *exe)
+static int	launch_ext(char **args, char **env)
 {
 	pid_t	pid;
 	char	*cmd;
@@ -199,20 +203,20 @@ static int	launch_ext(t_exe *exe)
 	int		ref;
 	int		ret;
 
-	cmd = get_var_content(*(exe->env), "PATH");
+	cmd = get_var_content(env, "PATH");
 	path = ft_split(cmd, ':');
 //	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
-		if ((ret = execve(exe->args[0], exe->args, *(exe->env))) == 0)
+		if ((ret = execve(args[0], args, env)) == 0)
 			return (SUCCESS);
-		ref = search_exec(path, exe->args[0]);
+		ref = search_exec(path, args[0]);
 		if (ref < 0)
 			return (ERROR);
 		cmd = ft_strjoin(path[ref], "/");
-		cmd = ft_strjoin(cmd, exe->args[0]);
-		execve(cmd, exe->args, *(exe->env));
+		cmd = ft_strjoin(cmd, args[0]);
+		execve(cmd, args, env);
 	}
 	else
 	{
@@ -224,17 +228,19 @@ static int	launch_ext(t_exe *exe)
 	return (SUCCESS);
 }
 
-int		launch_command(t_exe *exe)
+int		execute_cmd(char **args, char **env)
 {
 	int				i;
 	int				ret;
+	t_cmd_code		cmd_code;
 	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
 								launch_exit, launch_ext};
 
 	i = 0;
-	if ((ret = command[exe->cmd_code](exe)) == ERROR)
+	cmd_code = get_cmd_code(args[0]);
+	if ((ret = command[cmd_code](args, env)) == ERROR)
 		ft_putstr_fd("ERROR\n", 1);
-	free_str_array(&exe->args);
+	free_str_array(&args);
 	return (ret);
 }

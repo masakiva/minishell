@@ -5,20 +5,20 @@
 
 void	sig_int(int signum)
 {
-//	ft_putstr_fd("SIGINT", 1);
+	//	ft_putstr_fd("SIGINT", 1);
 	ft_putstr_fd("\n", STDOUT_FILENO);
-//	kill(0, signum);
+	//	kill(0, signum);
 	exit(signum);
-//	signal(signum, SIG_DFL);
+	//	signal(signum, SIG_DFL);
 }
 
 void	sig_kill(int signum)
 {
-//	ft_putstr_fd("SIGQUIT", 1);
+	//	ft_putstr_fd("SIGQUIT", 1);
 	ft_putstr_fd("\n", STDOUT_FILENO);
-//	kill(0, signum);
+	//	kill(0, signum);
 	exit(signum);
-//	signal(signum, SIG_DFL);
+	//	signal(signum, SIG_DFL);
 }
 
 void				signal_handler(void)
@@ -27,60 +27,68 @@ void				signal_handler(void)
 	signal(SIGQUIT, sig_kill);
 }
 
-static int			get_input(t_all *all)
+static int			get_input(t_list **commands)
 {
-	int		ret;
 	char	*line;
+	int		ret;
 
-	ret = 1;
 	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
 	if (ret == ERROR)
 		return (MALLOC_ERR); // or read(2) error
-	if (line[0] == '\0')
-		ft_putstr_fd("\n", 1);//?
-	all->commands = parse_input(line);
-	if (all->commands == NULL)
+	//if (line[0] == '\0')
+		//ft_putstr_fd("\n", 1);
+	*commands = parse_input(line);
+	if (*commands == NULL)
 		return (MALLOC_ERR);
 	free(line);
-	parse_commands(&all->commands, &all->env);
-	free_commands(&all->commands);
 	if (ret == 1)
 		return (SUCCESS);
-	else
+	else // dans quel cas gnl renvoie 0?
 		return (CLEAN_EXIT);
 }
 
-static int			main_loop(t_all *all)
+static int			main_loop(char **env)
 {
-	int	ret;
+	int			ret;
+	t_list		*commands;
+	t_command	*cur_command;
+	char		**args;
 
-	if ((ret = get_input(all)) != SUCCESS)
-		return (ret);
+	ret = get_input(&commands);
+	if (ret != SUCCESS)
+		;//err
+	while (commands != NULL)
+	{
+		cur_command = ft_lstpop(&commands);
+		if (cur_command != NULL)
+		{
+			args = prepare_args(cur_command, env);
+			//free_command(cur_command);
+			if ((ret = execute_cmd(args, env)) != SUCCESS)
+				return (ret);
+		}
+	}
 	return (ret);
 }
 
 int					main(int argc, char **argv, char **env)
 {
-	t_all			all;
 	int				ret;
 
 	(void)argv;
 	if (argc != 1)
-	{
-		all.current = NULL;
-		all.env = NULL;
-		return (ft_exit(ARG_ERR, &all));
-	}
+		ret = ARG_ERR;
 	else
 	{
-		all.current = env;
-		if ((ret = all_init(&all)) != SUCCESS)
-			return (ft_exit(ret, &all));
+		//ret = all_init(&all);
+		ret = SUCCESS;
+		if (ret == SUCCESS)
+		{
+			signal_handler();
+			while (ret == SUCCESS)
+				ret = main_loop(env);
+		}
 	}
-	ret = SUCCESS;
-	signal_handler();
-	while (ret == SUCCESS)
-		ret = main_loop(&all);
-	return (ft_exit(ret, &all));
+	return (ft_exit(ret, env));
 }

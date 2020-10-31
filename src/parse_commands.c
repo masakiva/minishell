@@ -153,39 +153,27 @@ char	*remake_and_subs(t_token *token, char **env)
 	return (ret);
 }
 
-int		parse_commands(t_list **commands, char ***env)
+char	**prepare_args(t_command *command, char **env)
 {
-	t_command	*cmd;
-	t_list		*ptr;
-	t_token		*token;
-	t_exe		exe;
-	char		*str;
-	int			ret;
-	size_t		size;// only used once
+	t_list		*tokens;
+	t_token		*cur_token;
+	char		**args;
+	char		*cur_arg;
 	size_t		i;
 
-	cmd = ft_lstpop(commands);
-	ptr = cmd->tokens;
-	size = ft_lstsize(ptr);
-	exe.args = (char **)malloc(sizeof(char *) * (size + 1));
+	tokens = command->tokens;
+	args = (char **)malloc(sizeof(char *) * (ft_lstsize(tokens) + 1));
 	i = 0;
-	while (ptr != NULL)
+	while (tokens != NULL)
 	{
-		token = ft_lstpop(&ptr);
-  		str = remake_and_subs(token, *env);
+		cur_token = ft_lstpop(&tokens);
+  		cur_arg = remake_and_subs(cur_token, env);
 //		 do checks here for pipes, redir, etc...
-		free(token->str);
-		exe.args[i] = str;
-		free(token);
+		args[i] = cur_arg;
+		free_token(cur_token);
 		i++;
 	}
-	exe.args[i] = NULL;
-//	ft_printarray_fd(exe.args, 1);
-//	print_tokens(*commands);
-	exe.cmd_code = get_cmd_code(exe.args[0]);
-	exe.env = &(*env);
-	if ((ret = launch_command(&exe)) != SUCCESS)
-		return (ret);
-//	ft_printarray_fd(exe.args, 1);
-	return (0);
+	args[i] = NULL;
+//	ft_printarray_fd(args, 1);
+	return (args);
 }

@@ -130,6 +130,7 @@ typedef struct		s_state_machine
 
 void		print_tokens(t_list *tokens); // temp
 void	free_token(void *content);
+void	free_command(void *content);
 void	free_commands(t_list **commands);
 int		new_command(t_list **commands);
 int		add_variable(t_list **variables, size_t start, size_t end, size_t len);
@@ -143,7 +144,7 @@ t_list	*parse_input(char *line);
 void				signal_handler(void);
 
 
-int		parse_commands(t_list **commands, char ***env);
+char	**prepare_args(t_command *command, char **env);
 
 typedef char	*(*t_function)(char *, t_list **, t_state_machine *);
 
@@ -158,28 +159,27 @@ typedef enum		e_cmd_code
 	EXIT,
 	ELSE
 }					t_cmd_code;
+/*static*/ t_cmd_code	get_cmd_code(char *arg);
 
 typedef struct		s_all
 {
 	int				fd[3]; // a laisser ici
-	t_cmd_code		command; // a retirer
 	int				cmd_ret;
-	uint8_t			pad[4];
 	char			**env;
 	t_list			*commands;
 	char			**current; // a retirer
 }					t_all;
 
 
-typedef struct		s_exe
-{
-	t_cmd_code		cmd_code;
-	uint8_t			pad[4];
-	char			**args;
-	char			***env;
-}					t_exe;
+//typedef struct		s_exe
+//{
+//	t_cmd_code		cmd_code;
+//	uint8_t			pad[4];
+//	char			**args;
+//	char			**env;
+//}					t_exe;
 
-typedef int			(*t_func)(t_exe *exe);
+typedef int			(*t_func)(char **args, char **env);
 
 /*
 **	**********************************
@@ -190,7 +190,7 @@ typedef int			(*t_func)(t_exe *exe);
 /*
 **	launch_command.c
 */
-int					launch_command(t_exe *exe);
+int		execute_cmd(char **args, char **env);
 
 /*
 **	all_init.c
@@ -221,7 +221,7 @@ void				free_str_array(char ***array);
 /*
 **	ft_exit.c
 */
-int					ft_exit(int err_code, t_all *all);
+int					ft_exit(int err_code, char **env);
 int					err_bis(int err_code);
 
 #endif
