@@ -1,6 +1,6 @@
-#include "minishell.h"
-#include <stdlib.h>
+#include "parsing.h"
 
+#include <stdio.h> // temp
 void	print_tokens(t_list *commands)
 {
 	size_t		i;

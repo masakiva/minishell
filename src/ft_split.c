@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "minishell.h"
 
 static size_t	wordlen(char const *s, char *set)

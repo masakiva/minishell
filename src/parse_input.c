@@ -1,8 +1,4 @@
-#include "minishell.h"
-#include "libft.h"
-
-#include <stdlib.h>
-#include <unistd.h>
+#include "parsing.h"
 
 char	*error(char *line, t_list **commands, t_state_machine *machine)
 {
@@ -249,7 +245,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 
 t_list	*parse_input(char *line)
 {
-	static t_function	process[NB_STATES - 1] = {letter, quote, backslash,
+	static t_parse	process[NB_STATES - 1] = {letter, quote, backslash,
 		dollar, tilde, space, angle_bracket, semicolon, pipe_, error};
 	t_state_machine		machine;
 	t_list				*commands; // a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token?

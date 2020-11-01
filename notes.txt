@@ -1,3 +1,5 @@
+header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
+
 trop bizarre la len d'un token ne peut pas etre superieure a 4095 sur linux
 et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
 >>!!Gnl recursif limite par la taille de la stack ? -> verifier ulimit -a !!

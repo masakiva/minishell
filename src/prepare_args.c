@@ -1,7 +1,6 @@
-#include "minishell.h"
-#include <stdlib.h>
+#include "execution.h"
 
-/*static*/ t_cmd_code	get_cmd_code(char *arg)
+enum e_cmd_code	get_cmd_code(char *arg)
 {
 	char	**cmd_list;
 	int		i;

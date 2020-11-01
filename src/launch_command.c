@@ -1,10 +1,9 @@
-#include "minishell.h"
-#include "libft.h"
+#include "execution.h"
 
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include <stdio.h> // perror
+#include <sys/types.h> // waitpid
+#include <sys/wait.h> // waitpid
+
 #define DISABLED	1
 #define ENABLED		0
 
@@ -232,8 +231,8 @@ int		execute_cmd(char **args, char **env)
 {
 	int				i;
 	int				ret;
-	t_cmd_code		cmd_code;
-	const t_func	command[8] = {launch_echo, launch_cd, launch_pwd,
+	enum e_cmd_code		cmd_code;
+	const t_exec	command[8] = {launch_echo, launch_cd, launch_pwd,
 								launch_export, launch_unset, launch_env,
 								launch_exit, launch_ext};
 

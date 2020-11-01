@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/10/21 17:41:19 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/11/01 17:40:59 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ typedef struct	s_list
 }				t_list;
 
 typedef	uint8_t	t_byte;
+
+/*
+**	part 1
+*/
 
 void			*ft_memset(void *b, int c, size_t len);
 void			ft_bzero(void *s, size_t n);
@@ -53,6 +57,10 @@ int				ft_atoi(const char *str);
 void			*ft_calloc(size_t count, size_t size);
 char			*ft_strdup(const char *s1);
 
+/*
+**	part 2
+*/
+
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_strtrim(char const *s1, char const *set);
@@ -64,6 +72,10 @@ ssize_t			ft_putstr_fd(const char *s, int fd);
 ssize_t			ft_putendl_fd(const char *s, int fd);
 ssize_t			ft_putnbr_fd(int n, int fd);
 
+/*
+**	bonus (chained list utils)
+*/
+
 t_list			*ft_lstnew(void *content);
 void			ft_lstadd_front(t_list **alst, t_list *new);
 size_t			ft_lstsize(t_list *lst);
@@ -74,6 +86,10 @@ void			ft_lstclear(t_list **lst, void (*del)(void *));
 void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 		void (*del)(void *));
+
+/*
+**	custom functions
+*/
 
 int				get_next_line(int fd, char **line);
 ssize_t			ft_index(char *haystack, char needle);

@@ -1,7 +1,4 @@
-#include <unistd.h>
-#include <stdlib.h>
 #include "minishell.h"
-#include "libft.h"
 
 static int	extract_env(t_all *all)
 {

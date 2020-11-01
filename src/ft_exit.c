@@ -1,8 +1,5 @@
 #include "minishell.h"
-#include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include "libft.h"
 
 static int			err_output(const char *str)
 {
@@ -27,11 +24,4 @@ int					ft_exit(int err_code, char **env)
 	if (err_code != CLEAN_EXIT && err_code > 0)
 		return (err_output(err_msg(err_code)));
 	exit(EXIT_SUCCESS);
-}
-
-int					err_bis(int err_code)
-{
-	if (err_code == MALLOC_ERR)
-		strerror(errno);
-	exit(EXIT_FAILURE);
 }
