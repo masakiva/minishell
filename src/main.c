@@ -58,15 +58,14 @@ static int			main_loop(char **env)
 	ret = get_input(&commands);
 	if (ret != SUCCESS)
 		;//err
-	while (commands != NULL)
+	while (commands != NULL && ret == SUCCESS)
 	{
 		cur_command = ft_lstpop(&commands);
-		if (cur_command != NULL)
+		if (cur_command != NULL) // le contraire possible?
 		{
 			args = prepare_args(cur_command, env);
 			//free_command(cur_command);
-			if ((ret = execute_cmd(args, env)) != SUCCESS)
-				return (ret);
+			ret = execute_cmd(args, env);
 		}
 	}
 	return (ret);
