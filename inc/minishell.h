@@ -20,8 +20,8 @@
 **	**********************************
 */
 
-//# define ERROR		-1 dans libft.h
-# define SUCCESS	0 // or 1 ?
+# define SUCCESS	1
+# define FAILURE	0
 
 # define TRUE		1
 # define FALSE		0

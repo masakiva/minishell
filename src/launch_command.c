@@ -7,43 +7,71 @@
 #define DISABLED	1
 #define ENABLED		0
 
-// >>> echo
-// error management: stop quand un write fail, ou alors on fait un seul write pour tout
-// no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
-static int	launch_echo(char **args, char **env)
+t_byte		check_arg_for_options(char *arg, char *op_chars)
 {
-	int		i;
-	int		n_option;
+	size_t	i;
+	ssize_t	j;
+	t_byte	options;
 
-	(void)env;
-	n_option = DISABLED;
-	i = 1;
-	if (args[i] != NULL)
+	options = 0;
+	if (arg[0] == '-')
 	{
-		n_option = ft_strcmp(args[i], "-n");
-		if (n_option != ENABLED)
+		i = 1;
+		while (arg[i] != '\0')
 		{
-			ft_putstr_fd(args[i], STDOUT_FILENO);
-			i++;
-			if (args[i] != NULL)
-			{
-				ft_putchar_fd(' ', STDOUT_FILENO);
-				i++;
-			}
-		}
-		while (args[i] != NULL)
-		{
-			ft_putchar_fd(' ', STDOUT_FILENO);
-			ft_putstr_fd(args[i], STDOUT_FILENO);
+			j = ft_isset(arg[i], op_chars);
+			if (j != -1 && j < 8)
+				options |= 0b00000001 << j;
+			else
+				return (0);
 			i++;
 		}
 	}
-	if (n_option != ENABLED || args[1] == NULL)
+	return (options);
+}
+
+t_byte		pop_options(char ***args, char *op_chars)
+{
+	t_byte	cur_options;
+	t_byte	options;
+
+	options = 0;
+	(*args)++;
+	while (**args != NULL)
+	{
+		cur_options = check_arg_for_options(**args, op_chars);
+		if (cur_options == 0)
+			break ;
+		else
+			options |= cur_options;
+		(*args)++;
+	}
+	return (options);
+}
+
+// >>> echo
+// error management: stop quand un write fail, ou alors on fait un seul write pour tout
+// no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
+static int	ft_echo(char **args, char **env)
+{
+	t_byte	options;
+
+	(void)env;
+	options = pop_options(&args, ECHO_OPTIONS);
+	if (*args != NULL)
+		ft_putstr_fd(*args++, STDOUT_FILENO);
+	while (*args != NULL)
+	{
+		ft_putchar_fd(' ', STDOUT_FILENO);
+		ft_putstr_fd(*args, STDOUT_FILENO);
+		args++;
+	}
+	if (!(options & ECHO_N_OPTION))
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (SUCCESS);
 }
 
-static int	launch_cd(char **args, char **env)
+static int	ft_cd(char **args, char **env)
 {
 	char	*path;
 
@@ -57,13 +85,13 @@ static int	launch_cd(char **args, char **env)
 	{
 		perror("cd");
 		free(path);
-		return (ERROR);
+		return (FAILURE);
 	}
 	free(path);
 	return (SUCCESS);
 }
 
-static int	launch_pwd(char **args, char **env)
+static int	ft_pwd(char **args, char **env)
 {
 	char	*buf;
 
@@ -73,7 +101,7 @@ static int	launch_pwd(char **args, char **env)
 	if (buf == NULL)
 	{
 		free(buf);
-		return (ERROR);
+		return (FAILURE);
 	}
 	ft_putstr_fd(buf, STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
@@ -81,12 +109,12 @@ static int	launch_pwd(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	launch_export(char **args, char **env)
+static int	ft_export(char **args, char **env)
 {
 	size_t	i;
 	size_t	size;
 	char	**new;
-	
+
 	if (ft_strchr(args[1], '=') == NULL)
 		return (SUCCESS);
 	size = ft_arraylen(env);
@@ -105,7 +133,7 @@ static int	launch_export(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	launch_unset(char **args, char **env)
+static int	ft_unset(char **args, char **env)
 {
 	ssize_t	i;
 	ssize_t	j;
@@ -125,8 +153,8 @@ static int	launch_unset(char **args, char **env)
 		if (j != pos)
 		{
 			new[i] = (env)[j];
-		i++;
-		j++;
+			i++;
+			j++;
 		}
 		else
 		{
@@ -141,7 +169,7 @@ static int	launch_unset(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	launch_env(char **args, char **env)
+static int	ft_env(char **args, char **env)
 {
 	(void)args;
 	ft_printarray_fd(env, STDOUT_FILENO);
@@ -166,7 +194,7 @@ static int	search_path(DIR *dirp, char *name)
 		if (ft_strcmp(buf->d_name, name) == 0)
 			return (SUCCESS);
 	}
-	return (ERROR);
+	return (FAILURE);
 }
 
 int	search_exec(char **path, char *name)
@@ -204,7 +232,7 @@ static int	launch_ext(char **args, char **env)
 
 	cmd = get_var_content(env, "PATH");
 	path = ft_split(cmd, ':');
-//	ft_printarray_fd(path, STDOUT_FILENO);
+	//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -212,7 +240,7 @@ static int	launch_ext(char **args, char **env)
 			return (SUCCESS);
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
-			return (ERROR);
+			return (FAILURE);
 		cmd = ft_strjoin(path[ref], "/");
 		cmd = ft_strjoin(cmd, args[0]);
 		execve(cmd, args, env);
@@ -232,14 +260,14 @@ int		execute_cmd(char **args, char **env)
 	int				i;
 	int				ret;
 	enum e_cmd_code		cmd_code;
-	const t_exec	command[8] = {launch_echo, launch_cd, launch_pwd,
-								launch_export, launch_unset, launch_env,
-								launch_exit, launch_ext};
+	const t_exec	command[8] = {ft_echo, ft_cd, ft_pwd,
+		ft_export, ft_unset, ft_env,
+		launch_exit, launch_ext};
 
 	i = 0;
 	cmd_code = get_cmd_code(args[0]);
-	if ((ret = command[cmd_code](args, env)) == ERROR)
-		ft_putstr_fd("ERROR\n", 1);
+	if ((ret = command[cmd_code](args, env)) == FAILURE)
+		ft_putstr_fd("FAILURE\n", 1);
 	free_str_array(&args);
 	return (ret);
 }

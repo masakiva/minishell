@@ -6,16 +6,18 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:40:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/19 13:42:04 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/11/01 22:41:30 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_isset(char c, char *set) //weird return value because it might be use to obtain char index
+#include "libft.h"
+
+ssize_t		ft_isset(char c, char *set) //weird return value because it might be use to obtain char index
 {
-	int	i;
+	size_t		i;
 
 	i = 0;
-	while (set[i])
+	while (set[i] != '\0')
 	{
 		if (c == set[i])
 			return (i);

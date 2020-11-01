@@ -82,7 +82,7 @@ int		new_command(t_list **commands)
 
 	command = (t_command *)malloc(sizeof(t_command));
 	if (command == NULL)
-		return (ERROR);
+		return (FAILURE);
 	command->tokens = NULL;
 	command->pipe_flag = FALSE;
 	link = ft_lstnew(command);
@@ -91,7 +91,7 @@ int		new_command(t_list **commands)
 	else
 	{
 		free(command);
-		return (ERROR);
+		return (FAILURE);
 	}
 	return (SUCCESS);
 }
@@ -103,7 +103,7 @@ int		add_variable(t_list **variables, size_t start, size_t end, size_t len)
 
 	variable = (t_variable *)malloc(sizeof(t_variable));
 	if (variable == NULL)
-		return (ERROR);
+		return (FAILURE);
 	variable->start = start;
 	variable->len = len;
 	variable->end = end;
@@ -113,7 +113,7 @@ int		add_variable(t_list **variables, size_t start, size_t end, size_t len)
 	else
 	{
 		free(variable);
-		return (ERROR);
+		return (FAILURE);
 	}
 	return (SUCCESS);
 }
@@ -140,11 +140,11 @@ char	*parse_variable(char *line, t_state_machine *machine)
 			line++;
 		}
 	}
-	if (reset_buf(machine) == ERROR)
+	if (reset_buf(machine) == FAILURE)
 		return (NULL);
 	var_start = ft_strlen(machine->cur_token->str) - var_len;
 	var_end = ft_strlen(machine->cur_token->str) - 1;
-	if (add_variable(&machine->cur_token->vars, var_start, var_end, var_len) == ERROR)
+	if (add_variable(&machine->cur_token->vars, var_start, var_end, var_len) == FAILURE)
 	{
 		free_token(machine->cur_token);
 		return (NULL);
@@ -156,15 +156,15 @@ int		link_token(t_list **tokens, t_state_machine *machine)
 {
 	t_list	*link;
 
-	if (reset_buf(machine) == ERROR) // laisser en dehors de la func?
-		return (ERROR);
+	if (reset_buf(machine) == FAILURE) // laisser en dehors de la func?
+		return (FAILURE);
 	link = ft_lstnew(machine->cur_token);
 	if (link != NULL)
 		ft_lstadd_back(tokens, link);
 	else
 	{
 		free_token(machine->cur_token);
-		return (ERROR);
+		return (FAILURE);
 	}
 	machine->cur_token = NULL;
 	return (SUCCESS);
@@ -178,7 +178,7 @@ int		reset_buf(t_state_machine *machine)
 	{
 		machine->cur_token = (t_token *)malloc(sizeof(t_token));
 		if (machine->cur_token == NULL)
-			return (ERROR);
+			return (FAILURE);
 		ft_bzero(machine->cur_token, sizeof(t_token));
 		res = ft_strdup(machine->buf); // on a la len de buf
 	}
@@ -191,7 +191,7 @@ int		reset_buf(t_state_machine *machine)
 	{
 		ft_lstclear(&machine->cur_token->vars, free_content);
 		free(machine->cur_token);
-		return (ERROR);
+		return (FAILURE);
 	}
 	machine->cur_token->str = res;
 	if (machine->len > 0)
@@ -206,8 +206,8 @@ int		add_to_buf(char c, t_state_machine *machine)
 {
 	if (machine->len == BUF_SIZE - 1)
 	{
-		if (reset_buf(machine) == ERROR)
-			return (ERROR);
+		if (reset_buf(machine) == FAILURE)
+			return (FAILURE);
 	}
 	machine->buf[machine->len] = c;
 	machine->len++;

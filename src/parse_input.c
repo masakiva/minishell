@@ -122,7 +122,7 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 {
 	(void)commands;
-	if (reset_buf(machine) == ERROR)
+	if (reset_buf(machine) == FAILURE)
 		return(NULL);
 	if (machine->cur_token->redir != NO_REDIR)
 	{
@@ -148,7 +148,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 
 char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 {
-	if (new_command(commands) == ERROR)
+	if (new_command(commands) == FAILURE)
 		return(NULL);
 	line++;
 	machine->state = SPACE;
@@ -158,7 +158,7 @@ char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
 {
 	((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
-	if (new_command(commands) == ERROR)
+	if (new_command(commands) == FAILURE)
 		return (NULL);
 	line++;
 	machine->state = SPACE;
@@ -169,11 +169,11 @@ char	*tilde(char *line, t_list **commands, t_state_machine *machine)
 {
 	(void)commands;
 	add_to_buf('~', machine);
-	if (reset_buf(machine) == ERROR)
+	if (reset_buf(machine) == FAILURE)
 		return (NULL);
 	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|") != -1 || ft_isspace(*line) || *line == '\0'))
 	{
-		if (add_variable(&machine->cur_token->vars, 0, 1, 1) == ERROR)
+		if (add_variable(&machine->cur_token->vars, 0, 1, 1) == FAILURE)
 		{
 			free_token(machine->cur_token);
 			return (NULL);
@@ -192,7 +192,7 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 		machine->state = QUOTE;
 	else if (*line == '>' || *line == '<')
 	{
-		if (link_token(tokens, machine) == ERROR)
+		if (link_token(tokens, machine) == FAILURE)
 			return (NULL);
 		machine->state = ANGLE_BRACKET;
 	}
@@ -213,19 +213,19 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	}
 	else if (*line == ';')
 	{
-		if (link_token(tokens, machine) == ERROR)
+		if (link_token(tokens, machine) == FAILURE)
 			return (NULL);
 		machine->state = SEMICOLON;
 	}
 	else if (*line == '|')
 	{
-		if (link_token(tokens, machine) == ERROR)
+		if (link_token(tokens, machine) == FAILURE)
 			return (NULL);
 		machine->state = PIPE;
 	}
 	else if (*line == '\0' || ft_isspace(*line))
 	{
-		if (link_token(tokens, machine) == ERROR)
+		if (link_token(tokens, machine) == FAILURE)
 			return (NULL);
 		if (*line == '\0')
 			machine->state = END;
@@ -258,7 +258,7 @@ t_list	*parse_input(char *line)
 	machine.cur_token = NULL;
 	ft_bzero(&machine.buf, BUF_SIZE);
 	commands = NULL;
-	if (new_command(&commands) == ERROR)
+	if (new_command(&commands) == FAILURE)
 		return (NULL);
 	while (machine.state != END)
 	{

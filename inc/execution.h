@@ -4,6 +4,9 @@
 # include "minishell.h"
 # include "signals.h"
 
+# define ECHO_OPTIONS	"n"
+# define ECHO_N_OPTION	0b00000001
+
 typedef int			(*t_exec)(char **args, char **env);
 
 int		stat_loc;

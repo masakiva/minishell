@@ -149,6 +149,7 @@ char	*remake_and_subs(t_token *token, char **env)
 		}
 	}
 	ret[i] = '\0';
+	free(buf);
 	return (ret);
 }
 
@@ -173,6 +174,7 @@ char	**prepare_args(t_command *command, char **env)
 		i++;
 	}
 	args[i] = NULL;
+	free(command);
 //	ft_printarray_fd(args, 1);
 	return (args);
 }

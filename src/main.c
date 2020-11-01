@@ -10,7 +10,7 @@ static int			get_input(t_list **commands)
 
 	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
-	if (ret == ERROR)
+	if (ret == ERROR) // defined for gnl
 		return (MALLOC_ERR); // or read(2) error
 	//if (line[0] == '\0')
 		//ft_putstr_fd("\n", 1);
@@ -40,7 +40,6 @@ static int			main_loop(char **env)
 		if (cur_command != NULL) // le contraire possible?
 		{
 			args = prepare_args(cur_command, env);
-			//free_command(cur_command);
 			ret = execute_cmd(args, env);
 		}
 	}
@@ -56,14 +55,10 @@ int					main(int argc, char **argv, char **env)
 		ret = ARG_ERR;
 	else
 	{
-		//ret = all_init(&all);
 		ret = SUCCESS;
-		if (ret == SUCCESS)
-		{
-			signal_handler();
-			while (ret == SUCCESS)
-				ret = main_loop(env);
-		}
+		signal_handler();
+		while (ret == SUCCESS)
+			ret = main_loop(env);
 	}
 	return (ft_exit(ret, env));
 }
