@@ -26,10 +26,6 @@
 # define TRUE		1
 # define FALSE		0
 
-# define CLEAN_EXIT		42// or 1 ?
-# define ARG_ERR		1
-# define MALLOC_ERR		2
-
 # define _XOPEN_SOURCE // qu'est-ce?
 
 # define PROMPT			"$ "
@@ -53,16 +49,11 @@
 **	**********************************
 */
 
-enum		e_cmd_code
+enum		e_errors
 {
-	ECHO,
-	CD,
-	PWD,
-	EXPORT,
-	UNSET,
-	ENV,
-	EXIT,
-	ELSE
+	CLEAN_EXIT = 2,
+	ARG_ERR,
+	MALLOC_ERR,
 };
 
 enum e_redir_op

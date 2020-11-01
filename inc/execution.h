@@ -7,6 +7,19 @@
 # define ECHO_OPTIONS	"n"
 # define ECHO_N_OPTION	0b00000001
 
+enum		e_cmd_code
+{
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT,
+	ELSE,
+	M_ERROR
+};
+
 typedef int			(*t_exec)(char **args, char **env);
 
 int		stat_loc;
@@ -18,11 +31,5 @@ pid_t	gpid;
 
 char	**prepare_args(t_command *command, char **env);
 int		execute_cmd(char **args, char **env);
-
-/*
-**	utils
-*/
-
-enum	e_cmd_code	get_cmd_code(char *arg);
 
 #endif

@@ -1,27 +1,5 @@
 #include "execution.h"
 
-enum e_cmd_code	get_cmd_code(char *arg)
-{
-	char	**cmd_list;
-	int		i;
-
-	i = 0;
-	cmd_list = ft_split(BUILTINS, '/');
-	if (cmd_list == NULL)
-		return (MALLOC_ERR);
-	while (cmd_list[i] != NULL)
-	{
-		if (ft_strcmp(arg, cmd_list[i]) == 0)
-		{
-			free_str_array(&cmd_list);
-			return (i);
-		}
-		i++;
-	}
-	free_str_array(&cmd_list);
-	return (ELSE);
-}
-
 char	*get_var(char *str, size_t start, size_t end)
 {
 	char	*ret;

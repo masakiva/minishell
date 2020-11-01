@@ -3,25 +3,31 @@
 #include "parsing.h"
 #include "execution.h"
 
+#include <stdio.h>
+
 static int			get_input(t_list **commands)
 {
 	char	*line;
 	int		ret;
 
-	ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
+	if (isatty(STDIN_FILENO)) // temp
+		ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
 	ret = get_next_line(STDIN_FILENO, &line);
 	if (ret == ERROR) // defined for gnl
 		return (MALLOC_ERR); // or read(2) error
+	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
+	{
+		free(line);
+		free_commands(commands);
+		return (CLEAN_EXIT);
+	}
 	//if (line[0] == '\0')
 		//ft_putstr_fd("\n", 1);
 	*commands = parse_input(line);
 	if (*commands == NULL)
 		return (MALLOC_ERR);
 	free(line);
-	if (ret == 1)
-		return (SUCCESS);
-	else // dans quel cas gnl renvoie 0?
-		return (CLEAN_EXIT);
+	return (SUCCESS);
 }
 
 static int			main_loop(char **env)
@@ -55,8 +61,8 @@ int					main(int argc, char **argv, char **env)
 		ret = ARG_ERR;
 	else
 	{
-		ret = SUCCESS;
 		signal_handler();
+		ret = SUCCESS;
 		while (ret == SUCCESS)
 			ret = main_loop(env);
 	}

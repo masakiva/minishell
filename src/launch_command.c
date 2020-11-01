@@ -99,10 +99,7 @@ static int	ft_pwd(char **args, char **env)
 	(void)env;
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
-	{
-		free(buf);
 		return (FAILURE);
-	}
 	ft_putstr_fd(buf, STDOUT_FILENO);
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	free(buf);
@@ -255,6 +252,28 @@ static int	launch_ext(char **args, char **env)
 	return (SUCCESS);
 }
 
+enum e_cmd_code	get_cmd_code(char *arg)
+{
+	char	**cmd_list;
+	int		i;
+
+	i = 0;
+	cmd_list = ft_split(BUILTINS, '/');
+	if (cmd_list == NULL)
+		return (M_ERROR);
+	while (cmd_list[i] != NULL)
+	{
+		if (ft_strcmp(arg, cmd_list[i]) == 0)
+		{
+			free_str_array(&cmd_list);
+			return (i);
+		}
+		i++;
+	}
+	free_str_array(&cmd_list);
+	return (ELSE);
+}
+
 int		execute_cmd(char **args, char **env)
 {
 	int				i;
@@ -266,7 +285,10 @@ int		execute_cmd(char **args, char **env)
 
 	i = 0;
 	cmd_code = get_cmd_code(args[0]);
-	if ((ret = command[cmd_code](args, env)) == FAILURE)
+	if (cmd_code == M_ERROR)
+		return (MALLOC_ERR);
+	ret = command[cmd_code](args, env);
+	if (ret == FAILURE)
 		ft_putstr_fd("FAILURE\n", 1);
 	free_str_array(&args);
 	return (ret);
