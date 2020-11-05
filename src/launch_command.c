@@ -78,10 +78,11 @@ static int	ft_cd(char **args, char **env)
 	if (args[1] == NULL)
 		path = get_var_content(env, "HOME");
 	else
-	{
 		path = ft_strdup(args[1]);
-	}
-	if (chdir(path) != SUCCESS)
+	if (path == NULL)
+		; // err
+	errno = 0;
+	if (chdir(path) == ERROR)
 	{
 		perror("cd");
 		free(path);
@@ -289,7 +290,7 @@ int		execute_cmd(char **args, char **env)
 		return (MALLOC_ERR);
 	ret = command[cmd_code](args, env);
 	if (ret == FAILURE)
-		ft_putstr_fd("FAILURE\n", 1);
+		ft_putstr_fd("COMMAND ERROR\n", 1);
 	free_str_array(&args);
 	return (ret);
 }

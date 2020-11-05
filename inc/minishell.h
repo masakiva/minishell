@@ -68,7 +68,6 @@ typedef struct		s_variable
 {
 	size_t	start;
 	size_t	len;
-	size_t	end; // a retirer
 }					t_variable;
 
 typedef struct		s_token

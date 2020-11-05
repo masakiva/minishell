@@ -96,7 +96,7 @@ int		new_command(t_list **commands)
 	return (SUCCESS);
 }
 
-int		add_variable(t_list **variables, size_t start, size_t end, size_t len)
+int		add_variable(t_list **variables, size_t start, size_t len)
 {
 	t_list		*link;
 	t_variable	*variable;
@@ -106,7 +106,6 @@ int		add_variable(t_list **variables, size_t start, size_t end, size_t len)
 		return (FAILURE);
 	variable->start = start;
 	variable->len = len;
-	variable->end = end;
 	link = ft_lstnew(variable);
 	if (link != NULL)
 		ft_lstadd_back(variables, link);
@@ -122,7 +121,6 @@ char	*parse_variable(char *line, t_state_machine *machine)
 {
 	size_t		var_start;
 	size_t		var_len;
-	size_t		var_end;
 
 	var_len = 0;
 	if (*line == '?' || ft_isdigit(*line)) // second condition to keep?
@@ -143,8 +141,7 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
 	var_start = ft_strlen(machine->cur_token->str) - var_len;
-	var_end = ft_strlen(machine->cur_token->str) - 1;
-	if (add_variable(&machine->cur_token->vars, var_start, var_end, var_len) == FAILURE)
+	if (add_variable(&machine->cur_token->vars, var_start, var_len) == FAILURE)
 	{
 		free_token(machine->cur_token);
 		return (NULL);

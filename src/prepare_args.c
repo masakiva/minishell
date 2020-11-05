@@ -1,27 +1,27 @@
 #include "execution.h"
 
-char	*get_var(char *str, size_t start, size_t end)
-{
-	char	*ret;
-	size_t	size;
-	size_t	i;
-	size_t	j;
-
-	size = (end - start) + 1;
-	if (!(ret = malloc((size + 1) *sizeof(char))))
-		return (0);
-	i = start;
-	j = 0;
-	while (i <= end)
-	{
-		ret[j] = str[i];
-		i++;
-		j++;
-	}
-	ret[j] = '\0';
-	return (ret);
-}
-
+//char	*get_var(char *str, size_t start, size_t end)
+//{
+//	char	*ret;
+//	size_t	size;
+//	size_t	i;
+//	size_t	j;
+//
+//	size = (end - start) + 1;
+//	if (!(ret = malloc((size + 1) *sizeof(char))))
+//		return (0);
+//	i = start;
+//	j = 0;
+//	while (i <= end)
+//	{
+//		ret[j] = str[i];
+//		i++;
+//		j++;
+//	}
+//	ret[j] = '\0';
+//	return (ret);
+//}
+//
 char	**extract_vars(char *str, t_list *lst, char **env)
 {
 	t_list		*ptr;
@@ -39,7 +39,7 @@ char	**extract_vars(char *str, t_list *lst, char **env)
 	while (ptr != NULL)
 	{
 		var = ptr->content;
-		buf = get_var(str, var->start, var->end);
+		buf = ft_substr(str, var->start, var->len);
 		if (*buf == '~')
 			ret[i] = get_var_content(env, "HOME");
 		else
@@ -62,7 +62,7 @@ size_t	resize_token(char *str, t_list *lst)
 	while (lst != NULL)
 	{
 		var = lst->content;
-		ret -= (var->end - var->start) + 1;
+		ret -= var->len;
 		lst = lst->next;
 	}
 	return (ret);
@@ -103,9 +103,8 @@ char	*remake_and_subs(t_token *token, char **env)
 			k = 0;
 			if (buf[l] != NULL)
 			{
-				if (ft_strlen(buf[l]) == 0)
-					j = var->end + 1;
-				else
+				j = var->start + var->len;
+				if (ft_strlen(buf[l]) != 0)
 				{
 					while (buf[l][k])
 					{
@@ -113,7 +112,7 @@ char	*remake_and_subs(t_token *token, char **env)
 						k++;
 						i++;
 					}
-					j = var->end + 1;
+					j = var->start + var->len;
 				}
 			}
 			ptr = ptr->next;

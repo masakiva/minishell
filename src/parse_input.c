@@ -171,9 +171,10 @@ char	*tilde(char *line, t_list **commands, t_state_machine *machine)
 	add_to_buf('~', machine);
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
-	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|") != -1 || ft_isspace(*line) || *line == '\0'))
+	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|") != -1
+				|| ft_isspace(*line) || *line == '\0'))
 	{
-		if (add_variable(&machine->cur_token->vars, 0, 1, 1) == FAILURE)
+		if (add_variable(&machine->cur_token->vars, 0, 1) == FAILURE)
 		{
 			free_token(machine->cur_token);
 			return (NULL);

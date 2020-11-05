@@ -6,6 +6,7 @@ et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
 
 https://brennan.io/2015/01/16/write-a-shell-in-c/
 redirections https://catonmat.net/bash-one-liners-explained-part-three
+multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
 
 Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 man bash https://www.gnu.org/software/bash/manual/html_node/index.html
@@ -20,4 +21,6 @@ man bash -> QUOTING
 		 - * et @ ont un special meaning entre double quotes
 	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
 
-multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
+
+testeur https://github.com/cacharle/minishell_test.git
++ fichier .ods de tests (->nmbabazi)
