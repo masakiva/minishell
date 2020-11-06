@@ -21,6 +21,7 @@ man bash -> QUOTING
 		 - * et @ ont un special meaning entre double quotes
 	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
 
-
 testeur https://github.com/cacharle/minishell_test.git
 + fichier .ods de tests (->nmbabazi)
+
+Les redirections doivent être effectuées à l'intérieur d'un fork(), il faut donc fork avant prepare_commands (hormis pour cd et env).

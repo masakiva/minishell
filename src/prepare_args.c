@@ -1,4 +1,6 @@
 #include "execution.h"
+#include <unistd.h>
+#include <fcntl.h>
 
 //char	*get_var(char *str, size_t start, size_t end)
 //{
@@ -130,6 +132,39 @@ char	*remake_and_subs(t_token *token, char **env)
 	return (ret);
 }
 
+void	apply_redir(char *cur_arg, enum e_redir_op redir)
+{
+	int			old_fd;
+	int			redir_fd;
+	mode_t		mode;
+	int			flags;
+
+	flags = 0;
+	mode = 0;
+	if (redir == FILEIN)
+	{
+		old_fd = STDIN_FILENO;
+		flags = O_RDONLY;
+	}
+	else
+	{
+		old_fd = STDOUT_FILENO;
+		flags = O_WRONLY;
+		flags += O_CREAT;
+		mode = S_IRUSR;
+		mode += S_IWUSR;
+		mode += S_IRGRP;
+		mode += S_IROTH;
+		if (redir == APPEND)
+			flags += O_APPEND;
+	}
+	if ((redir_fd = open(cur_arg, flags, mode)) >= 0)
+	{
+		close(old_fd);
+		dup(redir_fd);
+	}
+}
+
 char	**prepare_args(t_command *command, char **env)
 {
 	t_list		*tokens;
@@ -146,9 +181,14 @@ char	**prepare_args(t_command *command, char **env)
 		cur_token = ft_lstpop(&tokens);
   		cur_arg = remake_and_subs(cur_token, env);
 //		 do checks here for pipes, redir, etc...
-		args[i] = cur_arg;
+		if (cur_token->redir != NO_REDIR)
+			apply_redir(cur_arg, cur_token->redir);
+		else
+		{
+			args[i] = cur_arg;
+			i++;
+		}
 		free_token(cur_token);
-		i++;
 	}
 	args[i] = NULL;
 	free(command);
