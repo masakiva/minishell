@@ -292,5 +292,7 @@ int		execute_cmd(char **args, char **env)
 	if (ret == FAILURE)
 		ft_putstr_fd("COMMAND ERROR\n", 1);
 	free_str_array(&args);
+	if (fd_backup != -1)
+		dup2(fd_backup, fd_old);
 	return (ret);
 }
