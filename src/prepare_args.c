@@ -137,7 +137,7 @@ char	*remake_and_subs(t_token *token, char **env)
 
 void	apply_redir(char *cur_arg, enum e_redir_op redir)
 {
-	int			old_fd;
+//	int			old_fd;
 	int			redir_fd;
 	mode_t		mode;
 	int			flags;
@@ -146,12 +146,12 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	mode = 0;
 	if (redir == FILEIN)
 	{
-		old_fd = STDIN_FILENO;
+		fd_old = STDIN_FILENO;
 		flags = O_RDONLY;
 	}
 	else
 	{
-		old_fd = STDOUT_FILENO;
+		fd_old = STDOUT_FILENO;
 		flags = O_WRONLY;
 		flags += O_CREAT;
 		mode = S_IRUSR;
@@ -163,8 +163,9 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	}
 	if ((redir_fd = open(cur_arg, flags, mode)) >= 0)
 	{
-		close(old_fd);
-		dup(redir_fd);
+		dup2(fd_old, fd_backup);
+		dup2(redir_fd, fd_old);
+		close(redir_fd);
 	}
 }
 
@@ -176,6 +177,7 @@ char	**prepare_args(t_command *command, char **env)
 	char		*cur_arg;
 	size_t		i;
 
+	fd_backup = dup(0);
 	tokens = command->tokens;
 	args = (char **)malloc(sizeof(char *) * (ft_lstsize(tokens) + 1));
 	i = 0;

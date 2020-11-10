@@ -23,6 +23,8 @@ enum		e_cmd_code
 typedef int			(*t_exec)(char **args, char **env);
 
 int		stat_loc;
+int		fd_backup;
+int		fd_old;
 pid_t	gpid;
 
 /*
