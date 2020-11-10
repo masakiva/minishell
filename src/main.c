@@ -30,25 +30,58 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
+static int			handle_commands(t_list **commands, char **env)
+{
+	int			ret;
+	char		**args;
+	t_command	*cur_command;
+
+	ret = SUCCESS;
+	gpid = -1;
+	cur_command = NULL;
+	if (commands != NULL)
+		cur_command = ft_lstpop(commands);
+	if (cur_command != NULL) // le contraire possible?
+	{
+		if (cur_command->pipe_flag == TRUE)
+		{
+			pipe(fd_pipe);
+			gpid = fork();
+			fd_backup = dup(0);
+			if (gpid == 0)
+			{
+				fd_old = STDIN_FILENO;
+				dup2(fd_old, fd_backup);
+				dup2(fd_pipe[0], fd_old);
+				close(fd_pipe[0]);
+				return (handle_commands(commands, env));
+			}
+			else
+			{
+				fd_old = STDOUT_FILENO;
+				dup2(fd_old, fd_backup);
+				dup2(fd_pipe[1], fd_old);
+				close(fd_pipe[1]);
+			}
+		}
+		args = prepare_args(cur_command, env);
+		ret = execute_cmd(args, env);
+	}
+	return (ret);
+}
+
 static int			main_loop(char **env)
 {
 	int			ret;
 	t_list		*commands;
-	t_command	*cur_command;
-	char		**args;
+//	t_command	*cur_command;
+//	char		**args;
 
+	fd_backup = -1;
 	ret = get_input(&commands);
 	if (ret != SUCCESS)
 		;//err
-	while (commands != NULL && ret == SUCCESS)
-	{
-		cur_command = ft_lstpop(&commands);
-		if (cur_command != NULL) // le contraire possible?
-		{
-			args = prepare_args(cur_command, env);
-			ret = execute_cmd(args, env);
-		}
-	}
+	ret = handle_commands(&commands, env);
 	return (ret);
 }
 

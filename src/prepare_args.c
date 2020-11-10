@@ -144,6 +144,7 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 
 	flags = 0;
 	mode = 0;
+	fd_backup = dup(0);
 	if (redir == FILEIN)
 	{
 		fd_old = STDIN_FILENO;
@@ -177,7 +178,6 @@ char	**prepare_args(t_command *command, char **env)
 	char		*cur_arg;
 	size_t		i;
 
-	fd_backup = dup(0);
 	tokens = command->tokens;
 	args = (char **)malloc(sizeof(char *) * (ft_lstsize(tokens) + 1));
 	i = 0;

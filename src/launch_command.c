@@ -294,5 +294,15 @@ int		execute_cmd(char **args, char **env)
 	free_str_array(&args);
 	if (fd_backup != -1)
 		dup2(fd_backup, fd_old);
+	if (gpid == 0)
+		kill(gpid, SIGCHLD);
+	else
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		waitpid(gpid, &stat_loc, 0);
+		signal_handler();
+		return (SUCCESS);
+	}
 	return (ret);
 }
