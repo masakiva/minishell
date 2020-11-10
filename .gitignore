@@ -18,3 +18,7 @@ minishell
 
 # ctags
 tags
+
+#tester_output
+output___bash
+output___minishell

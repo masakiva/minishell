@@ -46,8 +46,9 @@ char	**extract_vars(char *str, t_list *lst, char **env)
 			ret[i] = get_var_content(env, "HOME");
 		else
 			ret[i] = get_var_content(env, buf);
+		free(buf);
 		if (ret[i] == NULL)
-			ret[i] = "";
+			ret[i] = ft_strdup("");
 		i++;
 		ptr = ptr->next;
 	}
@@ -128,6 +129,8 @@ char	*remake_and_subs(t_token *token, char **env)
 		}
 	}
 	ret[i] = '\0';
+	//while (*buf != NULL)
+		//free(*buf++);
 	free(buf);
 	return (ret);
 }
