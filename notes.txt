@@ -1,3 +1,8 @@
+make libft a chaque fois?
+leak ft_split buf
+double-free ext
+
+
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
 
 trop bizarre la len d'un token ne peut pas etre superieure a 4095 sur linux
@@ -7,6 +12,7 @@ et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
 https://brennan.io/2015/01/16/write-a-shell-in-c/
 redirections https://catonmat.net/bash-one-liners-explained-part-three
 multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
+redirection and pipe explanation https://askubuntu.com/questions/172982/what-is-the-difference-between-redirection-and-pipe/1074550#1074550
 
 Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 man bash https://www.gnu.org/software/bash/manual/html_node/index.html

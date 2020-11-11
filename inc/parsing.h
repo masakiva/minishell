@@ -54,7 +54,7 @@ t_list	*parse_input(char *line);
 */
 
 int		new_command(t_list **commands);
-int		add_variable(t_list **variables, size_t start, size_t len);
+int		add_variable(t_list **var_list, size_t start, size_t len);
 char	*parse_variable(char *line, t_state_machine *machine);
 int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);

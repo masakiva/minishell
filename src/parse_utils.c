@@ -8,7 +8,7 @@ void	print_tokens(t_list *commands)
 	t_list		*tokens;
 	t_token		*token;
 	t_list		*vars;
-	t_variable	*var;
+	t_var_pos	*var;
 
 	j = 0;
 	while (commands != NULL)
@@ -23,9 +23,9 @@ void	print_tokens(t_list *commands)
 			token = (t_token *)tokens->content;
 			printf("%zu = %s\n", i, token->str);
 			printf("token len = %zu\n", ft_strlen(token->str));
-			if (token->vars != NULL)
+			if (token->var_positions != NULL)
 			{
-				vars = token->vars;
+				vars = token->var_positions;
 				while (vars != NULL)
 				{
 					var = vars->content;
@@ -57,7 +57,7 @@ void		free_token(void *content)
 
 	token = (t_token *)content;
 	free(token->str);
-	ft_lstclear(&token->vars, free_content);
+	ft_lstclear(&token->var_positions, free_content);
 	free(token);
 }
 
@@ -96,22 +96,22 @@ int		new_command(t_list **commands)
 	return (SUCCESS);
 }
 
-int		add_variable(t_list **variables, size_t start, size_t len)
+int		add_variable(t_list **var_list, size_t start, size_t len)
 {
 	t_list		*link;
-	t_variable	*variable;
+	t_var_pos	*var_pos;
 
-	variable = (t_variable *)malloc(sizeof(t_variable));
-	if (variable == NULL)
+	var_pos = (t_var_pos *)malloc(sizeof(t_var_pos));
+	if (var_pos == NULL)
 		return (FAILURE);
-	variable->start = start;
-	variable->len = len;
-	link = ft_lstnew(variable);
+	var_pos->start = start;
+	var_pos->len = len;
+	link = ft_lstnew(var_pos);
 	if (link != NULL)
-		ft_lstadd_back(variables, link);
+		ft_lstadd_back(var_list, link);
 	else
 	{
-		free(variable);
+		free(var_pos);
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -141,7 +141,7 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
 	var_start = ft_strlen(machine->cur_token->str) - var_len;
-	if (add_variable(&machine->cur_token->vars, var_start, var_len) == FAILURE)
+	if (add_variable(&machine->cur_token->var_positions, var_start, var_len) == FAILURE)
 	{
 		free_token(machine->cur_token);
 		return (NULL);
@@ -186,7 +186,7 @@ int		reset_buf(t_state_machine *machine)
 	}
 	if (res == NULL)
 	{
-		ft_lstclear(&machine->cur_token->vars, free_content);
+		ft_lstclear(&machine->cur_token->var_positions, free_content);
 		free(machine->cur_token);
 		return (FAILURE);
 	}

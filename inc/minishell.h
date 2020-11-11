@@ -64,16 +64,16 @@ enum e_redir_op
 	APPEND
 };
 
-typedef struct		s_variable
+typedef struct		s_var_pos
 {
 	size_t	start;
 	size_t	len;
-}					t_variable;
+}					t_var_pos;
 
 typedef struct		s_token
 {
 	char			*str;
-	t_list			*vars;
+	t_list			*var_positions;
 	enum e_redir_op	redir;
 	uint8_t			pad[4];
 }					t_token;

@@ -76,7 +76,7 @@ static int	ft_cd(char **args, char **env)
 	char	*path;
 
 	if (args[1] == NULL)
-		path = get_var_content(env, "HOME");
+		path = get_var_value(env, "HOME");
 	else
 		path = ft_strdup(args[1]);
 	if (path == NULL)
@@ -228,7 +228,7 @@ static int	launch_ext(char **args, char **env)
 	int		ref;
 	int		ret;
 
-	cmd = get_var_content(env, "PATH");
+	cmd = get_var_value(env, "PATH");
 	path = ft_split(cmd, ':');
 	//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();

@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/10/21 17:46:06 by abenoit          ###   ########.fr        #
+#    Updated: 2020/11/11 22:47:01 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ SRCS_CUSTOM	+= ft_index.c
 SRCS_CUSTOM	+= ft_isspace.c
 SRCS_CUSTOM	+= ft_strcmp.c
 SRCS_CUSTOM	+= ft_isset.c
-SRCS_CUSTOM	+= ft_get_var_content.c
+SRCS_CUSTOM	+= ft_get_var_value.c
 SRCS_CUSTOM	+= ft_get_var_pos.c
 SRCS_CUSTOM	+= ft_printarray_fd.c
 SRCS_CUSTOM	+= ft_arraylen.c

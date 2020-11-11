@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_var_content.c                               :+:      :+:    :+:   */
+/*   ft_get_var_value.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:42:49 by abenoit           #+#    #+#             */
-/*   Updated: 2020/11/10 16:46:27 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/11/11 23:10:55 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-char	*get_var_content(char **array, char *name)
+char	*get_var_value(char **env, char *name)
 {
-	ssize_t		i;
-	char	**tmp;
-	char		*value;
-
-	i = 0;
-	while (array[i])
+	while (*env != NULL)
 	{
-		tmp = ft_split(array[i], '=');
-		if (ft_strcmp(tmp[0], name) == 0)
-		{
-			free(tmp[0]);
-			value = tmp[1];
-			free(tmp);
-			return (value);
-		}
-		free_str_array(&tmp);
-		i++;
+		if (ft_strncmp(*env, name, ft_strlen(name)) == 0)
+			return (ft_strdup(ft_strchr(*env, '=') + 1));
+		env++;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }

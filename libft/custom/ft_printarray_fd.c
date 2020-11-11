@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:46:48 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/19 13:47:00 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/11/11 22:53:49 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_printarray_fd(char **array, int fd)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (array[i] != NULL)
