@@ -50,22 +50,40 @@ static int			handle_commands(t_list **commands, char **env)
 			fd_backup = dup(0);
 			if (gpid == 0)
 			{
-				fd_old = STDIN_FILENO;
-				dup2(fd_old, fd_backup);
-				dup2(fd_pipe[0], fd_old);
-				close(fd_pipe[0]);
-				return (handle_commands(commands, env));
-			}
-			else
-			{
 				fd_old = STDOUT_FILENO;
 				dup2(fd_old, fd_backup);
 				dup2(fd_pipe[1], fd_old);
+				args = prepare_args(cur_command, env);
+				ret = execute_cmd(args, env);
 				close(fd_pipe[1]);
+				close(fd_pipe[0]);
+				return (CLEAN_EXIT);
+			}
+			else
+			{
+				fd_old = STDIN_FILENO;
+				dup2(fd_old, fd_backup);
+				dup2(fd_pipe[0], fd_old);
+				free(cur_command);
+				close(fd_pipe[0]);
+				close(fd_pipe[1]);
+				cur_command = ft_lstpop(commands);
+				if (cur_command != NULL)
+				{
+					args = prepare_args(cur_command, env);
+					ret = execute_cmd(args, env);
+					signal(SIGINT, SIG_IGN);
+					signal(SIGQUIT, SIG_IGN);
+					waitpid(gpid, &stat_loc, 0);
+					signal_handler();
+				}
 			}
 		}
-		args = prepare_args(cur_command, env);
-		ret = execute_cmd(args, env);
+		else
+		{
+			args = prepare_args(cur_command, env);
+			ret = execute_cmd(args, env);
+		}
 	}
 	return (ret);
 }

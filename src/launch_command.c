@@ -292,17 +292,12 @@ int		execute_cmd(char **args, char **env)
 	if (ret == FAILURE)
 		ft_putstr_fd("COMMAND ERROR\n", 1);
 	free_str_array(&args);
+	if (gpid == 0)
+	{
+		close(fd_old);
+		close(STDIN_FILENO);
+	}
 	if (fd_backup != -1)
 		dup2(fd_backup, fd_old);
-	if (gpid == 0)
-		kill(gpid, SIGCHLD);
-	else
-	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-		waitpid(gpid, &stat_loc, 0);
-		signal_handler();
-		return (SUCCESS);
-	}
 	return (ret);
 }
