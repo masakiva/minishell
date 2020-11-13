@@ -33,7 +33,7 @@ char	**extract_vars(char *str, t_list *var_positions, char **env)
 	return (ret);
 }
 
-size_t	resize_token(char *str, t_list *var_positions)
+size_t	resize_token(char *str, t_list *var_positions, char **var_values)
 {
 	size_t		ret;
 	t_var_pos	*cur_var_pos;
@@ -44,6 +44,11 @@ size_t	resize_token(char *str, t_list *var_positions)
 		cur_var_pos = var_positions->content;
 		ret -= cur_var_pos->len;
 		var_positions = var_positions->next;
+	}
+	while (*var_values != NULL)
+	{
+		ret += ft_strlen(*var_values);
+		var_values++;
 	}
 	return (ret);
 }
@@ -62,16 +67,10 @@ char	*expand_token_vars(t_token *token, char **env)
 
 	// if (token->var_positions == NULL)
 	// 	return (ft_strdup(token->str));
-	token_len = resize_token(token->str, token->var_positions);
 	var_values = extract_vars(token->str, token->var_positions, env);
 	if (var_values == NULL)
 		return (NULL);
-	k = 0;
-	while (var_values[k] != NULL)
-	{
-		token_len += ft_strlen(var_values[k]);
-		k++;
-	}
+	token_len = resize_token(token->str, token->var_positions, var_values);
 	ret = (char *)malloc(sizeof(char) * (token_len + 2)); // + 2?
 	if (ret == NULL)
 		return (NULL);
@@ -111,8 +110,9 @@ char	*expand_token_vars(t_token *token, char **env)
 		}
 	}
 	ret[i] = '\0';
-	//while (*var_values != NULL)
-		//free(*var_values++);
+	i = 0;
+	while (var_values[i] != NULL)
+		free(var_values[i++]);
 	free(var_values);
 	return (ret);
 }
