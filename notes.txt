@@ -1,6 +1,4 @@
-make libft a chaque fois?
-leak ft_split buf
-double-free ext
+j'ai ajouté un 'make libft' comme raccourci, quand on change un truc dans la lib
 
 
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8

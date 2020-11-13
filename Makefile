@@ -46,7 +46,7 @@ LDFLAGS		+= -L $(LIBFT_DIR)
 LDLIBS		+= -lft
 
 ifeq ($(d), 0)
-#	CFLAGS	+= -Wpadded
+	CFLAGS	+= -Wpadded
 	CFLAGS	+= -g3
 	CFLAGS	+= -fsanitize=address,undefined
 	LDFLAGS	+= -fsanitize=address,undefined
@@ -68,6 +68,9 @@ $(OBJ_DIR):
 $(LIBFT_DIR)libft.a:
 				$(MAKE) -C $(LIBFT_DIR) bonus custom
 
+libft:
+				$(MAKE) -C $(LIBFT_DIR) bonus custom
+
 clean:
 				$(MAKE) -C $(LIBFT_DIR) fclean
 				$(RM) -r $(OBJ_DIR)
@@ -77,4 +80,4 @@ fclean:			clean
 
 re:				fclean all
 
-.PHONY:			all clean fclean re
+.PHONY:			all clean fclean re libft

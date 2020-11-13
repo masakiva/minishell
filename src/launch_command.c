@@ -197,8 +197,8 @@ static int	search_path(DIR *dirp, char *name)
 
 int	search_exec(char **path, char *name)
 {
-	DIR				*dirp;
-	int				i;
+	DIR		*dirp;
+	int		i;
 
 	i = 0;
 	while (path[i] != NULL)
@@ -216,7 +216,7 @@ int	search_exec(char **path, char *name)
 		else
 			i++;
 	}
-	closedir(dirp);
+	//closedir(dirp);
 	return (-1);
 }
 
@@ -224,12 +224,14 @@ static int	launch_ext(char **args, char **env)
 {
 	pid_t	pid;
 	char	*cmd;
+	char	*tmp;
 	char	**path;
 	int		ref;
 	int		ret;
 
 	cmd = get_var_value(env, "PATH");
 	path = ft_split(cmd, ':');
+	free(cmd);
 	//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
@@ -238,10 +240,16 @@ static int	launch_ext(char **args, char **env)
 			return (SUCCESS);
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
+		{
+			free_str_array(&path);
 			return (FAILURE);
+		}
 		cmd = ft_strjoin(path[ref], "/");
+		tmp = cmd;
 		cmd = ft_strjoin(cmd, args[0]);
+		free(tmp);
 		execve(cmd, args, env);
+		free(cmd);
 	}
 	else
 	{
@@ -250,6 +258,7 @@ static int	launch_ext(char **args, char **env)
 		waitpid(pid, &stat_loc, 0);
 		signal_handler();
 	}
+	free_str_array(&path);
 	return (SUCCESS);
 }
 

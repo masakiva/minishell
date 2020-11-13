@@ -3,6 +3,9 @@
 #include "parsing.h"
 #include "execution.h"
 
+#include <sys/types.h> // waitpid
+#include <sys/wait.h> // waitpid
+
 #include <stdio.h>
 
 static int			get_input(t_list **commands)
