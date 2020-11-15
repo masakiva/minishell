@@ -56,10 +56,10 @@ static int			handle_commands(t_list **commands, char **env)
 				fd_old = STDOUT_FILENO;
 				dup2(fd_old, fd_backup);
 				dup2(fd_pipe[1], fd_old);
+				close(fd_pipe[0]);
 				args = prepare_args(cur_command, env);
 				ret = execute_cmd(args, env);
 				close(fd_pipe[1]);
-				close(fd_pipe[0]);
 				return (CLEAN_EXIT);
 			}
 			else
