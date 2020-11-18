@@ -100,6 +100,7 @@ static int			main_loop(char **env)
 
 	fd_backup = -1;
 	ret = get_input(&commands);
+//	write(1, "OK\n", 3);
 	if (ret != SUCCESS)
 		;//err
 	ret = handle_commands(&commands, env);

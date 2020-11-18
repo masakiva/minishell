@@ -53,8 +53,27 @@ size_t	resize_token(char *str, t_list *var_positions, char **var_values)
 	return (ret);
 }
 
+void	free_str_array2(char ***array)
+{
+	size_t	i;
+
+	i = 0;
+	if (*array != NULL)
+	{
+		while ((*array)[i] != NULL)
+		{
+			free((*array)[i]);
+			(*array)[i] = NULL;
+			i++;
+		}
+		free(*array);
+	//	*array = NULL;
+	}
+}
+
 char	*expand_token_vars(t_token *token, char **env)
 {
+	char		***ptr;
 	char		**var_values;
 	char		*ret;
 	size_t		token_len;
@@ -110,7 +129,8 @@ char	*expand_token_vars(t_token *token, char **env)
 		}
 	}
 	ret[i] = '\0';
-	free_str_array(&var_values);
+	ptr = &var_values;
+	free_str_array(ptr);
 //	i = 0;
 //	while (var_values[i] != NULL)
 //		free(var_values[i++]);
