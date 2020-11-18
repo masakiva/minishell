@@ -110,11 +110,11 @@ char	*expand_token_vars(t_token *token, char **env)
 		}
 	}
 	ret[i] = '\0';
-	//free_str_array(&var_values);
-	i = 0;
-	while (var_values[i] != NULL)
-		free(var_values[i++]);
-	free(var_values);
+	free_str_array(&var_values);
+//	i = 0;
+//	while (var_values[i] != NULL)
+//		free(var_values[i++]);
+//	free(var_values);
 	return (ret);
 }
 
