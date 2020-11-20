@@ -21,6 +21,8 @@ char	**extract_vars(char *str, t_list *var_positions, char **env)
 			return (NULL);
 		if (*var_name == '~')
 			ret[i] = get_var_value(env, "HOME");
+		if (*var_name == '?')
+			ret[i] = ft_itoa(stat_loc);
 		else
 			ret[i] = get_var_value(env, var_name);
 		free(var_name);
