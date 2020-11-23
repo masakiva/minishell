@@ -4,9 +4,6 @@
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
 
-#define DISABLED	1
-#define ENABLED		0
-
 t_byte		check_arg_for_options(char *arg, char *op_chars)
 {
 	size_t	i;
@@ -241,7 +238,7 @@ static int	launch_ext(char **args, char **env)
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
 		{
-			free_str_array(&path);
+			free_str_array(path);
 			return (FAILURE);
 		}
 		cmd = ft_strjoin(path[ref], "/");
@@ -258,7 +255,7 @@ static int	launch_ext(char **args, char **env)
 		waitpid(pid, &stat_loc, 0);
 		signal_handler();
 	}
-	free_str_array(&path);
+	free_str_array(path);
 	return (SUCCESS);
 }
 
@@ -275,12 +272,12 @@ enum e_cmd_code	get_cmd_code(char *arg)
 	{
 		if (ft_strcmp(arg, cmd_list[i]) == 0)
 		{
-			free_str_array(&cmd_list);
+			free_str_array(cmd_list);
 			return (i);
 		}
 		i++;
 	}
-	free_str_array(&cmd_list);
+	free_str_array(cmd_list);
 	return (ELSE);
 }
 
@@ -300,7 +297,7 @@ int		execute_cmd(char **args, char **env)
 	ret = command[cmd_code](args, env);
 	if (ret == FAILURE)
 		ft_putstr_fd("COMMAND ERROR\n", 1);
-	free_str_array(&args);
+	free_str_array(args);
 	if (gpid == 0)
 	{
 		close(fd_old);

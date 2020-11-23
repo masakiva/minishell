@@ -12,13 +12,17 @@ char	**extract_vars(char *str, t_list *var_positions, char **env)
 	ret = malloc(sizeof(char *) * (ft_lstsize(var_positions) + 1));
 	if (ret == NULL)
 		return (NULL);
+	ft_bzero(ret, sizeof(char *) * (ft_lstsize(var_positions) + 1));
 	i = 0;
 	while (var_positions != NULL)
 	{
 		cur_var_pos = var_positions->content;
 		var_name = ft_substr(str, cur_var_pos->start, cur_var_pos->len);
-		if (var_name == NULL) // free previous extractions
+		if (var_name == NULL)
+		{
+			free_str_array(ret);
 			return (NULL);
+		}
 		if (*var_name == '~')
 			ret[i] = get_var_value(env, "HOME");
 		if (*var_name == '?')
@@ -26,12 +30,14 @@ char	**extract_vars(char *str, t_list *var_positions, char **env)
 		else
 			ret[i] = get_var_value(env, var_name);
 		free(var_name);
-		if (ret[i] == NULL) // free previous extractions
+		if (ret[i] == NULL)
+		{
+			free_str_array(ret);
 			return (NULL);
+		}
 		i++;
 		var_positions = var_positions->next;
 	}
-	ret[i] = NULL;
 	return (ret);
 }
 
@@ -55,24 +61,6 @@ size_t	resize_token(char *str, t_list *var_positions, char **var_values)
 	return (ret);
 }
 
-void	free_str_array2(char ***array)
-{
-	size_t	i;
-
-	i = 0;
-	if (*array != NULL)
-	{
-		while ((*array)[i] != NULL)
-		{
-			free((*array)[i]);
-			(*array)[i] = NULL;
-			i++;
-		}
-		free(*array);
-	//	*array = NULL;
-	}
-}
-
 char	*expand_token_vars(t_token *token, char **env)
 {
 	char		***ptr;
@@ -81,10 +69,10 @@ char	*expand_token_vars(t_token *token, char **env)
 	size_t		token_len;
 	t_list		*var_positions;
 	t_var_pos	*var;
-	size_t		i;
-	size_t		j;
-	size_t		k;
-	size_t		l;
+	size_t		i_ret;
+	size_t		j_input;
+	size_t		k_value;
+	size_t		l_values;
 
 	// if (token->var_positions == NULL)
 	// 	return (ft_strdup(token->str));
@@ -95,44 +83,44 @@ char	*expand_token_vars(t_token *token, char **env)
 	ret = (char *)malloc(sizeof(char) * (token_len + 2)); // + 2?
 	if (ret == NULL)
 		return (NULL);
-	i = 0;
-	j = 0;
-	l = 0;
+	i_ret = 0;
+	j_input = 0;
+	l_values = 0;
 	var_positions = token->var_positions;
-	while (i < token_len)
+	while (i_ret < token_len)
 	{
 		if (var_positions != NULL) 
 			var = var_positions->content;
-		if (var != NULL && j == var->start)
+		if (var != NULL && j_input == var->start)
 		{
-			k = 0;
-			if (var_values[l] != NULL)
+			if (var_values[l_values] != NULL)
 			{
-				j = var->start + var->len;
-				if (ft_strlen(var_values[l]) != 0)
+				j_input = var->start + var->len;
+				if (ft_strlen(var_values[l_values]) != 0)
 				{
-					while (var_values[l][k])
+					k_value = 0;
+					while (var_values[l_values][k_value])
 					{
-						ret[i] = var_values[l][k];
-						k++;
-						i++;
+						ret[i_ret] = var_values[l_values][k_value];
+						k_value++;
+						i_ret++;
 					}
-					j = var->start + var->len;
+					j_input = var->start + var->len;
 				}
 			}
 			var_positions = var_positions->next;
-			l++;
+			l_values++;
 		}
 		else
 		{
-			ret[i] = token->str[j];
-			i++;
-			j++;
+			ret[i_ret] = token->str[j_input];
+			i_ret++;
+			j_input++;
 		}
 	}
-	ret[i] = '\0';
-	ptr = &var_values;
-	free_str_array(ptr);
+	ret[i_ret] = '\0';
+	ptr = &var_values; // ??
+	free_str_array(var_values);
 //	i = 0;
 //	while (var_values[i] != NULL)
 //		free(var_values[i++]);
@@ -142,36 +130,31 @@ char	*expand_token_vars(t_token *token, char **env)
 
 void	apply_redir(char *cur_arg, enum e_redir_op redir)
 {
-//	int			old_fd;
 	int			redir_fd;
 	mode_t		mode;
 	int			flags;
 
-	flags = 0;
 	mode = 0;
-	fd_backup = dup(0);
+	fd_backup = dup(0); // eh bien il sort d'ou ce fd_backup ; err a gerer
 	if (redir == FILEIN)
 	{
-		fd_old = STDIN_FILENO;
+		fd_old = STDIN_FILENO; // et fd_old
 		flags = O_RDONLY;
 	}
 	else
 	{
 		fd_old = STDOUT_FILENO;
-		flags = O_WRONLY;
-		flags += O_CREAT;
-		mode = S_IRUSR;
-		mode += S_IWUSR;
-		mode += S_IRGRP;
-		mode += S_IROTH;
+		flags = O_WRONLY | O_CREAT;
+		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 		if (redir == APPEND)
-			flags += O_APPEND;
+			flags |= O_APPEND;
 	}
-	if ((redir_fd = open(cur_arg, flags, mode)) >= 0)
+	redir_fd = open(cur_arg, flags, mode);
+	if (redir_fd >= 0) // else error?
 	{
-		dup2(fd_old, fd_backup);
-		dup2(redir_fd, fd_old);
-		close(redir_fd);
+		dup2(fd_old, fd_backup); // error?
+		dup2(redir_fd, fd_old); // error
+		close(redir_fd); // error
 	}
 }
 
@@ -185,14 +168,21 @@ char	**prepare_args(t_command *command, char **env)
 
 	tokens = command->tokens;
 	args = (char **)malloc(sizeof(char *) * (ft_lstsize(tokens) + 1));
+	if (args == NULL)
+		return (NULL); // MALLOC_ERR
+	ft_bzero(args, sizeof(char *) * (ft_lstsize(tokens) + 1));
 	i = 0;
 	while (tokens != NULL)
 	{
 		cur_token = ft_lstpop(&tokens);
   		cur_arg = expand_token_vars(cur_token, env);
-//		 do checks here for pipes, redir, etc...
+		if (cur_arg == NULL)
+		{
+			free_str_array(args);
+			return (NULL); // MALLOC_ERR
+		}
 		if (cur_token->redir != NO_REDIR)
-			apply_redir(cur_arg, cur_token->redir);
+			apply_redir(cur_arg, cur_token->redir); // error?
 		else
 		{
 			args[i] = cur_arg;
@@ -200,7 +190,6 @@ char	**prepare_args(t_command *command, char **env)
 		}
 		free_token(cur_token);
 	}
-	args[i] = NULL;
 	free(command);
 //	ft_printarray_fd(args, 1);
 	return (args);

@@ -60,7 +60,7 @@ $(NAME):		$(LIBFT_DIR)libft.a $(OBJ)
 $(OBJ_DIR)%.o:	$(SRC_DIR)%.c
 				$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
-$(OBJ):			$(HDR) | $(OBJ_DIR)
+$(OBJ):			$(HDR) $(LIBFT_DIR)libft.a | $(OBJ_DIR)
 
 $(OBJ_DIR):
 				mkdir $@
@@ -68,8 +68,9 @@ $(OBJ_DIR):
 $(LIBFT_DIR)libft.a:
 				$(MAKE) -C $(LIBFT_DIR) bonus custom
 
-libft:
+lib:
 				$(MAKE) -C $(LIBFT_DIR) bonus custom
+				$(MAKE) $(NAME)
 
 clean:
 				$(MAKE) -C $(LIBFT_DIR) fclean

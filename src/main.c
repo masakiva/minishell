@@ -13,27 +13,28 @@ static int			get_input(t_list **commands)
 	char	*line;
 	int		ret;
 
-	if (isatty(STDIN_FILENO)) // temp
-		ft_putstr_fd(PROMPT, STDOUT_FILENO); // err
+	if (isatty(STDIN_FILENO)) // temp pour le testeur
+	{
+		if (ft_putstr_fd(PROMPT, STDOUT_FILENO) == ERROR)
+			return (WRITE_ERR);
+	}
 	ret = get_next_line(STDIN_FILENO, &line);
-	if (ret == ERROR) // defined for gnl
-		return (MALLOC_ERR); // or read(2) error
+	if (ret == ERROR)
+		return (GNL_ERR);
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
 		free(line);
 		free_commands(commands);
 		return (CLEAN_EXIT);
 	}
-	//if (line[0] == '\0')
-		//ft_putstr_fd("\n", 1);
 	*commands = parse_input(line);
+	free(line);
 	if (*commands == NULL)
 		return (MALLOC_ERR);
-	free(line);
 	return (SUCCESS);
 }
 
-static int			handle_commands(t_list **commands, char **env)
+static int			handle_execution(t_list **commands, char **env)
 {
 	int			ret;
 	char		**args;
@@ -48,44 +49,45 @@ static int			handle_commands(t_list **commands, char **env)
 	{
 		if (cur_command->pipe_flag == TRUE)
 		{
-			pipe(fd_pipe);
-			gpid = fork();
+			pipe(fd_pipe);// error?
+			gpid = fork();// error?
 			fd_backup = dup(0);
 			if (gpid == 0)
 			{
 				fd_old = STDOUT_FILENO;
-				dup2(fd_old, fd_backup);
-				dup2(fd_pipe[1], fd_old);
-				close(fd_pipe[0]);
-				args = prepare_args(cur_command, env);
-				ret = execute_cmd(args, env);
-				close(fd_pipe[1]);
-				return (CLEAN_EXIT);
+				dup2(fd_old, fd_backup);// error
+				dup2(fd_pipe[1], fd_old);// error
+				close(fd_pipe[0]);// error
+				args = prepare_args(cur_command, env);// error
+				ret = execute_cmd(args, env);// error
+				close(fd_pipe[1]);// error
+				ret = CLEAN_EXIT;
+				//return (CLEAN_EXIT);
 			}
 			else
 			{
 				fd_old = STDIN_FILENO;
-				dup2(fd_old, fd_backup);
-				dup2(fd_pipe[0], fd_old);
+				dup2(fd_old, fd_backup);// error
+				dup2(fd_pipe[0], fd_old);// error
 				free(cur_command);
-				close(fd_pipe[0]);
-				close(fd_pipe[1]);
+				close(fd_pipe[0]);// error
+				close(fd_pipe[1]);// error
 				cur_command = ft_lstpop(commands);
-				if (cur_command != NULL)
+				if (cur_command != NULL)// else error
 				{
-					args = prepare_args(cur_command, env);
-					ret = execute_cmd(args, env);
-					signal(SIGINT, SIG_IGN);
-					signal(SIGQUIT, SIG_IGN);
-					waitpid(gpid, &stat_loc, 0);
+					args = prepare_args(cur_command, env);// error
+					ret = execute_cmd(args, env);// error
+					signal(SIGINT, SIG_IGN);// error?
+					signal(SIGQUIT, SIG_IGN);// error?
+					waitpid(gpid, &stat_loc, 0);// error?
 					signal_handler();
 				}
 			}
 		}
 		else
 		{
-			args = prepare_args(cur_command, env);
-			ret = execute_cmd(args, env);
+			args = prepare_args(cur_command, env);// error
+			ret = execute_cmd(args, env);// error
 		}
 	}
 	return (ret);
@@ -95,15 +97,12 @@ static int			main_loop(char **env)
 {
 	int			ret;
 	t_list		*commands;
-//	t_command	*cur_command;
-//	char		**args;
 
 	fd_backup = -1;
 	ret = get_input(&commands);
 //	write(1, "OK\n", 3);
-	if (ret != SUCCESS)
-		;//err
-	ret = handle_commands(&commands, env);
+	if (ret == SUCCESS)
+		ret = handle_execution(&commands, env);
 	return (ret);
 }
 

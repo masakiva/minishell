@@ -123,7 +123,7 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	size_t		var_len;
 
 	var_len = 0;
-	if (*line == '?' || ft_isdigit(*line)) // second condition to keep?
+	if (*line == '?' || ft_isdigit(*line))
 	{
 		add_to_buf(*line, machine);
 		var_len++;

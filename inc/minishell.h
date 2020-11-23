@@ -49,11 +49,13 @@
 **	**********************************
 */
 
-enum		e_errors
+enum		e_retcode
 {
 	CLEAN_EXIT = 2,
 	ARG_ERR,
 	MALLOC_ERR,
+	WRITE_ERR,
+	GNL_ERR
 };
 
 enum e_redir_op
@@ -105,7 +107,7 @@ void	free_commands(t_list **commands);
 **	ft_exit.c
 */
 
-int					ft_exit(int err_code, char **env);
+int					ft_exit(enum e_retcode retcode, char **env);
 
 
 

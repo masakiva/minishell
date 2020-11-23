@@ -6,28 +6,24 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:48:59 by abenoit           #+#    #+#             */
-/*   Updated: 2020/11/18 16:26:52 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/11/23 22:56:30 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-void	free_str_array(char ***array)
+void	free_str_array(char **array)
 {
-	char	**ptr;
 	size_t	i;
 
 	i = 0;
-	ptr = *array;
-	if (ptr != NULL)
+	if (array != NULL)
 	{
-		while (ptr[i] != NULL)
+		while (array[i] != NULL)
 		{
-			free(ptr[i]);
-			ptr[i] = NULL;
+			free(array[i]);
 			i++;
 		}
-		free(ptr);
-		*array = NULL;
+		free(array);
 	}
 }

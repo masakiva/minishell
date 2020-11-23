@@ -1,28 +1,47 @@
 #include "minishell.h"
 #include <string.h>
+#include <stdio.h>
 
-static int			err_output(const char *str)
+void		putstr_stderr(const char *str)
 {
-	ft_putstr_fd("Error: ", STDERR_FILENO);
-	ft_putstr_fd(str, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
-	exit(EXIT_FAILURE);
+	if (ft_putstr_fd(str, STDERR_FILENO) == ERROR)
+	{
+		perror("Cannot write the error message on STDERR");
+		exit(EXIT_FAILURE);
+	}
 }
 
 static const char	*err_msg(int err_code)
 {
-	const char	*msg[] = {"",
+	const char	*msg[] = {
 		"Minishell takes no argument",
-		"Memory allocation failure"};
+		"Memory allocation failure",
+		"Cannot write on standard output",
+		"Cannot read standard input (GNL error)"};
 
 	return (msg[err_code]);
 }
 
-int					ft_exit(int err_code, char **env)
+static int			err_output(enum e_retcode err_code)
+{
+	putstr_stderr("Error\n");
+	if (err_code <= ARG_ERR)
+	{
+		putstr_stderr(err_msg(err_code - 3));
+		putstr_stderr("\n");
+	}
+	else
+		perror(err_msg(err_code - 3));
+	exit(EXIT_FAILURE);
+}
+
+int					ft_exit(enum e_retcode ret, char **env)
 {
 	(void)env;
 	//free_str_array(&env); // besoin de free?
-	if (err_code != CLEAN_EXIT && err_code > 0)
-		return (err_output(err_msg(err_code)));
+	if (ret > CLEAN_EXIT)
+		err_output(ret);
+	else if (ret < CLEAN_EXIT)// temp
+		putstr_stderr("ERROR CODE ERROR");// temp
 	exit(EXIT_SUCCESS);
 }
