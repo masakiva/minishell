@@ -34,7 +34,7 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
-static int			handle_execution(t_list **commands, char **env)
+static int			handle_execution(t_xe *xe)
 {
 	int			ret;
 	char		**args;
@@ -43,8 +43,8 @@ static int			handle_execution(t_list **commands, char **env)
 	ret = SUCCESS;
 	gpid = -1;
 	cur_command = NULL;
-	if (commands != NULL)
-		cur_command = ft_lstpop(commands);
+	if (xe->commands != NULL)
+		cur_command = ft_lstpop(&(xe->commands));
 	if (cur_command != NULL) // le contraire possible?
 	{
 		if (cur_command->pipe_flag == TRUE)
@@ -58,8 +58,8 @@ static int			handle_execution(t_list **commands, char **env)
 				dup2(fd_old, fd_backup);// error
 				dup2(fd_pipe[1], fd_old);// error
 				close(fd_pipe[0]);// error
-				args = prepare_args(cur_command, env);// error
-				ret = execute_cmd(args, env);// error
+				args = prepare_args(cur_command, xe->env);// error
+				ret = execute_cmd(args, xe->env);// error
 				close(fd_pipe[1]);// error
 				ret = CLEAN_EXIT;
 				//return (CLEAN_EXIT);
@@ -72,11 +72,11 @@ static int			handle_execution(t_list **commands, char **env)
 				free(cur_command);
 				close(fd_pipe[0]);// error
 				close(fd_pipe[1]);// error
-				cur_command = ft_lstpop(commands);
+				cur_command = ft_lstpop(&(xe->commands));
 				if (cur_command != NULL)// else error
 				{
-					args = prepare_args(cur_command, env);// error
-					ret = execute_cmd(args, env);// error
+					args = prepare_args(cur_command, xe->env);// error
+					ret = execute_cmd(args, xe->env);// error
 					signal(SIGINT, SIG_IGN);// error?
 					signal(SIGQUIT, SIG_IGN);// error?
 					waitpid(gpid, &stat_loc, 0);// error?
@@ -86,39 +86,60 @@ static int			handle_execution(t_list **commands, char **env)
 		}
 		else
 		{
-			args = prepare_args(cur_command, env);// error
-			ret = execute_cmd(args, env);// error
+			args = prepare_args(cur_command, xe->env);// error
+			ret = execute_cmd(args, xe->env);// error
 		}
 	}
 	return (ret);
 }
 
-static int			main_loop(char **env)
+static int			main_loop(t_xe *xe)
 {
 	int			ret;
-	t_list		*commands;
 
 	fd_backup = -1;
-	ret = get_input(&commands);
+	ret = get_input(&(xe->commands));
 //	write(1, "OK\n", 3);
 	if (ret == SUCCESS)
-		ret = handle_execution(&commands, env);
+		ret = handle_execution(xe);
 	return (ret);
 }
 
-int					main(int argc, char **argv, char **env)
+char	**extract_env(char	**env_source)
+{
+	int		i;
+	char	**ret;
+
+	if (!(ret = malloc((ft_arraylen(env_source) + 1) * sizeof(char*))))
+		return (NULL);
+	i = 0;
+	while (env_source[i])
+	{
+		ret[i] = ft_strdup(env_source[i]);
+		i++;
+	}
+	ret[i] = NULL;
+	return (ret);
+}
+
+int					main(int argc, char **argv, char **env_source)
 {
 	int				ret;
+	t_xe 			*xe;
 
 	(void)argv;
+	xe = malloc(sizeof(t_xe));
+	if (xe == NULL)
+		return (ft_exit(MALLOC_ERR, xe));
 	if (argc != 1)
 		ret = ARG_ERR;
 	else
 	{
 		signal_handler();
+		xe->env = extract_env(env_source);
 		ret = SUCCESS;
 		while (ret == SUCCESS)
-			ret = main_loop(env);
+			ret = main_loop(xe);
 	}
-	return (ft_exit(ret, env));
+	return (ft_exit(ret, xe));
 }

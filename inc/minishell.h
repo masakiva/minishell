@@ -87,6 +87,15 @@ typedef struct		s_command
 	uint8_t		pad[7];
 }					t_command;
 
+typedef struct		s_xe
+{
+	int		fd[3]; // a laisser ici
+	int		stat_loc;
+	pid_t	gpid;	// nécessaire ?
+	char	**env;
+	t_list	*commands;
+}					t_xe;
+
 
 /*
 **	**********************************
@@ -107,7 +116,7 @@ void	free_commands(t_list **commands);
 **	ft_exit.c
 */
 
-int					ft_exit(enum e_retcode retcode, char **env);
+int					ft_exit(enum e_retcode retcode, t_xe *xe);
 
 
 
@@ -144,10 +153,7 @@ int					ft_exit(enum e_retcode retcode, char **env);
 
 typedef struct		s_all
 {
-	int				fd[3]; // a laisser ici
 	int				cmd_ret;
-	char			**env;
-	t_list			*commands;
 	char			**current; // a retirer
 }					t_all;
 

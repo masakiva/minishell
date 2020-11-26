@@ -5,7 +5,6 @@ SRC_DIR		= src/
 SRC_NAME	+= main.c
 #SRC_NAME	+= ft_split.c
 #SRC_NAME	+= rec_gnl.c
-#SRC_NAME	+= prm_init.c
 SRC_NAME	+= signal_handling.c
 SRC_NAME	+= parse_input.c
 SRC_NAME	+= parse_utils.c

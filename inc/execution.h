@@ -22,11 +22,11 @@ enum		e_cmd_code
 
 typedef int			(*t_exec)(char **args, char **env);
 
-int		stat_loc;
-int		fd_backup;
-int		fd_old;
-int		fd_pipe[2];
 pid_t	gpid;
+int		fd_pipe[2];
+int		stat_loc;
+int		fd_old;
+int		fd_backup;
 
 /*
 **	main functions
