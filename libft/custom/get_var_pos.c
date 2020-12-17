@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_get_var_pos.c                                   :+:      :+:    :+:   */
+/*   get_var_pos.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:44:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/11/23 22:59:32 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/16 15:43:24 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-ssize_t	get_var_pos(char **array, char *name)
+ssize_t		get_var_pos(char **array, char *name)
 {
 	ssize_t		i;
-	char	**tmp;
+	char		**tmp;
 
 	i = 0;
-	while (array[i])
+	while (array[i] != NULL)
 	{
 		tmp = ft_split(array[i], '=');
 		if (ft_strcmp(tmp[0], name) == 0)

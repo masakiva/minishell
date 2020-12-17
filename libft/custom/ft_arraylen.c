@@ -6,18 +6,18 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:47:31 by abenoit           #+#    #+#             */
-/*   Updated: 2020/10/19 14:18:02 by abenoit          ###   ########.fr       */
+/*   Updated: 2020/12/16 15:37:43 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include <stddef.h>
 
 size_t	ft_arraylen(char **array)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (array[i])
+	while (array[i] != NULL)
 		i++;
 	return (i);
 }

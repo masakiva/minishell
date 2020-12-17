@@ -121,10 +121,6 @@ char	*expand_token_vars(t_token *token, char **env)
 	ret[i_ret] = '\0';
 	ptr = &var_values; // ??
 	free_str_array(var_values);
-//	i = 0;
-//	while (var_values[i] != NULL)
-//		free(var_values[i++]);
-//	free(var_values);
 	return (ret);
 }
 
@@ -135,10 +131,10 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	int			flags;
 
 	mode = 0;
-	fd_backup = dup(0); // eh bien il sort d'ou ce fd_backup ; err a gerer
+	fd_backup = dup(0);
 	if (redir == FILEIN)
 	{
-		fd_old = STDIN_FILENO; // et fd_old
+		fd_old = STDIN_FILENO;
 		flags = O_RDONLY;
 	}
 	else

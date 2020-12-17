@@ -105,41 +105,30 @@ static int			main_loop(t_xe *xe)
 	return (ret);
 }
 
-char	**extract_env(char	**env_source)
+int		main(int argc, char **argv, char **env_source)
 {
-	int		i;
-	char	**ret;
-
-	if (!(ret = malloc((ft_arraylen(env_source) + 1) * sizeof(char*))))
-		return (NULL);
-	i = 0;
-	while (env_source[i])
-	{
-		ret[i] = ft_strdup(env_source[i]);
-		i++;
-	}
-	ret[i] = NULL;
-	return (ret);
-}
-
-int					main(int argc, char **argv, char **env_source)
-{
-	int				ret;
-	t_xe 			*xe;
+	int		ret;
+	t_xe 	*xe;
 
 	(void)argv;
-	xe = malloc(sizeof(t_xe));
+	ret = SUCCESS;
+	xe = (t_xe *)malloc(sizeof(t_xe));
 	if (xe == NULL)
-		return (ft_exit(MALLOC_ERR, xe));
-	if (argc != 1)
+		ret = MALLOC_ERR;
+	else if (argc != 1)
+	{
 		ret = ARG_ERR;
+		free(xe);
+	}
 	else
 	{
-		signal_handler();
-		xe->env = extract_env(env_source);
-		ret = SUCCESS;
+		signal_handler(); // err?
+		xe->env = dup_str_array(env_source);
+		if (xe->env == NULL)
+			ret = MALLOC_ERR;
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
+		free(xe);
 	}
 	return (ft_exit(ret, xe));
 }

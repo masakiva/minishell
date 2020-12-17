@@ -91,9 +91,10 @@ typedef struct		s_xe
 {
 	int		fd[3]; // a laisser ici
 	int		stat_loc;
-	pid_t	gpid;	// nécessaire ?
 	char	**env;
 	t_list	*commands;
+	pid_t	gpid;	// nécessaire ?
+	uint8_t	pad[4];
 }					t_xe;
 
 
