@@ -20,7 +20,7 @@ enum		e_cmd_code
 	M_ERROR
 };
 
-typedef int			(*t_exec)(char **args, char **env);
+typedef int			(*t_exec)(char **args, t_xe *xe);
 
 pid_t	gpid;
 int		fd_pipe[2];
@@ -33,6 +33,6 @@ int		fd_backup;
 */
 
 char	**prepare_args(t_command *command, char **env);
-int		execute_cmd(char **args, char **env);
+int		execute_cmd(char **args, t_xe *xe);
 
 #endif

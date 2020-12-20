@@ -49,11 +49,11 @@ t_byte		pop_options(char ***args, char *op_chars)
 // >>> echo
 // error management: stop quand un write fail, ou alors on fait un seul write pour tout
 // no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
-static int	ft_echo(char **args, char **env)
+static int	ft_echo(char **args, t_xe *xe)
 {
 	t_byte	options;
 
-	(void)env;
+	(void)xe;
 	options = pop_options(&args, ECHO_OPTIONS);
 	if (*args != NULL)
 		ft_putstr_fd(*args++, STDOUT_FILENO);
@@ -68,12 +68,12 @@ static int	ft_echo(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	ft_cd(char **args, char **env)
+static int	ft_cd(char **args, t_xe *xe)
 {
 	char	*path;
 
 	if (args[1] == NULL)
-		path = get_var_value(env, "HOME");
+		path = get_var_value(xe->env, "HOME");
 	else
 		path = ft_strdup(args[1]);
 	if (path == NULL)
@@ -89,12 +89,12 @@ static int	ft_cd(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	ft_pwd(char **args, char **env)
+static int	ft_pwd(char **args, t_xe *xe)
 {
 	char	*buf;
 
 	(void)args;
-	(void)env;
+	(void)xe;
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
 		return (FAILURE);
@@ -104,77 +104,107 @@ static int	ft_pwd(char **args, char **env)
 	return (SUCCESS);
 }
 
-static int	ft_export(char **args, char **env)
+char	**append_variable_to_env(char *var, char **env)
 {
+	size_t	env_size;
+	char	**new_env;
 	size_t	i;
-	size_t	size;
-	char	**new;
 
-	if (ft_strchr(args[1], '=') == NULL)
-		return (SUCCESS);
-	size = ft_arraylen(env);
-	if (!(new = malloc((size + 2) * sizeof(char*))))
-		return (MALLOC_ERR);
+	env_size = ft_arraylen(env);
+	new_env = (char **)malloc(sizeof(char *) * (env_size + 2));
+	if (new_env == NULL)
+		return (NULL);
 	i = 0;
-	while (i < size)
+	while (i < env_size)
 	{
-		new[i] = (env)[i];
+		new_env[i] = env[i];
 		i++;
 	}
-	new[i] = ft_strdup(args[1]);
-	new[i + 1] = NULL;
-	free(env);
-	env = new;
+	new_env[i] = ft_strdup(var);
+	new_env[i + 1] = NULL;
+	return (new_env);
+}
+
+int		check_var_name(char *var, size_t varname_len)
+{
+	(void)var;
+	(void)varname_len;
 	return (SUCCESS);
 }
 
-static int	ft_unset(char **args, char **env)
+static int	ft_export(char **args, t_xe *xe)
 {
-	ssize_t	i;
-	ssize_t	j;
-	ssize_t	size;
-	ssize_t	pos;
-	char	**new;
+	size_t	nb_args;
+	size_t	i;
+	ssize_t	varname_len;
+	char	**new_env;
 
-	size = ft_arraylen(env);
-	if ((pos = get_var_pos(env, args[1])) == -1)
+	nb_args = ft_arraylen(args);
+	i = 1;
+	while (i < nb_args)
+	{
+		varname_len = ft_index(args[i], '=');
+		if (varname_len == -1)
+		{
+			if (check_var_name(args[i], ft_strlen(args[i])) == FAILURE)
+				;//inline error "Variable identifier (name) invalid",
+		}
+		else if (check_var_name(args[i], varname_len) == SUCCESS)
+		{
+			new_env = append_variable_to_env(args[i], xe->env);
+			if (new_env == NULL)
+				return (MALLOC_ERR);
+			free(xe->env);
+			xe->env = new_env;
+		}
+		else
+			;//inline error "Variable identifier (name) invalid",
+		i++;
+	}
+	return (SUCCESS);
+}
+
+static int	ft_unset(char **args, t_xe *xe)
+{
+	size_t	env_size;
+	ssize_t	var_pos;
+	char	**new_env;
+	size_t	i;
+	size_t	j;
+
+	env_size = ft_arraylen(xe->env);
+	var_pos = get_var_pos(xe->env, args[1]);
+	if (var_pos == -1)
 		return (SUCCESS);
-	if (!(new = malloc((size) * sizeof(char*))))
+	new_env = (char **)malloc(sizeof(char *) * env_size);
+	if (new_env == NULL)
 		return (MALLOC_ERR);
 	i = 0;
 	j = 0;
-	while ((env)[j])
+	while (i < env_size)
 	{
-		if (j != pos)
-		{
-			new[i] = (env)[j];
-			i++;
-			j++;
-		}
+		if (i != (size_t)var_pos)
+			new_env[j++] = xe->env[i++];
 		else
-		{
-			free((env)[j]);
-			(env)[j] = NULL;
-			j++;
-		}
+			free(xe->env[i++]);
 	}
-	new[i] = NULL;
-	free(env);
-	env = new;
+	new_env[j] = NULL;
+	free(xe->env);
+	xe->env = new_env;
 	return (SUCCESS);
 }
 
-static int	ft_env(char **args, char **env)
+static int	ft_env(char **args, t_xe *xe)
 {
 	(void)args;
-	ft_printarray_fd(env, STDOUT_FILENO);
+	ft_printarray_fd(xe->env, STDOUT_FILENO);
 	return (SUCCESS);
 }
 
-static int	launch_exit(char **args, char **env)
+static int	launch_exit(char **args, t_xe *xe)
 {
 	(void)args;
-	(void)env;
+	(void)xe;
 	return (CLEAN_EXIT);
 }
 
@@ -217,7 +247,7 @@ int	search_exec(char **path, char *name)
 	return (-1);
 }
 
-static int	launch_ext(char **args, char **env)
+static int	launch_ext(char **args, t_xe *xe)
 {
 	pid_t	pid;
 	char	*cmd;
@@ -226,14 +256,14 @@ static int	launch_ext(char **args, char **env)
 	int		ref;
 	int		ret;
 
-	cmd = get_var_value(env, "PATH");
+	cmd = get_var_value(xe->env, "PATH");
 	path = ft_split(cmd, ':');
 	free(cmd);
 	//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
-		if ((ret = execve(args[0], args, env)) == 0)
+		if ((ret = execve(args[0], args, xe->env)) == 0)
 			return (SUCCESS);
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
@@ -245,7 +275,7 @@ static int	launch_ext(char **args, char **env)
 		tmp = cmd;
 		cmd = ft_strjoin(cmd, args[0]);
 		free(tmp);
-		execve(cmd, args, env);
+		execve(cmd, args, xe->env);
 		free(cmd);
 	}
 	else
@@ -281,7 +311,7 @@ enum e_cmd_code	get_cmd_code(char *arg)
 	return (ELSE);
 }
 
-int		execute_cmd(char **args, char **env)
+int		execute_cmd(char **args, t_xe *xe)
 {
 	int				i;
 	int				ret;
@@ -294,7 +324,7 @@ int		execute_cmd(char **args, char **env)
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
-	ret = command[cmd_code](args, env);
+	ret = command[cmd_code](args, xe);
 	if (ret == FAILURE)
 		ft_putstr_fd("COMMAND ERROR\n", 1);
 	free_str_array(args);

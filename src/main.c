@@ -59,7 +59,7 @@ static int			handle_execution(t_xe *xe)
 				dup2(fd_pipe[1], fd_old);// error
 				close(fd_pipe[0]);// error
 				args = prepare_args(cur_command, xe->env);// error
-				ret = execute_cmd(args, xe->env);// error
+				ret = execute_cmd(args, xe);// error
 				close(fd_pipe[1]);// error
 				ret = CLEAN_EXIT;
 				//return (CLEAN_EXIT);
@@ -76,7 +76,7 @@ static int			handle_execution(t_xe *xe)
 				if (cur_command != NULL)// else error
 				{
 					args = prepare_args(cur_command, xe->env);// error
-					ret = execute_cmd(args, xe->env);// error
+					ret = execute_cmd(args, xe);// error
 					signal(SIGINT, SIG_IGN);// error?
 					signal(SIGQUIT, SIG_IGN);// error?
 					waitpid(gpid, &stat_loc, 0);// error?
@@ -87,7 +87,7 @@ static int			handle_execution(t_xe *xe)
 		else
 		{
 			args = prepare_args(cur_command, xe->env);// error
-			ret = execute_cmd(args, xe->env);// error
+			ret = execute_cmd(args, xe);// error
 		}
 	}
 	return (ret);
