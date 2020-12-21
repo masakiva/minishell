@@ -38,7 +38,7 @@ static int			err_output(enum e_retcode err_code)
 int					ft_exit(enum e_retcode ret, t_xe *xe)
 {
 	(void)xe;
-	//free_str_array(&env); // besoin de free?
+	free_str_array(xe->env); // besoin de free?
 	if (ret > CLEAN_EXIT)
 		err_output(ret);
 	else if (ret < CLEAN_EXIT)// temp

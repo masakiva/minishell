@@ -117,7 +117,8 @@ void	free_commands(t_list **commands);
 **	ft_exit.c
 */
 
-int					ft_exit(enum e_retcode retcode, t_xe *xe);
+void		putstr_stderr(const char *str);
+int			ft_exit(enum e_retcode retcode, t_xe *xe);
 
 
 

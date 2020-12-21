@@ -125,40 +125,41 @@ char	**append_variable_to_env(char *var, char **env)
 	return (new_env);
 }
 
-int		check_var_name(char *var, size_t varname_len)
+int		check_var_name(char *var)
 {
-	(void)var;
-	(void)varname_len;
-	return (SUCCESS);
+	if (!ft_isdigit(*var))
+	{
+		while (ft_isalnum(*var) || *var == '_')
+			var++;
+		if (*var == '=' || *var == '\0')
+			return (SUCCESS);
+	}
+	return (FAILURE);
 }
 
 static int	ft_export(char **args, t_xe *xe)
 {
 	size_t	nb_args;
 	size_t	i;
-	ssize_t	varname_len;
 	char	**new_env;
 
 	nb_args = ft_arraylen(args);
 	i = 1;
 	while (i < nb_args)
 	{
-		varname_len = ft_index(args[i], '=');
-		if (varname_len == -1)
+		if (check_var_name(args[i]) == SUCCESS)
 		{
-			if (check_var_name(args[i], ft_strlen(args[i])) == FAILURE)
-				;//inline error "Variable identifier (name) invalid",
-		}
-		else if (check_var_name(args[i], varname_len) == SUCCESS)
-		{
-			new_env = append_variable_to_env(args[i], xe->env);
-			if (new_env == NULL)
-				return (MALLOC_ERR);
-			free(xe->env);
-			xe->env = new_env;
+			if (ft_index(args[i], '=') != -1)
+			{
+				new_env = append_variable_to_env(args[i], xe->env);
+				if (new_env == NULL)
+					return (MALLOC_ERR);
+				free(xe->env);
+				xe->env = new_env;
+			}
 		}
 		else
-			;//inline error "Variable identifier (name) invalid",
+			putstr_stderr("export: Variable identifier (name) invalid\n"); // pb si le write marche pas
 		i++;
 	}
 	return (SUCCESS);

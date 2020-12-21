@@ -1,10 +1,11 @@
 j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
 
 export new value for existing var
-check var name before export
+export tout court affiche env + variables non assignees entre "" (+ declare-x)
 unset (+ export?) leaks
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
+ou quand on valide une commande vide
 
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
 
