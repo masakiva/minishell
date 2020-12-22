@@ -104,30 +104,9 @@ static int	ft_pwd(char **args, t_xe *xe)
 	return (SUCCESS);
 }
 
-char	**append_variable_to_env(char *var, char **env)
-{
-	size_t	env_size;
-	char	**new_env;
-	size_t	i;
-
-	env_size = ft_arraylen(env);
-	new_env = (char **)malloc(sizeof(char *) * (env_size + 2));
-	if (new_env == NULL)
-		return (NULL);
-	i = 0;
-	while (i < env_size)
-	{
-		new_env[i] = env[i];
-		i++;
-	}
-	new_env[i] = ft_strdup(var);
-	new_env[i + 1] = NULL;
-	return (new_env);
-}
-
 int		check_var_name(char *var)
 {
-	if (!ft_isdigit(*var))
+	if (!ft_isdigit(*var) && *var != '=' && *var != '\0')
 	{
 		while (ft_isalnum(*var) || *var == '_')
 			var++;
@@ -137,13 +116,41 @@ int		check_var_name(char *var)
 	return (FAILURE);
 }
 
+void	print_export(char **env, char **exported)
+{
+	size_t	equal_pos;
+
+	while (*env != NULL)
+	{
+		equal_pos = ft_index(*env, '=');
+		ft_putstr_fd("export ", STDOUT_FILENO);// change fd
+		write(STDOUT_FILENO, *env, equal_pos + 1);// idem
+		ft_putchar_fd('"', STDOUT_FILENO); // idem
+		ft_putstr_fd(*env + equal_pos + 1, STDOUT_FILENO);// id
+		ft_putchar_fd('"', STDOUT_FILENO); // id
+		ft_putchar_fd('\n', STDOUT_FILENO); // id
+		env++;
+	}
+	if (exported != NULL)
+		while (*exported != NULL)
+		{
+			ft_putstr_fd("export ", STDOUT_FILENO);// change fd
+			ft_putstr_fd(*exported, STDOUT_FILENO); //idem 
+			ft_putchar_fd('\n', STDOUT_FILENO); // idem
+			exported++;
+		}
+}
+
 static int	ft_export(char **args, t_xe *xe)
 {
 	size_t	nb_args;
 	size_t	i;
 	char	**new_env;
+	char	**new_exported;
 
 	nb_args = ft_arraylen(args);
+	if (nb_args == 1)
+		print_export(xe->env, xe->exported);
 	i = 1;
 	while (i < nb_args)
 	{
@@ -151,15 +158,23 @@ static int	ft_export(char **args, t_xe *xe)
 		{
 			if (ft_index(args[i], '=') != -1)
 			{
-				new_env = append_variable_to_env(args[i], xe->env);
+				new_env = append_str_to_array(args[i], xe->env);
 				if (new_env == NULL)
 					return (MALLOC_ERR);
 				free(xe->env);
 				xe->env = new_env;
 			}
+			else
+			{
+				new_exported = append_str_to_array(args[i], xe->exported);
+				if (new_exported == NULL)
+					return (MALLOC_ERR);
+				free(xe->exported);
+				xe->exported = new_exported;
+			}
 		}
 		else
-			putstr_stderr("export: Variable identifier (name) invalid\n"); // pb si le write marche pas
+			putstr_stderr("export: Variable identifier (name) invalid\n"); // leaks si le write marche pas
 		i++;
 	}
 	return (SUCCESS);

@@ -98,7 +98,7 @@ static int			main_loop(t_xe *xe)
 	int			ret;
 
 	fd_backup = -1;
-	ret = get_input(&(xe->commands));
+	ret = get_input(&xe->commands);
 //	write(1, "OK\n", 3);
 	if (ret == SUCCESS)
 		ret = handle_execution(xe);
@@ -113,6 +113,7 @@ int		main(int argc, char **argv, char **env_source)
 	(void)argv;
 	ret = SUCCESS;
 	xe = (t_xe *)malloc(sizeof(t_xe));
+	ft_bzero(xe, sizeof(t_xe));
 	if (xe == NULL)
 		ret = MALLOC_ERR;
 	else if (argc != 1)

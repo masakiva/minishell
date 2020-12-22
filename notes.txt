@@ -1,7 +1,10 @@
 j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
 
+use "bash --posix" to test!
+
 export new value for existing var
-export tout court affiche env + variables non assignees entre "" (+ declare-x)
+export tout court -> ordre alpha
+unset pour les var non assignees?
 unset (+ export?) leaks
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
@@ -17,6 +20,10 @@ https://brennan.io/2015/01/16/write-a-shell-in-c/
 redirections https://catonmat.net/bash-one-liners-explained-part-three
 multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
 redirection and pipe explanation https://askubuntu.com/questions/172982/what-is-the-difference-between-redirection-and-pipe/1074550#1074550
+
+forks https://www.youtube.com/watch?v=ss1-REMJ9GA
+pipes https://www.youtube.com/watch?v=dhFkwGRSVGk
+signals https://www.youtube.com/watch?v=83M5-NPDeWs
 
 Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 man bash https://www.gnu.org/software/bash/manual/html_node/index.html

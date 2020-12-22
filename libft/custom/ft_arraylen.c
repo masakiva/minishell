@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:47:31 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/16 15:37:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/22 12:44:09 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ size_t	ft_arraylen(char **array)
 	size_t	i;
 
 	i = 0;
-	while (array[i] != NULL)
-		i++;
+	if (array != NULL)
+		while (array[i] != NULL)
+			i++;
 	return (i);
 }
