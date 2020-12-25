@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:47:31 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/22 12:44:09 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 00:07:33 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ size_t	ft_arraylen(char **array)
 
 	i = 0;
 	if (array != NULL)
+	{
 		while (array[i] != NULL)
+		{
 			i++;
+		}
+	}
 	return (i);
 }

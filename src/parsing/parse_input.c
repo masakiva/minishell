@@ -100,7 +100,7 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 		else
 		{
 			if (quote_style == '"' && *line == '\\'
-					&& ft_isset(line[1], "\\\"$") != -1)
+					&& ft_isset(line[1], "\\\"$"))
 				line++;
 			add_to_buf(*line, machine);
 			line++;
@@ -171,7 +171,7 @@ char	*tilde(char *line, t_list **commands, t_state_machine *machine)
 	add_to_buf('~', machine);
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
-	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|") != -1
+	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|")
 				|| ft_isspace(*line) || *line == '\0'))
 	{
 		if (add_variable(&machine->cur_token->var_positions, 0, 1) == FAILURE)

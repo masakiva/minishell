@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/22 12:48:32 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 00:26:51 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <sys/types.h>
 
 # define ERROR	-1
+
+# define TRUE	1
+# define FALSE	0
 
 typedef struct	s_list
 {
@@ -96,7 +99,7 @@ ssize_t			ft_index(char *haystack, char needle);
 int				ft_isspace(int c);
 
 int				ft_strcmp(const char *s1, const char *s2);
-ssize_t			ft_isset(char c, char *set);
+int				ft_isset(char c, char *set);
 
 char			*get_var_value(char **env, char *name);
 ssize_t			get_var_pos(char **env, char *name);
@@ -105,7 +108,10 @@ size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
 char			**dup_str_array(char **array);
 char			**append_str_to_array(char *str, char **array);
+void			sort_str_array(char **array);
 
 void			*ft_lstpop(t_list **lst);
+
+void			ft_swap(void **a, void **b);
 
 #endif

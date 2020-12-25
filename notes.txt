@@ -3,9 +3,10 @@ j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
 use "bash --posix" to test!
 
 export new value for existing var
-export tout court -> ordre alpha
+export append avec +=
 unset pour les var non assignees?
 unset (+ export?) leaks
+besoin de proteger ft_strcmp? (comments)
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
 ou quand on valide une commande vide

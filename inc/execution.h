@@ -35,4 +35,21 @@ int		fd_backup;
 char	**prepare_args(t_command *command, char **env);
 int		execute_cmd(char **args, t_xe *xe);
 
+/*
+**	builtins
+*/
+
+int		ft_echo(char **args, t_xe *xe);
+int		ft_pwd(char **args, t_xe *xe);
+int		ft_cd(char **args, t_xe *xe);
+int		ft_export(char **args, t_xe *xe);
+int		ft_unset(char **args, t_xe *xe);
+int		ft_env(char **args, t_xe *xe);
+
+/*
+**	utils
+*/
+
+t_byte		pop_options(char ***args, char *op_chars);
+
 #endif

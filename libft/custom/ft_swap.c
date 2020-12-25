@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isset.c                                         :+:      :+:    :+:   */
+/*   ft_swap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/19 13:40:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/26 00:25:58 by mvidal-a         ###   ########.fr       */
+/*   Created: 2020/12/22 17:17:26 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/12/22 17:20:19 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-int		ft_isset(char c, char *set)
+void	ft_swap(void **a, void **b)
 {
-	while (*set != '\0')
-	{
-		if (c == *set)
-			return (TRUE);
-		set++;
-	}
-	return (FALSE);
+	void	*c;
+
+	c = *a;
+	*a = *b;
+	*b = c;
 }

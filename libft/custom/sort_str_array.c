@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isset.c                                         :+:      :+:    :+:   */
+/*   sort_str_array.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/19 13:40:47 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/26 00:25:58 by mvidal-a         ###   ########.fr       */
+/*   Created: 2020/12/26 00:07:37 by mvidal-a          #+#    #+#             */
+/*   Updated: 2020/12/26 00:08:16 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_isset(char c, char *set)
+void	sort_str_array(char **array)
 {
-	while (*set != '\0')
+	size_t		i;
+	size_t		j;
+
+	i = 0;
+	while (array[i] != NULL)
 	{
-		if (c == *set)
-			return (TRUE);
-		set++;
+		j = 0;
+		while (array[j] != NULL)
+		{
+			if (ft_strcmp(array[i], array[j]) < 0)
+				ft_swap((void **)&array[i], (void **)&array[j]);
+			j++;
+		}
+		i++;
 	}
-	return (FALSE);
 }

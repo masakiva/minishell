@@ -1,33 +1,37 @@
 NAME		= minishell
 
-SRC_DIR		= src/
+SRC_DIR		+= src/
+SRC_DIR		+= src/parsing/
+SRC_DIR		+= src/execution/
 
-SRC_NAME	+= main.c
-#SRC_NAME	+= ft_split.c
-#SRC_NAME	+= rec_gnl.c
-SRC_NAME	+= signal_handling.c
-SRC_NAME	+= parse_input.c
-SRC_NAME	+= parse_utils.c
-SRC_NAME	+= prepare_args.c
-SRC_NAME	+= launch_command.c
-SRC_NAME	+= ft_exit.c
+SRC	+= main.c
+SRC	+= signal_handling.c
+SRC	+= parse_input.c
+SRC	+= parse_utils.c
+SRC	+= prepare_args.c
 
-SRC			= $(addprefix $(SRC_DIR), $(SRC_NAME))
+SRC	+= launch_command.c
+SRC	+= options.c
+SRC	+= echo.c
+SRC	+= pwd_cd.c
+SRC	+= export_unset_env.c
 
-HDR_NAME	+= minishell.h
-HDR_NAME	+= signals.h
-HDR_NAME	+= parsing.h
-HDR_NAME	+= execution.h
+SRC	+= ft_exit.c
+
+vpath %.c $(SRC_DIR)
 
 INC_DIR		= inc/
 
-HDR			= $(addprefix $(INC_DIR), $(HDR_NAME))
+HDR	+= minishell.h
+HDR	+= signals.h
+HDR	+= parsing.h
+HDR	+= execution.h
+
+vpath %.h $(INC_DIR)
 
 OBJ_DIR		= obj/
 
-OBJ_NAME	= $(SRC_NAME:.c=.o)
-
-OBJ			= $(addprefix $(OBJ_DIR), $(OBJ_NAME))
+OBJ			= $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 LIBFT_DIR	= libft/
 
@@ -56,7 +60,7 @@ all:			$(NAME)
 $(NAME):		$(LIBFT_DIR)libft.a $(OBJ)
 				$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
-$(OBJ_DIR)%.o:	$(SRC_DIR)%.c
+$(OBJ_DIR)%.o:	%.c
 				$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(OBJ):			$(HDR) $(LIBFT_DIR)libft.a | $(OBJ_DIR)
