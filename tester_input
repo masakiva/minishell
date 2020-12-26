@@ -7,3 +7,10 @@ echo -nn -n 4
 echo 		-n -fn 5
 echo -f -n
 echo pwd
+export d=0
+export f=fd dfs
+export 24
+		export 
+export d
+unset dfs 24
+export

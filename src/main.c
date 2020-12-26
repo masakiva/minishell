@@ -131,6 +131,8 @@ int		main(int argc, char **argv, char **env_source)
 			sort_str_array(xe->env);
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
+		free_str_array(xe->exported); // besoin de free?
+		free_str_array(xe->env); // besoin de free?
 		free(xe);
 	}
 	return (ft_exit(ret, xe));

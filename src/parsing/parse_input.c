@@ -251,8 +251,6 @@ t_list	*parse_input(char *line)
 	t_state_machine		machine;
 	t_list				*commands; // a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token?
 
-	if (line[0] == '.' && line[1] == '\0')// temp
-		exit(EXIT_SUCCESS);// temp
 	errno = 0;
 	machine.state = SPACE;
 	machine.len = 0;
