@@ -6,25 +6,30 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:44:56 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/18 16:29:00 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 22:37:11 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-ssize_t		get_var_pos(char **env, char *name)
+ssize_t		get_var_pos(char **vars, char *name)
 {
 	size_t		i;
-	size_t		name_len;
+	ssize_t		name_len;
 
-	i = 0;
-	while (env[i] != NULL)
+	if (vars != NULL)
 	{
-		name_len = ft_strlen(name);
-		if (ft_strncmp(env[i], name, name_len) == 0
-				&& env[i][name_len] == '=')
-			return (i);
-		i++;
+		i = 0;
+		name_len = ft_index(name, '=');
+		if (name_len == -1)
+			name_len = ft_strlen(name);
+		while (vars[i] != NULL)
+		{
+			if (ft_strncmp(vars[i], name, name_len) == 0
+					&& (vars[i][name_len] == '=' || vars[i][name_len] == '\0'))
+				return (i);
+			i++;
+		}
 	}
 	return (-1);
 }

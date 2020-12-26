@@ -8,7 +8,7 @@ int		ft_echo(char **args, t_xe *xe)
 	t_byte	options;
 
 	(void)xe;
-	options = pop_options(&args, ECHO_OPTIONS);
+	options = shift_options(&args, ECHO_OPTIONS);
 	if (*args != NULL)
 		ft_putstr_fd(*args++, STDOUT_FILENO);
 	while (*args != NULL)

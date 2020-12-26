@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pop_str_from_array.c                               :+:      :+:    :+:   */
+/*   rm_str_from_array.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/26 02:13:47 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/26 02:22:31 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 22:52:27 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-char	**pop_str_from_array(char **array, size_t str_pos)
+char	**rm_str_from_array(char **array, size_t str_pos)
 {
 	size_t	array_size;
 	char	**new_array;

@@ -170,7 +170,7 @@ char	**prepare_args(t_command *command, char **env)
 	i = 0;
 	while (tokens != NULL)
 	{
-		cur_token = ft_lstpop(&tokens);
+		cur_token = ft_lstshift(&tokens);
   		cur_arg = expand_token_vars(cur_token, env);
 		if (cur_arg == NULL)
 		{

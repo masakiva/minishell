@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/26 02:19:45 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 22:52:16 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,17 +101,17 @@ int				ft_isspace(int c);
 int				ft_strcmp(const char *s1, const char *s2);
 int				ft_isset(char c, char *set);
 
-char			*get_var_value(char **env, char *name);
-ssize_t			get_var_pos(char **env, char *name);
+char			*get_var_value(char **vars, char *name);
+ssize_t			get_var_pos(char **vars, char *name);
 void			ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
 char			**dup_str_array(char **array);
 char			**push_str_to_array(char **array, char *str);
-char			**pop_str_from_array(char **array, size_t str_pos);
+char			**rm_str_from_array(char **array, size_t str_pos);
 void			sort_str_array(char **array);
 
-void			*ft_lstpop(t_list **lst);
+void			*ft_lstshift(t_list **lst);
 
 void			ft_swap(void **a, void **b);
 

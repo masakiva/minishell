@@ -44,7 +44,7 @@ static int			handle_execution(t_xe *xe)
 	gpid = -1;
 	cur_command = NULL;
 	if (xe->commands != NULL)
-		cur_command = ft_lstpop(&(xe->commands));
+		cur_command = ft_lstshift(&(xe->commands));
 	if (cur_command != NULL) // le contraire possible?
 	{
 		if (cur_command->pipe_flag == TRUE)
@@ -72,7 +72,7 @@ static int			handle_execution(t_xe *xe)
 				free(cur_command);
 				close(fd_pipe[0]);// error
 				close(fd_pipe[1]);// error
-				cur_command = ft_lstpop(&(xe->commands));
+				cur_command = ft_lstshift(&(xe->commands));
 				if (cur_command != NULL)// else error
 				{
 					args = prepare_args(cur_command, xe->env);// error

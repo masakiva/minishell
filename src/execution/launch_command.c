@@ -46,7 +46,7 @@ int	search_exec(char **path, char *name)
 			i++;
 	}
 	//closedir(dirp);
-	return (-1);
+	return (NOT_FOUND);
 }
 
 static int	launch_ext(char **args, t_xe *xe)

@@ -7,6 +7,9 @@
 # define ECHO_OPTIONS	"n"
 # define ECHO_N_OPTION	0b00000001
 
+# define ENTIRE_STR	-1
+# define NOT_FOUND	-1
+
 enum		e_cmd_code
 {
 	ECHO,
@@ -17,7 +20,7 @@ enum		e_cmd_code
 	ENV,
 	EXIT,
 	ELSE,
-	M_ERROR
+	M_ERROR // another way?
 };
 
 typedef int			(*t_exec)(char **args, t_xe *xe);
@@ -50,6 +53,6 @@ int		ft_env(char **args, t_xe *xe);
 **	utils
 */
 
-t_byte		pop_options(char ***args, char *op_chars);
+t_byte		shift_options(char ***args, char *op_chars);
 
 #endif

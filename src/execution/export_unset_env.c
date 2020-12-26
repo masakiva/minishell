@@ -1,12 +1,15 @@
 #include "execution.h"
 
-int		check_var_name(char *var)
+int		check_var_name(char *var, ssize_t name_len)
 {
-	if (!ft_isdigit(*var) && *var != '=' && *var != '\0')
+	size_t	i;
+
+	if (!ft_isdigit(var[0]) && var[0] != '=' && var[0] != '\0')
 	{
-		while (ft_isalnum(*var) || *var == '_')
-			var++;
-		if (*var == '=' || *var == '\0')
+		i = 0;
+		while (ft_isalnum(var[i]) || var[i] == '_')
+			i++;
+		if ((name_len == ENTIRE_STR && var[i] == '\0') || i == (size_t)name_len)
 			return (SUCCESS);
 	}
 	return (FAILURE);
@@ -41,9 +44,9 @@ int		ft_export(char **args, t_xe *xe)
 {
 	size_t	nb_args;
 	size_t	i;
-	char	**new_env;
-	char	**new_exported;
+	char	**new_array;
 	ssize_t	equal_pos;
+	ssize_t	var_pos;
 
 	nb_args = ft_arraylen(args);
 	if (nb_args == 1)
@@ -51,36 +54,45 @@ int		ft_export(char **args, t_xe *xe)
 	i = 1;
 	while (i < nb_args)
 	{
-		if (check_var_name(args[i]) == SUCCESS)
+		equal_pos = ft_index(args[i], '=');
+		if (check_var_name(args[i], equal_pos) == SUCCESS)
 		{
-			equal_pos = ft_index(args[i], '=');
-			if (equal_pos != -1)
+			if (equal_pos != NOT_FOUND)
 			{
-//				if (variable_exists(args[i], xe->env, equal_pos) == TRUE)
-//				{
-//					new_env = pop_str_from_array(xe->env, args[i]);
-//					if (new_env == NULL)
-//						return (MALLOC_ERR);
-//					xe->env = new_env;
-//				}
-//				if (variable_exists(args[i], xe->exported, equal_pos) == TRUE)
-//				{
-//					new_exported = pop_str_from_array(xe->exported, args[i]);
-//					if (new_exported == NULL)
-//						return (MALLOC_ERR);
-//					xe->exported = new_exported;
-//				}
-				new_env = push_str_to_array(xe->env, args[i]);
-				if (new_env == NULL)
-					return (MALLOC_ERR);
-				xe->env = new_env;
+				var_pos = get_var_pos(xe->env, args[i]);
+				if (var_pos != NOT_FOUND)
+				{
+					free(xe->env[var_pos]);
+					xe->env[var_pos] = ft_strdup(args[i]);
+					if (xe->env[var_pos] == NULL)
+						return (MALLOC_ERR);
+				}
+				else
+				{
+					var_pos = get_var_pos(xe->exported, args[i]);
+					if (var_pos != NOT_FOUND)
+					{
+						new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
+						if (new_array == NULL)
+							return (MALLOC_ERR);
+						xe->exported = new_array;
+					}
+					new_array = push_str_to_array(xe->env, args[i]);
+					if (new_array == NULL)
+						return (MALLOC_ERR);
+					xe->env = new_array;
+				}
 			}
 			else
 			{
-				new_exported = push_str_to_array(xe->exported, args[i]);
-				if (new_exported == NULL)
-					return (MALLOC_ERR);
-				xe->exported = new_exported;
+				if (get_var_pos(xe->env, args[i]) == NOT_FOUND
+							&& get_var_pos(xe->exported, args[i]) == NOT_FOUND)
+				{
+					new_array = push_str_to_array(xe->exported, args[i]);
+					if (new_array == NULL)
+						return (MALLOC_ERR);
+					xe->exported = new_array;
+				}
 			}
 		}
 		else
@@ -94,23 +106,37 @@ int		ft_unset(char **args, t_xe *xe)
 {
 	size_t	nb_args;
 	ssize_t	var_pos;
-	char	**new_env;
+	char	**new_array;
 	size_t	i;
 
 	nb_args = ft_arraylen(args);
 	i = 1;
 	while (i < nb_args)
 	{
-		//if (check_var_name(args[i]) == SUCCESS)
-		//{
-		var_pos = get_var_pos(xe->env, args[i]);
-		if (var_pos != -1)
+		if (check_var_name(args[i], ENTIRE_STR) == SUCCESS)
 		{
-			new_env = pop_str_from_array(xe->env, (size_t)var_pos);
-			if (new_env == NULL)
-				return (MALLOC_ERR);
-			xe->env = new_env;
+			var_pos = get_var_pos(xe->env, args[i]);
+			if (var_pos != NOT_FOUND)
+			{
+				new_array = rm_str_from_array(xe->env, (size_t)var_pos);
+				if (new_array == NULL)
+					return (MALLOC_ERR);
+				xe->env = new_array;
+			}
+			else
+			{
+				var_pos = get_var_pos(xe->exported, args[i]);
+				if (var_pos != NOT_FOUND)
+				{
+					new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
+					if (new_array == NULL)
+						return (MALLOC_ERR);
+					xe->exported = new_array;
+				}
+			}
 		}
+		else
+			putstr_stderr("unset: Variable identifier (name) invalid\n"); // leaks si le write marche pas
 		i++;
 	}
 	return (SUCCESS);
