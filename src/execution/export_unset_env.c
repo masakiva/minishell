@@ -43,6 +43,7 @@ int		ft_export(char **args, t_xe *xe)
 	size_t	i;
 	char	**new_env;
 	char	**new_exported;
+	ssize_t	equal_pos;
 
 	nb_args = ft_arraylen(args);
 	if (nb_args == 1)
@@ -52,20 +53,33 @@ int		ft_export(char **args, t_xe *xe)
 	{
 		if (check_var_name(args[i]) == SUCCESS)
 		{
-			if (ft_index(args[i], '=') != -1)
+			equal_pos = ft_index(args[i], '=');
+			if (equal_pos != -1)
 			{
-				new_env = append_str_to_array(args[i], xe->env);
+//				if (variable_exists(args[i], xe->env, equal_pos) == TRUE)
+//				{
+//					new_env = pop_str_from_array(xe->env, args[i]);
+//					if (new_env == NULL)
+//						return (MALLOC_ERR);
+//					xe->env = new_env;
+//				}
+//				if (variable_exists(args[i], xe->exported, equal_pos) == TRUE)
+//				{
+//					new_exported = pop_str_from_array(xe->exported, args[i]);
+//					if (new_exported == NULL)
+//						return (MALLOC_ERR);
+//					xe->exported = new_exported;
+//				}
+				new_env = push_str_to_array(xe->env, args[i]);
 				if (new_env == NULL)
 					return (MALLOC_ERR);
-				free(xe->env);
 				xe->env = new_env;
 			}
 			else
 			{
-				new_exported = append_str_to_array(args[i], xe->exported);
+				new_exported = push_str_to_array(xe->exported, args[i]);
 				if (new_exported == NULL)
 					return (MALLOC_ERR);
-				free(xe->exported);
 				xe->exported = new_exported;
 			}
 		}
@@ -78,31 +92,27 @@ int		ft_export(char **args, t_xe *xe)
 
 int		ft_unset(char **args, t_xe *xe)
 {
-	size_t	env_size;
+	size_t	nb_args;
 	ssize_t	var_pos;
 	char	**new_env;
 	size_t	i;
-	size_t	j;
 
-	env_size = ft_arraylen(xe->env);
-	var_pos = get_var_pos(xe->env, args[1]);
-	if (var_pos == -1)
-		return (SUCCESS);
-	new_env = (char **)malloc(sizeof(char *) * env_size);
-	if (new_env == NULL)
-		return (MALLOC_ERR);
-	i = 0;
-	j = 0;
-	while (i < env_size)
+	nb_args = ft_arraylen(args);
+	i = 1;
+	while (i < nb_args)
 	{
-		if (i != (size_t)var_pos)
-			new_env[j++] = xe->env[i++];
-		else
-			free(xe->env[i++]);
+		//if (check_var_name(args[i]) == SUCCESS)
+		//{
+		var_pos = get_var_pos(xe->env, args[i]);
+		if (var_pos != -1)
+		{
+			new_env = pop_str_from_array(xe->env, (size_t)var_pos);
+			if (new_env == NULL)
+				return (MALLOC_ERR);
+			xe->env = new_env;
+		}
+		i++;
 	}
-	new_env[j] = NULL;
-	free(xe->env);
-	xe->env = new_env;
 	return (SUCCESS);
 }
 

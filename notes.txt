@@ -2,10 +2,10 @@ j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
 
 use "bash --posix" to test!
 
+unset check name
+unset pour les var non assignees
 export new value for existing var
 export append avec +=
-unset pour les var non assignees?
-unset (+ export?) leaks
 besoin de proteger ft_strcmp? (comments)
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
@@ -40,6 +40,5 @@ man bash -> QUOTING
 	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
 
 testeur https://github.com/cacharle/minishell_test.git
-+ fichier .ods de tests (->nmbabazi)
 
 Les redirections doivent être effectuées à l'intérieur d'un fork(), il faut donc fork avant prepare_commands (hormis pour cd et env).

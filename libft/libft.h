@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/26 00:26:51 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/26 02:19:45 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ void			ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
 char			**dup_str_array(char **array);
-char			**append_str_to_array(char *str, char **array);
+char			**push_str_to_array(char **array, char *str);
+char			**pop_str_from_array(char **array, size_t str_pos);
 void			sort_str_array(char **array);
 
 void			*ft_lstpop(t_list **lst);

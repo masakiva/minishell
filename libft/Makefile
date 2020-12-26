@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/12/26 00:09:00 by mvidal-a         ###   ########.fr        #
+#    Updated: 2020/12/26 02:19:12 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,8 @@ SRCS_CUSTOM	+= ft_printarray_fd.c
 SRCS_CUSTOM	+= ft_arraylen.c
 SRCS_CUSTOM	+= free_str_array.c
 SRCS_CUSTOM	+= dup_str_array.c
-SRCS_CUSTOM	+= append_str_to_array.c
+SRCS_CUSTOM	+= push_str_to_array.c
+SRCS_CUSTOM	+= pop_str_from_array.c
 SRCS_CUSTOM	+= sort_str_array.c
 SRCS_CUSTOM	+= ft_lstpop.c
 SRCS_CUSTOM	+= ft_swap.c

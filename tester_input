@@ -12,5 +12,6 @@ export f=fd dfs
 export 24
 		export 
 export d
+export fs=
 unset dfs 24
 export
