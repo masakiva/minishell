@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/26 22:52:16 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2020/12/27 14:57:35 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int				ft_strcmp(const char *s1, const char *s2);
 int				ft_isset(char c, char *set);
 
 char			*get_var_value(char **vars, char *name);
-ssize_t			get_var_pos(char **vars, char *name);
+ssize_t			get_var_pos(char **vars, char *name, size_t name_len);
 void			ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
