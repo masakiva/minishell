@@ -1,4 +1,5 @@
 #include "execution.h"
+#include "stdio.h"
 
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
@@ -66,10 +67,10 @@ static int	launch_ext(char **args, t_xe *xe)
 	{
 		ret = 0; // because execve does not return (what does that mean?) on success...
 		ret = execve(args[0], args, xe->env);
-		if (ret == 0)
-			return (SUCCESS);
+		if (ret == -1)
+			perror("External function error:");
 		else
-			;//what to do?
+			return (SUCCESS);
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
 		{
