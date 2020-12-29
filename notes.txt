@@ -2,13 +2,14 @@ j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
 
 use "bash --posix" to test!
 
-export append avec +=
+export in alpha order
 besoin de proteger ft_strcmp? (comments)
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
 ou quand on valide une commande vide
 
 commande "."
+builtins: set stat_loc?
 
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
 

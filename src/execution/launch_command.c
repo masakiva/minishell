@@ -58,15 +58,18 @@ static int	launch_ext(char **args, t_xe *xe)
 	int		ref;
 	int		ret;
 
-	cmd = get_var_value(xe->env, "PATH");
+	cmd = get_var_value(xe->env, "PATH"); // and with PATH unset?
 	path = ft_split(cmd, ':');
 	free(cmd);
-	//	ft_printarray_fd(path, STDOUT_FILENO);
 	pid = fork();
 	if (pid == 0)
 	{
-		if ((ret = execve(args[0], args, xe->env)) == 0)
+		ret = 0; // because execve does not return (what does that mean?) on success...
+		ret = execve(args[0], args, xe->env);
+		if (ret == 0)
 			return (SUCCESS);
+		else
+			;//what to do?
 		ref = search_exec(path, args[0]);
 		if (ref < 0)
 		{
@@ -84,7 +87,7 @@ static int	launch_ext(char **args, t_xe *xe)
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
-		waitpid(pid, &stat_loc, 0);
+		waitpid(pid, &xe->stat_loc, 0); // return value? error?
 		signal_handler();
 	}
 	free_str_array(path);

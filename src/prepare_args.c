@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-char	**extract_vars(char *str, t_list *var_positions, char **env)
+char	**extract_vars(char *str, t_list *var_positions, char **env, int stat_loc)
 {
 	t_var_pos	*cur_var_pos;
 	char		**ret;
@@ -61,7 +61,7 @@ size_t	resize_token(char *str, t_list *var_positions, char **var_values)
 	return (ret);
 }
 
-char	*expand_token_vars(t_token *token, char **env)
+char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 {
 	char		***ptr;
 	char		**var_values;
@@ -76,7 +76,7 @@ char	*expand_token_vars(t_token *token, char **env)
 
 	// if (token->var_positions == NULL)
 	// 	return (ft_strdup(token->str));
-	var_values = extract_vars(token->str, token->var_positions, env);
+	var_values = extract_vars(token->str, token->var_positions, env, stat_loc);
 	if (var_values == NULL)
 		return (NULL);
 	token_len = resize_token(token->str, token->var_positions, var_values);
@@ -154,7 +154,7 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	}
 }
 
-char	**prepare_args(t_command *command, char **env)
+char	**prepare_args(t_command *command, char **env, int stat_loc)
 {
 	t_list		*tokens;
 	t_token		*cur_token;
@@ -171,7 +171,7 @@ char	**prepare_args(t_command *command, char **env)
 	while (tokens != NULL)
 	{
 		cur_token = ft_lstshift(&tokens);
-  		cur_arg = expand_token_vars(cur_token, env);
+  		cur_arg = expand_token_vars(cur_token, env, stat_loc);
 		if (cur_arg == NULL)
 		{
 			free_str_array(args);
