@@ -36,13 +36,14 @@ void	print_export(char **env, char **exported)
 		while (*exported != NULL)
 		{
 			ft_putstr_fd("export ", STDOUT_FILENO);// change fd
-			ft_putstr_fd(*exported, STDOUT_FILENO); //idem 
+			ft_putstr_fd(*exported, STDOUT_FILENO); //idem
 			ft_putchar_fd('\n', STDOUT_FILENO); // idem
 			exported++;
 		}
 }
 
-static int	ft_env_move_from_exp(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
+static int	ft_env_move_from_exp(char **args, t_xe *xe,
+									ssize_t equalsign_pos, size_t i)
 {
 	ssize_t	var_pos;
 	char	**new_array;
@@ -60,7 +61,8 @@ static int	ft_env_move_from_exp(char **args, t_xe *xe, ssize_t equalsign_pos, si
 	if (new_var == NULL)
 		return (MALLOC_ERR);
 	ft_memcpy(new_var, args[i], equalsign_pos - 1);
-	ft_strlcpy(new_var + equalsign_pos - 1, args[i] + equalsign_pos, ft_strlen(args[i]));
+	ft_strlcpy(new_var + equalsign_pos - 1,
+				args[i] + equalsign_pos, ft_strlen(args[i]));
 	new_array = push_str_to_array(xe->env, new_var);
 	if (new_array == NULL)
 		return (MALLOC_ERR);
@@ -69,7 +71,8 @@ static int	ft_env_move_from_exp(char **args, t_xe *xe, ssize_t equalsign_pos, si
 	return (SUCCESS);
 }
 
-static int	ft_env_append(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
+static int	ft_env_append(char **args, t_xe *xe,
+							ssize_t equalsign_pos, size_t i)
 {
 	ssize_t	var_pos;
 	char	*new_var;
@@ -77,7 +80,8 @@ static int	ft_env_append(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
 	var_pos = get_var_pos(xe->env, args[i], equalsign_pos - 1);
 	if (var_pos != NOT_FOUND)
 	{
-		new_var = ft_strjoin(xe->env[var_pos], args[i] + equalsign_pos + 1); // ft_strjoin_free?
+		new_var = ft_strjoin(xe->env[var_pos],
+								args[i] + equalsign_pos + 1); // ft_strjoin_free?
 		if (new_var == NULL)
 			return (MALLOC_ERR);
 		free(xe->env[var_pos]);
@@ -85,14 +89,35 @@ static int	ft_env_append(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
 	}
 	else
 	{
-		ft_env_move_from_exp(args, xe, equalsign_pos, i);
+		if (ft_env_move_from_exp(args, xe, equalsign_pos, i) != SUCCESS)
+			return (MALLOC_ERR);
 	}
+	return (SUCCESS);
+}
+
+static int	ft_env_set_from_exp(char **args, t_xe *xe,
+				ssize_t equalsign_pos, size_t i)
+{
+	char	**new_array;
+	ssize_t	var_pos;
+
+	var_pos = get_var_pos(xe->exported, args[i], equalsign_pos);
+	if (var_pos != NOT_FOUND)
+	{
+		new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
+		if (new_array == NULL)
+			return (MALLOC_ERR);
+		xe->exported = new_array;
+	}
+	new_array = push_str_to_array(xe->env, args[i]);
+	if (new_array == NULL)
+		return (MALLOC_ERR);
+	xe->env = new_array;
 	return (SUCCESS);
 }
 
 static int	ft_env_set(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
 {
-	char	**new_array;
 	ssize_t	var_pos;
 
 	var_pos = get_var_pos(xe->env, args[i], equalsign_pos);
@@ -105,28 +130,25 @@ static int	ft_env_set(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
 	}
 	else
 	{
-		var_pos = get_var_pos(xe->exported, args[i], equalsign_pos);
-		if (var_pos != NOT_FOUND)
-		{
-			new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
-			if (new_array == NULL)
-				return (MALLOC_ERR);
-			xe->exported = new_array;
-		}
-		new_array = push_str_to_array(xe->env, args[i]);
-		if (new_array == NULL)
+		if (ft_env_set_from_exp(args, xe, equalsign_pos, i) != SUCCESS)
 			return (MALLOC_ERR);
-		xe->env = new_array;
 	}
 	return (SUCCESS);
 }
 
-static int	ft_env_export(char **args, t_xe *xe, ssize_t equalsign_pos, size_t i)
+static int	ft_env_export(char **args, t_xe *xe,
+							ssize_t equalsign_pos, size_t i)
 {
 	if (args[i][equalsign_pos - 1] == '+')
-		ft_env_append(args, xe, equalsign_pos, i);
+	{
+		if (ft_env_append(args, xe, equalsign_pos, i) != SUCCESS)
+			return (MALLOC_ERR);
+	}
 	else
-		ft_env_set(args, xe, equalsign_pos, i);
+	{
+		if (ft_env_set(args, xe, equalsign_pos, i) != SUCCESS)
+			return (MALLOC_ERR);
+	}
 	return (SUCCESS);
 }
 
@@ -135,7 +157,8 @@ static int	ft_exported_export(char **args, t_xe *xe, size_t i)
 	char	**new_array;
 
 	if (get_var_pos(xe->env, args[i], ft_strlen(args[i])) == NOT_FOUND
-			&& get_var_pos(xe->exported, args[i], ft_strlen(args[i])) == NOT_FOUND)
+			&& get_var_pos(xe->exported, args[i], ft_strlen(args[i]))
+				== NOT_FOUND)
 	{
 		new_array = push_str_to_array(xe->exported, args[i]);
 		if (new_array == NULL)
@@ -145,15 +168,11 @@ static int	ft_exported_export(char **args, t_xe *xe, size_t i)
 	return (SUCCESS);
 }
 
-int		ft_export(char **args, t_xe *xe)
+static int	ft_export_checks(char **args, t_xe *xe, size_t nb_args)
 {
-	size_t	nb_args;
 	size_t	i;
 	ssize_t	equalsign_pos;
 
-	nb_args = ft_arraylen(args);
-	if (nb_args == 1)
-		print_export(xe->env, xe->exported);
 	i = 1;
 	while (i < nb_args)
 	{
@@ -161,9 +180,15 @@ int		ft_export(char **args, t_xe *xe)
 		if (check_var_name(args[i], equalsign_pos) == SUCCESS)
 		{
 			if (equalsign_pos != NOT_FOUND)
-				ft_env_export(args, xe, equalsign_pos, i);
+			{
+				if (ft_env_export(args, xe, equalsign_pos, i) != SUCCESS)
+					return (MALLOC_ERR);
+			}
 			else
-				ft_exported_export(args, xe, i);
+			{
+				if (ft_exported_export(args, xe, i) != SUCCESS)
+					return (MALLOC_ERR);
+			}
 		}
 		else
 			putstr_stderr("export: Variable identifier (name) invalid\n"); // leaks si le write marche pas
@@ -172,11 +197,48 @@ int		ft_export(char **args, t_xe *xe)
 	return (SUCCESS);
 }
 
+int		ft_export(char **args, t_xe *xe)
+{
+	size_t	nb_args;
+
+	nb_args = ft_arraylen(args);
+	if (nb_args == 1)
+		print_export(xe->env, xe->exported);
+	if (ft_export_checks(args, xe, nb_args) != SUCCESS)
+		return (MALLOC_ERR);
+	return (SUCCESS);
+}
+
+static int	ft_unset_loop(char **args, t_xe *xe, size_t i)
+{
+	ssize_t	var_pos;
+	char	**new_array;
+
+	var_pos = get_var_pos(xe->env, args[i], ft_strlen(args[i]));
+	if (var_pos != NOT_FOUND)
+	{
+		new_array = rm_str_from_array(xe->env, (size_t)var_pos);
+		if (new_array == NULL)
+			return (MALLOC_ERR);
+		xe->env = new_array;
+	}
+	else
+	{
+		var_pos = get_var_pos(xe->exported, args[i], ft_strlen(args[i]));
+		if (var_pos != NOT_FOUND)
+		{
+			new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
+			if (new_array == NULL)
+				return (MALLOC_ERR);
+			xe->exported = new_array;
+		}
+	}
+	return (SUCCESS);
+}
+
 int		ft_unset(char **args, t_xe *xe)
 {
 	size_t	nb_args;
-	ssize_t	var_pos;
-	char	**new_array;
 	size_t	i;
 
 	nb_args = ft_arraylen(args);
@@ -185,25 +247,8 @@ int		ft_unset(char **args, t_xe *xe)
 	{
 		if (check_var_name(args[i], ENTIRE_STR) == SUCCESS)
 		{
-			var_pos = get_var_pos(xe->env, args[i], ft_strlen(args[i]));
-			if (var_pos != NOT_FOUND)
-			{
-				new_array = rm_str_from_array(xe->env, (size_t)var_pos);
-				if (new_array == NULL)
-					return (MALLOC_ERR);
-				xe->env = new_array;
-			}
-			else
-			{
-				var_pos = get_var_pos(xe->exported, args[i], ft_strlen(args[i]));
-				if (var_pos != NOT_FOUND)
-				{
-					new_array = rm_str_from_array(xe->exported, (size_t)var_pos);
-					if (new_array == NULL)
-						return (MALLOC_ERR);
-					xe->exported = new_array;
-				}
-			}
+			if (ft_unset_loop(args, xe, i) != SUCCESS)
+				return (MALLOC_ERR);
 		}
 		else
 			putstr_stderr("unset: Variable identifier (name) invalid\n"); // leaks si le write marche pas
