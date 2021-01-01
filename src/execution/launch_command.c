@@ -1,8 +1,9 @@
 #include "execution.h"
-#include "stdio.h"
 
-#include <sys/types.h> // waitpid
+#include <sys/types.h> // waitpid, opendir
 #include <sys/wait.h> // waitpid
+#include <stdio.h> // perror
+#include <dirent.h> // readdir, opendir
 
 static int	launch_exit(char **args, t_xe *xe)
 {
@@ -11,16 +12,16 @@ static int	launch_exit(char **args, t_xe *xe)
 	return (CLEAN_EXIT);
 }
 
-#include <dirent.h>
-
 static int	search_path(DIR *dirp, char *name)
 {
 	struct dirent	*buf;
 
-	while ((buf = readdir(dirp)) != NULL)
+	buf = readdir(dirp);
+	while (buf != NULL)
 	{
 		if (ft_strcmp(buf->d_name, name) == 0)
 			return (SUCCESS);
+		buf = readdir(dirp);
 	}
 	return (FAILURE);
 }
@@ -28,7 +29,7 @@ static int	search_path(DIR *dirp, char *name)
 int	search_exec(char **path, char *name)
 {
 	DIR		*dirp;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	while (path[i] != NULL)
@@ -37,52 +38,52 @@ int	search_exec(char **path, char *name)
 		{
 			if (search_path(dirp, name) == SUCCESS)
 			{
-				closedir(dirp);
+				if (closedir(dirp) == ERROR)
+					;//error
 				return (i);
 			}
-			closedir(dirp);
-			i++;
+			if (closedir(dirp) == ERROR)
+				;//error
 		}
-		else
-			i++;
+		i++;
 	}
-	//closedir(dirp);
 	return (NOT_FOUND);
 }
 
 static int	launch_ext(char **args, t_xe *xe)
 {
 	pid_t	pid;
-	char	*cmd;
 	char	*tmp;
+	char	*cmd;
 	char	**path;
-	int		ref;
-	int		ret;
+	int		program_dir;
 
-	cmd = get_var_value(xe->env, "PATH"); // and with PATH unset?
-	path = ft_split(cmd, ':');
-	free(cmd);
+	tmp = get_var_value(xe->env, "PATH"); // and with PATH unset?
+	if (tmp == NULL)
+		return (M_ERROR);
+	path = ft_split(tmp, ':');
+	free(tmp);
+	if (path == NULL)
+		return (M_ERROR);
 	pid = fork();
 	if (pid == 0)
 	{
-		ret = 0; // because execve does not return (what does that mean?) on success...
-		ret = execve(args[0], args, xe->env);
-		if (ret == -1)
-			perror("External function error:");
-		else
-			return (SUCCESS);
-		ref = search_exec(path, args[0]);
-		if (ref < 0)
+		if (ft_strchr(args[0], '/') != NULL)
+			if (execve(args[0], args, xe->env) == ERROR)
+				perror("External function error:");
+		program_dir = search_exec(path, args[0]);
+		if (program_dir == NOT_FOUND)
 		{
 			free_str_array(path);
-			return (FAILURE);
+			return (FAILURE); // other error code
 		}
-		cmd = ft_strjoin(path[ref], "/");
+		cmd = ft_strjoin(path[program_dir], "/");
 		tmp = cmd;
 		cmd = ft_strjoin(cmd, args[0]);
 		free(tmp);
-		execve(cmd, args, xe->env);
-		free(cmd);
+		if (execve(cmd, args, xe->env) == ERROR)
+			perror("External function error:");
+		free(cmd); // does not free if execve succeeds
 	}
 	else
 	{

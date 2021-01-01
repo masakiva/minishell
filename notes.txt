@@ -5,6 +5,13 @@ use "bash --posix" to test!
 export in alpha order
 besoin de proteger ft_strcmp? (comments)
 
+export d='\' f="  la.    ok.      sf.  non"
+export
+echo $d $f
+touch $f
+export h=~/fs
+export fd='$fs'
+
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
 ou quand on valide une commande vide
 

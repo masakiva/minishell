@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:42:49 by abenoit           #+#    #+#             */
-/*   Updated: 2020/12/26 22:37:09 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/01 17:15:22 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ char	*get_var_value(char **vars, char *name)
 
 	if (vars != NULL)
 	{
+		name_len = ft_strlen(name);
 		while (*vars != NULL)
 		{
-			name_len = ft_strlen(name);
 			if ((size_t)ft_index(*vars, '=') == name_len
 					&& ft_strncmp(*vars, name, name_len) == 0)
 				return (ft_strdup(*vars + name_len + 1));
