@@ -63,16 +63,15 @@ size_t	resize_token(char *str, t_list *var_positions, char **var_values)
 
 char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 {
-	char		***ptr;
 	char		**var_values;
 	char		*ret;
 	size_t		token_len;
 	t_list		*var_positions;
 	t_var_pos	*var;
-	size_t		i_ret;
-	size_t		j_input;
-	size_t		k_value;
-	size_t		l_values;
+	size_t		i_ret; // temp name
+	size_t		j_input; // temp name
+	size_t		k_value; // temp name
+	size_t		l_values; // temp name
 
 	// if (token->var_positions == NULL)
 	// 	return (ft_strdup(token->str));
@@ -89,37 +88,30 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	var_positions = token->var_positions;
 	while (i_ret < token_len)
 	{
-		if (var_positions != NULL) 
-			var = var_positions->content;
-		if (var != NULL && j_input == var->start)
+		if (var_positions != NULL) // && if imbriqué?
 		{
-			if (var_values[l_values] != NULL)
+			var = var_positions->content;
+			if (/*var != NULL && */j_input == var->start)
 			{
-				j_input = var->start + var->len;
-				if (ft_strlen(var_values[l_values]) != 0)
-				{
-					k_value = 0;
-					while (var_values[l_values][k_value])
-					{
-						ret[i_ret] = var_values[l_values][k_value];
-						k_value++;
-						i_ret++;
-					}
-					j_input = var->start + var->len;
-				}
+				//if (var_values[l_values] != NULL)
+				//{
+				//j_input = var->start + var->len;
+				//if (ft_strlen(var_values[l_values]) != 0)
+				//{
+				k_value = 0;
+				while (var_values[l_values][k_value] != '\0')
+					ret[i_ret++] = var_values[l_values][k_value++]; // strcpy? memccpy?
+				j_input /*= var->start + var->len*/+= var->len;
+				//}
+				//}
+				var_positions = var_positions->next;
+				l_values++;
 			}
-			var_positions = var_positions->next;
-			l_values++;
 		}
 		else
-		{
-			ret[i_ret] = token->str[j_input];
-			i_ret++;
-			j_input++;
-		}
+			ret[i_ret++] = token->str[j_input++];
 	}
 	ret[i_ret] = '\0';
-	ptr = &var_values; // ??
 	free_str_array(var_values);
 	return (ret);
 }
@@ -171,7 +163,7 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 	while (tokens != NULL)
 	{
 		cur_token = ft_lstshift(&tokens);
-  		cur_arg = expand_token_vars(cur_token, env, stat_loc);
+		cur_arg = expand_token_vars(cur_token, env, stat_loc);
 		if (cur_arg == NULL)
 		{
 			free_str_array(args);
@@ -187,6 +179,6 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 		free_token(cur_token);
 	}
 	free(command);
-//	ft_printarray_fd(args, 1);
+	//	ft_printarray_fd(args, 1);
 	return (args);
 }

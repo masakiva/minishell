@@ -12,9 +12,13 @@ SRC	+= prepare_args.c
 
 SRC	+= launch_command.c
 SRC	+= options.c
-SRC	+= echo.c
-SRC	+= pwd_cd.c
-SRC	+= export_unset_env.c
+SRC	+= ft_echo.c
+SRC	+= ft_pwd.c
+SRC	+= ft_cd.c
+SRC	+= var_utils.c
+SRC	+= ft_export.c
+SRC	+= ft_unset.c
+SRC	+= ft_env.c
 
 SRC	+= ft_exit.c
 

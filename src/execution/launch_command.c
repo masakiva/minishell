@@ -56,7 +56,7 @@ static int	launch_ext(char **args, t_xe *xe)
 	char	*tmp;
 	char	*cmd;
 	char	**path;
-	int		program_dir;
+	int		dir_index;
 
 	tmp = get_var_value(xe->env, "PATH"); // and with PATH unset?
 	if (tmp == NULL)
@@ -71,13 +71,13 @@ static int	launch_ext(char **args, t_xe *xe)
 		if (ft_strchr(args[0], '/') != NULL)
 			if (execve(args[0], args, xe->env) == ERROR)
 				perror("External function error:");
-		program_dir = search_exec(path, args[0]);
-		if (program_dir == NOT_FOUND)
+		dir_index = search_exec(path, args[0]);
+		if (dir_index == NOT_FOUND)
 		{
 			free_str_array(path);
 			return (FAILURE); // other error code
 		}
-		cmd = ft_strjoin(path[program_dir], "/");
+		cmd = ft_strjoin(path[dir_index], "/");
 		tmp = cmd;
 		cmd = ft_strjoin(cmd, args[0]);
 		free(tmp);

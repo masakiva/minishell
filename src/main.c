@@ -99,7 +99,6 @@ static int			main_loop(t_xe *xe)
 
 	fd_backup = -1;
 	ret = get_input(&xe->commands);
-//	write(1, "OK\n", 3);
 	if (ret == SUCCESS)
 		ret = handle_execution(xe);
 	return (ret);

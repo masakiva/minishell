@@ -1,10 +1,11 @@
-j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib
+j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
 
 use "bash --posix" to test!
 
-export in alpha order
+export in alpha order -> merge env + exported...?
 besoin de proteger ft_strcmp? (comments)
 
+export d=\$ vs export d=\1\f ou echo \$
 export d='\' f="  la.    ok.      sf.  non"
 export
 echo $d $f
@@ -17,6 +18,7 @@ ou quand on valide une commande vide
 
 commande "."
 builtins: set stat_loc?
+mkdir ok; cd ok; rmdir ../ok; pwd
 
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
 
