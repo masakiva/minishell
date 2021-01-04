@@ -34,8 +34,9 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
-static int			handle_execution(t_xe *xe)
+static int			handle_execution(t_xe *xe, int proc)
 {
+	int			i;
 	int			ret;
 	char		**args;
 	t_command	*cur_command;
@@ -65,8 +66,16 @@ static int			handle_execution(t_xe *xe)
 				close(fd_pipe[1]);// error
 				dup2(fd_pipe[0], STDIN_FILENO);// error
 				free(cur_command);
-				ret = handle_execution(xe);
+				ret = handle_execution(xe, proc + 1);
 				close(fd_pipe[0]);// error
+				dup2(backup_stdin, STDIN_FILENO);
+				i = 0;
+				while (i < proc)
+				{
+					wait(NULL);
+					i++;
+				}
+				dup2(backup_stdout, STDOUT_FILENO);
 				return (ret);
 /*
 				cur_command = ft_lstshift(&(xe->commands));
@@ -91,8 +100,6 @@ static int			handle_execution(t_xe *xe)
 	}
 	else
 	{
-		dup2(backup_stdin, STDIN_FILENO);
-		dup2(backup_stdout, STDOUT_FILENO);
 		return (SUCCESS);
 	}
 }
@@ -103,7 +110,7 @@ static int			main_loop(t_xe *xe)
 
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
-		ret = handle_execution(xe);
+		ret = handle_execution(xe, 0);
 	return (ret);
 }
 
