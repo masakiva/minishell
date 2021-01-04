@@ -13,6 +13,10 @@ touch $f
 export h=~/fs
 export fd='$fs'
 
+
+testlines pour multipipes :
+ls -la | grep oct | tr -dc '0-9'
+
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
 ou quand on valide une commande vide
 

@@ -51,12 +51,9 @@ static int			handle_execution(t_xe *xe)
 		{
 			pipe(fd_pipe);// error?
 			gpid = fork();// error?
-			fd_backup = dup(0);
 			if (gpid == 0)
 			{
-				fd_old = STDOUT_FILENO;
-				dup2(fd_old, fd_backup);// error
-				dup2(fd_pipe[1], fd_old);// error
+				dup2(fd_pipe[1], STDOUT_FILENO);// error
 				close(fd_pipe[0]);// error
 				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 				ret = execute_cmd(args, xe);// error
@@ -66,12 +63,12 @@ static int			handle_execution(t_xe *xe)
 			}
 			else
 			{
-				fd_old = STDIN_FILENO;
-				dup2(fd_old, fd_backup);// error
-				dup2(fd_pipe[0], fd_old);// error
+				dup2(fd_pipe[0], STDIN_FILENO);// error
 				free(cur_command);
 				close(fd_pipe[0]);// error
 				close(fd_pipe[1]);// error
+				handle_execution(xe);
+/*
 				cur_command = ft_lstshift(&(xe->commands));
 				if (cur_command != NULL)// else error
 				{
@@ -82,6 +79,7 @@ static int			handle_execution(t_xe *xe)
 					waitpid(gpid, &xe->stat_loc, 0);// error?
 					signal_handler();
 				}
+*/
 			}
 		}
 		else
@@ -97,7 +95,10 @@ static int			main_loop(t_xe *xe)
 {
 	int			ret;
 
-	fd_backup = -1;
+	close(STDIN_FILENO);
+	dup(backup_stdin);
+	close(STDOUT_FILENO);
+	dup(backup_stdout);
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
 		ret = handle_execution(xe);
@@ -113,6 +114,8 @@ int		main(int argc, char **argv, char **env_source)
 	ret = SUCCESS;
 	xe = (t_xe *)malloc(sizeof(t_xe));
 	ft_bzero(xe, sizeof(t_xe));
+	backup_stdin = dup(STDIN_FILENO);
+	backup_stdout = dup(STDOUT_FILENO);
 	if (xe == NULL)
 		ret = MALLOC_ERR;
 	else if (argc != 1)

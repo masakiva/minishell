@@ -27,8 +27,8 @@ typedef int			(*t_exec)(char **args, t_xe *xe);
 
 pid_t	gpid;
 int		fd_pipe[2];
-int		fd_old;
-int		fd_backup;
+int		backup_stdin;
+int		backup_stdout;
 
 /*
 **	main functions

@@ -89,7 +89,7 @@ typedef struct		s_command
 
 typedef struct		s_xe
 {
-	int		fd[3]; // a laisser ici
+	int		fd[3]; // a priori inutile
 	int		stat_loc;
 	char	**env;
 	char	**exported;

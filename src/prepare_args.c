@@ -118,20 +118,20 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 
 void	apply_redir(char *cur_arg, enum e_redir_op redir)
 {
+	int			src_fd;
 	int			redir_fd;
 	mode_t		mode;
 	int			flags;
 
 	mode = 0;
-	fd_backup = dup(0);
 	if (redir == FILEIN)
 	{
-		fd_old = STDIN_FILENO;
+		src_fd = STDIN_FILENO;
 		flags = O_RDONLY;
 	}
 	else
 	{
-		fd_old = STDOUT_FILENO;
+		src_fd = STDOUT_FILENO;
 		flags = O_WRONLY | O_CREAT;
 		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 		if (redir == APPEND)
@@ -140,8 +140,7 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	redir_fd = open(cur_arg, flags, mode);
 	if (redir_fd >= 0) // else error?
 	{
-		dup2(fd_old, fd_backup); // error?
-		dup2(redir_fd, fd_old); // error
+		dup2(redir_fd, src_fd); // error
 		close(redir_fd); // error
 	}
 }

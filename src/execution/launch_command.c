@@ -137,10 +137,7 @@ int		execute_cmd(char **args, t_xe *xe)
 	free_str_array(args);
 	if (gpid == 0)
 	{
-		close(fd_old);
 		close(STDIN_FILENO);
 	}
-	if (fd_backup != -1)
-		dup2(fd_backup, fd_old);
 	return (ret);
 }
