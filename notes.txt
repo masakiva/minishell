@@ -8,7 +8,7 @@ echo $f
 echo "$f"
 cat $f
 cat "$f"
-export h=~/fs
+export h=~/fs                        || machine->cur_token->str[ft_strlen(machine->cur_token->str) - 2] == '='
 export fd='$fs'
 
 command loop (semicolon)

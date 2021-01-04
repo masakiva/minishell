@@ -34,7 +34,7 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
-static int			handle_execution(t_xe *xe, int proc)
+int			handle_execution(t_xe *xe, int proc)
 {
 	int			i;
 	int			ret;
