@@ -1,28 +1,51 @@
 #include "execution.h"
 
-void	print_export(char **env, char **exported)
+char	**sort_variables(char **env, char **exported)
 {
-	size_t	equalsign_pos;
+	char		**sorted_array;
+	size_t		env_len;
+	size_t		exported_len;
 
-	while (*env != NULL)
+	env_len = ft_arraylen(env);
+	exported_len = ft_arraylen(exported);
+	sorted_array = (char **)malloc(sizeof(char *) * (env_len + exported_len + 1));
+	if (sorted_array == NULL)
+		return (NULL);
+	ft_memcpy(sorted_array, env, sizeof(char *) * env_len);
+	ft_memcpy(sorted_array + env_len, exported, sizeof(char *) * exported_len);
+	sorted_array[env_len + exported_len] = NULL;
+	sort_str_array(sorted_array);
+	return (sorted_array);
+}
+
+int		print_export(char **env, char **exported)
+{
+	char	**variables;
+	size_t	i;
+	ssize_t	equalsign_pos;
+
+	variables = sort_variables(env, exported);
+	if (variables == NULL)
+		return (FAILURE);
+	i = 0;
+	while (variables[i] != NULL)
 	{
-		equalsign_pos = ft_index(*env, '=');
 		ft_putstr_fd("export ", STDOUT_FILENO);// change fd
-		write(STDOUT_FILENO, *env, equalsign_pos + 1);// idem
-		ft_putchar_fd('"', STDOUT_FILENO); // idem
-		ft_putstr_fd(*env + equalsign_pos + 1, STDOUT_FILENO);// id
-		ft_putchar_fd('"', STDOUT_FILENO); // id
-		ft_putchar_fd('\n', STDOUT_FILENO); // id
-		env++;
-	}
-	if (exported != NULL)
-		while (*exported != NULL)
+		equalsign_pos = ft_index(variables[i], '=');
+		if (equalsign_pos != NOT_FOUND)
 		{
-			ft_putstr_fd("export ", STDOUT_FILENO);// change fd
-			ft_putstr_fd(*exported, STDOUT_FILENO); //idem
-			ft_putchar_fd('\n', STDOUT_FILENO); // idem
-			exported++;
+			write(STDOUT_FILENO, variables[i], equalsign_pos + 1);// idem
+			ft_putchar_fd('"', STDOUT_FILENO); // idem
+			ft_putstr_fd(variables[i] + equalsign_pos + 1, STDOUT_FILENO);// id
+			ft_putchar_fd('"', STDOUT_FILENO); // id
 		}
+		else
+			ft_putstr_fd(variables[i], STDOUT_FILENO); //id
+		ft_putchar_fd('\n', STDOUT_FILENO); // id
+		i++;
+	}
+	free(variables);
+	return (SUCCESS);
 }
 
 static int	ft_env_append_from_exp(char *var, t_xe *xe, ssize_t equalsign_pos)
@@ -175,7 +198,10 @@ static int	ft_export_checks(char **args, t_xe *xe)
 int		ft_export(char **args, t_xe *xe)
 {
 	if (ft_arraylen(args) == 1)
-		print_export(xe->env, xe->exported);
+	{
+		if (print_export(xe->env, xe->exported) != SUCCESS)
+			return (MALLOC_ERR);
+	}
 	else
 	{
 		if (ft_export_checks(args + 1, xe) != SUCCESS)
