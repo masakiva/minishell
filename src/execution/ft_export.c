@@ -18,6 +18,17 @@ char	**sort_variables(char **env, char **exported)
 	return (sorted_array);
 }
 
+void	print_export_var_value(char *value)
+{
+	while (*value != '\0')
+	{
+		if (ft_isset(*value, "$\"\\`") == TRUE)
+			ft_putchar_fd('\\', STDOUT_FILENO);// change fd
+		ft_putchar_fd(*value, STDOUT_FILENO);// change fd
+		value++;
+	}
+}
+
 int		print_export(char **env, char **exported)
 {
 	char	**variables;
@@ -36,7 +47,7 @@ int		print_export(char **env, char **exported)
 		{
 			write(STDOUT_FILENO, variables[i], equalsign_pos + 1);// idem
 			ft_putchar_fd('"', STDOUT_FILENO); // idem
-			ft_putstr_fd(variables[i] + equalsign_pos + 1, STDOUT_FILENO);// id
+			print_export_var_value(variables[i] + equalsign_pos + 1);
 			ft_putchar_fd('"', STDOUT_FILENO); // id
 		}
 		else

@@ -2,14 +2,19 @@
 
 besoin de proteger ft_strcmp? (comments)
 
-export d=\$ vs export d=\1\f ou echo \$
-export d='\' f="  la.    ok.      sf.  non"
+export f="  la.    ok.      sf.  non"
 export
-echo $d $f
-touch $f
+echo $f
+echo "$f"
+cat $f
+cat "$f"
 export h=~/fs
 export fd='$fs'
 
+command loop (semicolon)
+
+quit apres une erreur de parsing? (fonction error())
+par exemple export d=\
 
 testlines pour multipipes :
 cat | cat | ls
