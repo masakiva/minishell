@@ -131,8 +131,6 @@ int		main(int argc, char **argv, char **env_source)
 		xe->env = dup_str_array(env_source);
 		if (xe->env == NULL)
 			ret = MALLOC_ERR;
-		else
-			sort_str_array(xe->env);
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
 		free_str_array(xe->exported); // besoin de free?

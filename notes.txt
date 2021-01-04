@@ -1,8 +1,5 @@
-j'ai ajouté un 'make lib' comme raccourci, quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
+'make lib' -> quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
 
-use "bash --posix" to test!
-
-export in alpha order -> merge env + exported...?
 besoin de proteger ft_strcmp? (comments)
 
 export d=\$ vs export d=\1\f ou echo \$
