@@ -53,21 +53,21 @@ static int			handle_execution(t_xe *xe)
 			gpid = fork();// error?
 			if (gpid == 0)
 			{
-				dup2(fd_pipe[1], STDOUT_FILENO);// error
 				close(fd_pipe[0]);// error
+				dup2(fd_pipe[1], STDOUT_FILENO);// error
 				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 				ret = execute_cmd(args, xe);// error
 				close(fd_pipe[1]);// error
-				ret = CLEAN_EXIT;
-				//return (CLEAN_EXIT);
+				return (CLEAN_EXIT);
 			}
 			else
 			{
+				close(fd_pipe[1]);// error
 				dup2(fd_pipe[0], STDIN_FILENO);// error
 				free(cur_command);
+				ret = handle_execution(xe);
 				close(fd_pipe[0]);// error
-				close(fd_pipe[1]);// error
-				handle_execution(xe);
+				return (ret);
 /*
 				cur_command = ft_lstshift(&(xe->commands));
 				if (cur_command != NULL)// else error
@@ -86,19 +86,21 @@ static int			handle_execution(t_xe *xe)
 		{
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
+			return (ret);
 		}
 	}
-	return (ret);
+	else
+	{
+		dup2(backup_stdin, STDIN_FILENO);
+		dup2(backup_stdout, STDOUT_FILENO);
+		return (SUCCESS);
+	}
 }
 
 static int			main_loop(t_xe *xe)
 {
 	int			ret;
 
-	close(STDIN_FILENO);
-	dup(backup_stdin);
-	close(STDOUT_FILENO);
-	dup(backup_stdout);
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
 		ret = handle_execution(xe);

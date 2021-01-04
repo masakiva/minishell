@@ -135,9 +135,5 @@ int		execute_cmd(char **args, t_xe *xe)
 	if (ret == FAILURE)
 		ft_putstr_fd("COMMAND ERROR\n", 1);
 	free_str_array(args);
-	if (gpid == 0)
-	{
-		close(STDIN_FILENO);
-	}
 	return (ret);
 }

@@ -141,7 +141,6 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	if (redir_fd >= 0) // else error?
 	{
 		dup2(redir_fd, src_fd); // error
-		close(redir_fd); // error
 	}
 }
 
