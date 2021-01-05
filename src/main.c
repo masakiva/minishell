@@ -36,7 +36,6 @@ static int			get_input(t_list **commands)
 
 int			handle_execution(t_xe *xe, int fd_in, int proc)
 {
-	int			i;
 	int			ret;
 	char		**args;
 	t_command	*cur_command;
@@ -67,18 +66,6 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				close(fd_in);// error
 				free(cur_command);
 				return (handle_execution(xe, fd_pipe[0], proc + 1));
-/*
-				cur_command = ft_lstshift(&(xe->commands));
-				if (cur_command != NULL)// else error
-				{
-					args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
-					ret = execute_cmd(args, xe);// error
-					signal(SIGINT, SIG_IGN);// error?
-					signal(SIGQUIT, SIG_IGN);// error?
-					waitpid(gpid, &xe->stat_loc, 0);// error?
-					signal_handler();
-				}
-*/
 			}
 		}
 		else
@@ -86,12 +73,6 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 			dup2(fd_in, STDIN_FILENO);
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
-			i = 0;
-			while (i < proc)
-			{
-				wait(NULL);
-				i++;
-			}
 			return (ret);
 		}
 	}
