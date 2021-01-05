@@ -25,11 +25,6 @@ enum		e_cmd_code
 
 typedef int			(*t_exec)(char **args, t_xe *xe);
 
-pid_t	gpid;
-int		fd_pipe[2];
-int		backup_stdin;
-int		backup_stdout;
-
 /*
 **	main functions
 */

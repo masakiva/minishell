@@ -34,43 +34,67 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
-int			handle_execution(t_xe *xe, int fd_in, int proc)
+int			handle_execution(t_xe *xe)
 {
+	int			fd[2];
 	int			ret;
 	char		**args;
 	t_command	*cur_command;
 
 	ret = SUCCESS;
-	gpid = -1;
+	xe->gpid = -1;
 	cur_command = NULL;
 	if (xe->commands != NULL)
 		cur_command = ft_lstshift(&(xe->commands));
 	if (cur_command != NULL) // le contraire possible?
 	{
-		if (cur_command->pipe_flag == TRUE)
+		if (((t_list *)cur_command->tokens) == NULL)
 		{
-			pipe(fd_pipe);// error?
-			gpid = fork();// error?
-			if (gpid == 0)
+			free_command(cur_command);
+			cur_command = ft_lstshift(&(xe->commands));
+			return (SUCCESS);
+		}
+		else if (cur_command->pipe_flag == TRUE)
+		{
+			pipe(fd);// error?
+			xe->gpid = fork();// error?
+			if (xe->gpid == 0)
 			{
-				close(fd_pipe[0]);// error
-				dup2(fd_in, STDIN_FILENO);// error
-				dup2(fd_pipe[1], STDOUT_FILENO);// error
+				//xe->child = 1;
+				close(fd[0]);// error
+				dup2(fd[1], STDOUT_FILENO);// error
+				//dprintf(xe->backup_stdout, "list: child = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
 				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
+				//dprintf(xe->backup_stdout, "args0: child = %s\n", args[0]);
+				//dprintf(xe->backup_stdout, "args1: child = %s\n", args[1]);
 				ret = execute_cmd(args, xe);// error
+				close(fd[1]);
 				return (CLEAN_EXIT);
 			}
 			else
 			{
-				close(fd_pipe[1]);// error
-				close(fd_in);// error
-				free(cur_command);
-				return (handle_execution(xe, fd_pipe[0], proc + 1));
+				//xe->child = 0;
+				close(fd[1]);// error
+				dup2(fd[0], STDIN_FILENO);
+			//	free_command(cur_command);
+				cur_command = ft_lstshift(&(xe->commands));
+				if (cur_command == NULL)
+					return (MALLOC_ERR);
+				//dprintf(xe->backup_stdout, "list: parent = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
+				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
+				//dprintf(xe->backup_stdout, "args0: parent = %s\n", args[0]);
+				//dprintf(xe->backup_stdout, "args1: parent = %s\n", args[1]);
+				ret = execute_cmd(args, xe);// error
+				close(fd[0]);
+				dup2(xe->backup_stdout, STDOUT_FILENO);
+				dup2(xe->backup_stdin, STDIN_FILENO);
+				return (ret);
+//				return (handle_execution(xe, fd[0], proc + 1));
 			}
 		}
 		else
 		{
-			dup2(fd_in, STDIN_FILENO);
+			//dup2(fd_in, STDIN_FILENO);
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
 			return (ret);
@@ -78,8 +102,8 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	}
 	else
 	{
-		dup2(backup_stdout, STDOUT_FILENO);
-		dup2(backup_stdin, STDIN_FILENO);
+		dup2(xe->backup_stdout, STDOUT_FILENO);
+		dup2(xe->backup_stdin, STDIN_FILENO);
 		return (SUCCESS);
 	}
 }
@@ -90,7 +114,7 @@ static int			main_loop(t_xe *xe)
 
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
-		ret = handle_execution(xe, STDIN_FILENO, 0);
+		ret = handle_execution(xe);
 	return (ret);
 }
 
@@ -103,8 +127,8 @@ int		main(int argc, char **argv, char **env_source)
 	ret = SUCCESS;
 	xe = (t_xe *)malloc(sizeof(t_xe));
 	ft_bzero(xe, sizeof(t_xe));
-	backup_stdin = dup(STDIN_FILENO);
-	backup_stdout = dup(STDOUT_FILENO);
+	xe->backup_stdin = dup(STDIN_FILENO);
+	xe->backup_stdout = dup(STDOUT_FILENO);
 	if (xe == NULL)
 		ret = MALLOC_ERR;
 	else if (argc != 1)

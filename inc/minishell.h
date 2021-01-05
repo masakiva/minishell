@@ -89,13 +89,13 @@ typedef struct		s_command
 
 typedef struct		s_xe
 {
-	int		fd[3]; // a priori inutile
+	pid_t	gpid;
+	int		backup_stdin;
+	int		backup_stdout;
 	int		stat_loc;
 	char	**env;
 	char	**exported;
 	t_list	*commands;
-	pid_t	gpid;	// nécessaire ?
-	uint8_t	pad[4];
 }					t_xe;
 
 

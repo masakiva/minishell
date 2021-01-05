@@ -1,7 +1,6 @@
 'make lib' -> quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
 
-besoin de proteger ft_strcmp? (comments)
-
+man bash -> "Word splitting"
 export f="  la.    ok.      sf.  non"
 export
 echo $f
@@ -11,7 +10,9 @@ cat "$f"
 export h=~/fs                        || machine->cur_token->str[ft_strlen(machine->cur_token->str) - 2] == '='
 export fd='$fs'
 
-command loop (semicolon)
+command loop (semicolon) -> dans handle_commands?
+
+SHLVL
 
 quit apres une erreur de parsing? (fonction error())
 par exemple export d=\

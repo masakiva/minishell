@@ -7,7 +7,8 @@ char	*error(char *line, t_list **commands, t_state_machine *machine)
 		"No matching double quote",
 		"Multiline inputs are currently not supported",
 		"Redirection path invalid",
-		"No redirection path specified"};
+		"No redirection path specified",
+		"Empty command before ; or |"};
 
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);
@@ -148,20 +149,36 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 
 char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 {
-	if (new_command(commands) == FAILURE)
-		return(NULL);
-	line++;
-	machine->state = SPACE;
+	if (((t_command *)ft_lstlast(*commands)->content)->tokens == NULL)
+	{
+		machine->state = ERR;
+		machine->error = EMPTY_CMD;
+	}
+	else
+	{
+		if (new_command(commands) == FAILURE)
+			return (NULL);
+		line++;
+		machine->state = SPACE;
+	}
 	return (line);
 }
 
 char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
 {
-	((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
-	if (new_command(commands) == FAILURE)
-		return (NULL);
-	line++;
-	machine->state = SPACE;
+	if (((t_command *)ft_lstlast(*commands)->content)->tokens == NULL)
+	{
+		machine->state = ERR;
+		machine->error = EMPTY_CMD;
+	}
+	else
+	{
+		((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
+		if (new_command(commands) == FAILURE)
+			return (NULL);
+		line++;
+		machine->state = SPACE;
+	}
 	return (line);
 }
 
