@@ -34,7 +34,7 @@ static int			get_input(t_list **commands)
 	return (SUCCESS);
 }
 
-int			handle_execution(t_xe *xe, int proc)
+int			handle_execution(t_xe *xe, int fd_in, int proc)
 {
 	int			i;
 	int			ret;
@@ -55,28 +55,18 @@ int			handle_execution(t_xe *xe, int proc)
 			if (gpid == 0)
 			{
 				close(fd_pipe[0]);// error
+				dup2(fd_in, STDIN_FILENO);// error
 				dup2(fd_pipe[1], STDOUT_FILENO);// error
 				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 				ret = execute_cmd(args, xe);// error
-				close(fd_pipe[1]);// error
 				return (CLEAN_EXIT);
 			}
 			else
 			{
 				close(fd_pipe[1]);// error
-				dup2(fd_pipe[0], STDIN_FILENO);// error
+				close(fd_in);// error
 				free(cur_command);
-				ret = handle_execution(xe, proc + 1);
-				close(fd_pipe[0]);// error
-				dup2(backup_stdin, STDIN_FILENO);
-				i = 0;
-				while (i < proc)
-				{
-					wait(NULL);
-					i++;
-				}
-				dup2(backup_stdout, STDOUT_FILENO);
-				return (ret);
+				return (handle_execution(xe, fd_pipe[0], proc + 1));
 /*
 				cur_command = ft_lstshift(&(xe->commands));
 				if (cur_command != NULL)// else error
@@ -93,13 +83,22 @@ int			handle_execution(t_xe *xe, int proc)
 		}
 		else
 		{
+			dup2(fd_in, STDIN_FILENO);
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
+			i = 0;
+			while (i < proc)
+			{
+				wait(NULL);
+				i++;
+			}
 			return (ret);
 		}
 	}
 	else
 	{
+		dup2(backup_stdout, STDOUT_FILENO);
+		dup2(backup_stdin, STDIN_FILENO);
 		return (SUCCESS);
 	}
 }
@@ -110,7 +109,7 @@ static int			main_loop(t_xe *xe)
 
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
-		ret = handle_execution(xe, 0);
+		ret = handle_execution(xe, STDIN_FILENO, 0);
 	return (ret);
 }
 
