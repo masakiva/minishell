@@ -29,8 +29,9 @@ static int			get_input(t_list **commands)
 	return (ret);
 }
 
-int			handle_execution(t_xe *xe)
+int			handle_execution(t_xe *xe, int fd_in, int proc)
 {
+	int			i;
 	int			fd[2];
 	int			ret;
 	char		**args;
@@ -46,7 +47,10 @@ int			handle_execution(t_xe *xe)
 		if (((t_list *)cur_command->tokens) == NULL)
 		{
 			free_command(cur_command);
-			cur_command = ft_lstshift(&(xe->commands));
+		//	cur_command = ft_lstshift(&(xe->commands));
+		//	il faudrait plutôt partir sur une recursion ici
+			dup2(xe->backup_stdout, STDOUT_FILENO);
+			dup2(xe->backup_stdin, STDIN_FILENO);
 			return (SUCCESS);
 		}
 		else if (cur_command->pipe_flag == TRUE)
@@ -57,21 +61,24 @@ int			handle_execution(t_xe *xe)
 			{
 				//xe->child = 1;
 				close(fd[0]);// error
-				dup2(fd[1], STDOUT_FILENO);// error
+				if (dup2(fd_in, STDIN_FILENO) != -1)
+					close(fd_in);
+				if (dup2(fd[1], STDOUT_FILENO) != -1)// error
+					close(fd[1]);
 				//dprintf(xe->backup_stdout, "list: child = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
 				args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 				//dprintf(xe->backup_stdout, "args0: child = %s\n", args[0]);
 				//dprintf(xe->backup_stdout, "args1: child = %s\n", args[1]);
 				ret = execute_cmd(args, xe);// error
-				close(fd[1]);
 				return (CLEAN_EXIT);
 			}
 			else
 			{
 				//xe->child = 0;
 				close(fd[1]);// error
-				dup2(fd[0], STDIN_FILENO);
-			//	free_command(cur_command);
+				close(fd_in);
+				free_command(cur_command);
+/*
 				cur_command = ft_lstshift(&(xe->commands));
 				if (cur_command == NULL)
 					return (MALLOC_ERR);
@@ -84,14 +91,24 @@ int			handle_execution(t_xe *xe)
 				dup2(xe->backup_stdout, STDOUT_FILENO);
 				dup2(xe->backup_stdin, STDIN_FILENO);
 				return (ret);
-//				return (handle_execution(xe, fd[0], proc + 1));
+*/
+				return (handle_execution(xe, fd[0], proc + 1));
 			}
 		}
 		else
 		{
-			//dup2(fd_in, STDIN_FILENO);
+			if (dup2(fd_in, STDIN_FILENO) != -1)
+				close(fd_in);
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
+			i = 0;
+			while (i < proc)
+			{
+				wait(NULL);
+				i++;
+			}
+			dup2(xe->backup_stdout, STDOUT_FILENO);
+			dup2(xe->backup_stdin, STDIN_FILENO);
 			return (ret);
 		}
 	}
@@ -109,7 +126,7 @@ static int			main_loop(t_xe *xe)
 
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
-		ret = handle_execution(xe);
+		ret = handle_execution(xe, STDIN_FILENO, 0);
 	else if (ret == PARSING_ERR)
 		ret = SUCCESS;
 	return (ret);
