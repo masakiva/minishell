@@ -61,8 +61,13 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 			{
 				//xe->child = 1;
 				close(fd[0]);// error
-				if (dup2(fd_in, STDIN_FILENO) != -1)
-					close(fd_in);
+			//	dup2(fd_in, STDIN_FILENO);
+				if (fd_in != STDIN_FILENO)
+				{
+					if (dup2(fd_in, STDIN_FILENO) != -1)
+						close(fd_in);
+				}
+		//		dup2(fd[1], STDOUT_FILENO);
 				if (dup2(fd[1], STDOUT_FILENO) != -1)// error
 					close(fd[1]);
 				//dprintf(xe->backup_stdout, "list: child = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
@@ -97,18 +102,21 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 		}
 		else
 		{
-			if (dup2(fd_in, STDIN_FILENO) != -1)
-				close(fd_in);
+			if (fd_in != STDIN_FILENO)
+			{
+				if (dup2(fd_in, STDIN_FILENO) != -1)
+					close(fd_in);
+			}
 			args = prepare_args(cur_command, xe->env, xe->stat_loc);// error
 			ret = execute_cmd(args, xe);// error
+			dup2(xe->backup_stdout, STDOUT_FILENO);
+			dup2(xe->backup_stdin, STDIN_FILENO);
 			i = 0;
 			while (i < proc)
 			{
 				wait(NULL);
 				i++;
 			}
-			dup2(xe->backup_stdout, STDOUT_FILENO);
-			dup2(xe->backup_stdin, STDIN_FILENO);
 			return (ret);
 		}
 	}

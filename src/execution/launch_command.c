@@ -130,6 +130,7 @@ int		execute_cmd(char **args, t_xe *xe)
 	i = 0;
 	//printf("child = %d\n", xe->child);
 	//printf("arg0 = %s\n", args[0]);
+//	dprintf(xe->backup_stdin, "fd = %d\n", STDIN_FILENO);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
