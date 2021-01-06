@@ -1,8 +1,9 @@
 #include "parsing.h"
 
-char	*error(char *line, t_list **commands, t_state_machine *machine)
+int		parsing_error(t_list **commands, t_state_machine *machine)
 {
 	static char		*err_msg[NB_PARSING_ERRORS] = {
+		"=== no error (here for padding) ===",
 		"No matching single quote",
 		"No matching double quote",
 		"Multiline inputs are currently not supported",
@@ -18,8 +19,9 @@ char	*error(char *line, t_list **commands, t_state_machine *machine)
 		free_token(machine->cur_token);
 		free_commands(commands);
 	}
-	machine->state = END;
-	return (line);
+	else
+		*commands = NULL;/////// no need to free?
+	return (PARSING_ERR);
 }
 
 char	*space(char *line, t_list **commands, t_state_machine *machine)
@@ -50,10 +52,7 @@ char	*backslash(char *line, t_list **commands, t_state_machine *machine)
 		machine->state = LETTER;
 	}
 	else
-	{
-		machine->state = ERR;
 		machine->error = ESCAPE_NL;
-	}
 	return (line);
 }
 
@@ -64,7 +63,7 @@ char	*dollar(char *line, t_list **commands, t_state_machine *machine)
 		machine->state = QUOTE;
 	else if (*line == '?' || ft_isalnum(*line) || *line == '_')
 	{
-		line = parse_variable(line, machine);
+		line = parse_variable(line, machine, TO_SPLIT);
 		if (line == NULL)
 			return (NULL);
 		machine->state = LETTER;
@@ -91,7 +90,7 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 			line++;
 			if (*line == '?' || ft_isalnum(*line) || *line == '_')
 			{
-				line = parse_variable(line, machine);
+				line = parse_variable(line, machine, NOT_TO_SPLIT);
 				if (line == NULL)
 					return (NULL);
 			}
@@ -108,10 +107,7 @@ char	*quote(char *line, t_list **commands, t_state_machine *machine)
 		}
 	}
 	if (*line == '\0')
-	{
-		machine->state = ERR;
 		machine->error = ft_index("'\"", quote_style);
-	}
 	else
 	{
 		line++;
@@ -126,10 +122,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 	if (reset_buf(machine) == FAILURE)
 		return(NULL);
 	if (machine->cur_token->redir != NO_REDIR)
-	{
-		machine->state = ERR;
 		machine->error = REDIR_PATH_INVALID;
-	}
 	else
 	{
 		if (*line == '<')
@@ -150,10 +143,7 @@ char	*angle_bracket(char *line, t_list **commands, t_state_machine *machine)
 char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 {
 	if (((t_command *)ft_lstlast(*commands)->content)->tokens == NULL)
-	{
-		machine->state = ERR;
 		machine->error = EMPTY_CMD;
-	}
 	else
 	{
 		if (new_command(commands) == FAILURE)
@@ -167,10 +157,7 @@ char	*semicolon(char *line, t_list **commands, t_state_machine *machine)
 char	*pipe_(char *line, t_list **commands, t_state_machine *machine)
 {
 	if (((t_command *)ft_lstlast(*commands)->content)->tokens == NULL)
-	{
-		machine->state = ERR;
 		machine->error = EMPTY_CMD;
-	}
 	else
 	{
 		((t_command *)ft_lstlast(*commands)->content)->pipe_flag = TRUE;
@@ -188,10 +175,11 @@ char	*tilde(char *line, t_list **commands, t_state_machine *machine)
 	add_to_buf('~', machine);
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
-	if (machine->cur_token->str[1] == '\0' && (ft_isset(*line, "/><;|")
-				|| ft_isspace(*line) || *line == '\0'))
+	if (machine->cur_token->str[1] == '\0'
+			&& (ft_isset(*line, "/><;|") || ft_isspace(*line) || *line == '\0'))
 	{
-		if (add_variable(&machine->cur_token->var_positions, 0, 1) == FAILURE)
+		if (add_variable(&machine->cur_token->var_properties, 0, 1, TO_SPLIT)
+				== FAILURE)
 		{
 			free_token(machine->cur_token);
 			return (NULL);
@@ -261,35 +249,38 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 	return (line);
 }
 
-t_list	*parse_input(char *line)
+int		parse_input(char *line, t_list **commands)
 {
 	static t_parse	process[NB_STATES - 1] = {letter, quote, backslash,
-		dollar, tilde, space, angle_bracket, semicolon, pipe_, error};
+		dollar, tilde, space, angle_bracket, semicolon, pipe_};
 	t_state_machine		machine;
-	t_list				*commands; // a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token?
+	//t_list *commands; a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token? (ajouter a la fin *commands = machine->commands;)
 
 	errno = 0;
 	machine.state = SPACE;
 	machine.len = 0;
 	machine.cur_token = NULL;
+	machine.error = NO_ERROR;
 	ft_bzero(&machine.buf, BUF_SIZE);
-	commands = NULL;
-	if (new_command(&commands) == FAILURE)
-		return (NULL);
+	if (new_command(commands) == FAILURE)
+		return (MALLOC_ERR);
 	while (machine.state != END)
 	{
-		line = process[machine.state](line, &commands, &machine);
+		line = process[machine.state](line, commands, &machine);
 		if (line == NULL)
 		{
-			free_commands(&commands);
-			return (NULL);
+			free_commands(commands);
+			return (MALLOC_ERR);
 		}
+		else if (machine.error != NO_ERROR)
+			return (parsing_error(commands, &machine));
 	}
+	// how does the following condition work
 	if (machine.cur_token != NULL && machine.cur_token->redir != NO_REDIR)
 	{
 		machine.error = REDIR_PATH_MISSING;
-		error(line, &commands, &machine);
+		return (parsing_error(commands, &machine));
 	}
 //	print_tokens(commands);
-	return (commands);
+	return (SUCCESS);
 }

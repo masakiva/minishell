@@ -28,19 +28,12 @@
 
 # define _XOPEN_SOURCE // qu'est-ce?
 
-# define PROMPT			"$ "
+# define FT_PS1			"$ "
 
 # define BUILTINS		"echo/cd/pwd/export/unset/env/exit"
 
-/*
-**
-**	SHELL METACHARS AND OPERATORS
-**
-**	# define METACHARS		"|&;()<> \t\n"
-**	# define CTRL_OPS		"||/&&/&/;/;;/;&/;;&/|/|&/(/)"
-**	# define REDIR_OPS		"</>/>|/>>/&>/>&/<<"
-**	# define DQUOTES_ESC	"$`\"\\\n"
-*/
+# define TO_SPLIT		1
+# define NOT_TO_SPLIT	0
 
 
 /*
@@ -51,7 +44,8 @@
 
 enum		e_retcode
 {
-	CLEAN_EXIT = 2,
+	PARSING_ERR = 2,
+	CLEAN_EXIT,
 	ARG_ERR,
 	MALLOC_ERR,
 	WRITE_ERR,
@@ -66,16 +60,18 @@ enum e_redir_op
 	APPEND
 };
 
-typedef struct		s_var_pos
+typedef struct		s_var_props
 {
 	size_t	start;
 	size_t	len;
-}					t_var_pos;
+	t_byte	split_flag;
+	uint8_t	pad[7];
+}					t_var_props;
 
 typedef struct		s_token
 {
 	char			*str;
-	t_list			*var_positions;
+	t_list			*var_properties;
 	enum e_redir_op	redir;
 	uint8_t			pad[4];
 }					t_token;

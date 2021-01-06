@@ -1,14 +1,18 @@
 'make lib' -> quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
 
 man bash -> "Word splitting"
-export f="  la.    ok.      sf.  non"
-export
-echo $f
-echo "$f"
-cat $f
-cat "$f"
-export h=~/fs                        || machine->cur_token->str[ft_strlen(machine->cur_token->str) - 2] == '='
+	Explicit  null  arguments ("" or '') are retained and passed to commands as
+	empty strings.  Unquoted implicit null arguments, resulting from the expansion
+	of parameters that have no values, are removed.  If a parameter with no value
+	is expanded within double quotes, a null argument results and is retained and
+	passed to a command as an empty string.   When a quoted null argument appears
+	as part of a word whose expansion is non-null, the null argument is removed.
+	That is, the word -d'' becomes -d after word splitting and null argu‐ ment
+	removal.
 export fd='$fs'
+
+
+parsing errors
 
 command loop (semicolon) -> dans handle_commands?
 
@@ -23,7 +27,6 @@ cat /dev/urandom | cat
 ls -la | grep oct | tr -dc '0-9'
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
-ou quand on valide une commande vide
 
 commande "."
 builtins: set stat_loc?

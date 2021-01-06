@@ -17,13 +17,13 @@ enum e_state
 	SEMICOLON,
 	PIPE,
 	//METACHAR, // a la place des n precedents
-	ERR,
 	END,
 	NB_STATES
 };
 
 enum e_parsing_error
 {
+	NO_ERROR,
 	SQUOTE_MISSING,
 	DQUOTE_MISSING,
 	ESCAPE_NL,
@@ -48,15 +48,15 @@ typedef char	*(*t_parse)(char *, t_list **, t_state_machine *);
 **	main function
 */
 
-t_list	*parse_input(char *line);
+int		parse_input(char *line, t_list **commands);
 
 /*
 **	utils
 */
 
 int		new_command(t_list **commands);
-int		add_variable(t_list **var_list, size_t start, size_t len);
-char	*parse_variable(char *line, t_state_machine *machine);
+int		add_variable(t_list **var_list, size_t start, size_t len, t_byte split_flag);
+char	*parse_variable(char *line, t_state_machine *machine, t_byte split_flag);
 int		link_token(t_list **tokens, t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
 int		add_to_buf(char c, t_state_machine *machine);

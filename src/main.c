@@ -6,8 +6,6 @@
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
 
-#include <stdio.h>
-
 static int			get_input(t_list **commands)
 {
 	char	*line;
@@ -15,7 +13,7 @@ static int			get_input(t_list **commands)
 
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 	{
-		if (ft_putstr_fd(PROMPT, STDOUT_FILENO) == ERROR)
+		if (ft_putstr_fd(FT_PS1, STDOUT_FILENO) == ERROR)
 			return (WRITE_ERR);
 	}
 	ret = get_next_line(STDIN_FILENO, &line);
@@ -24,14 +22,11 @@ static int			get_input(t_list **commands)
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
 		free(line);
-		free_commands(commands);
 		return (CLEAN_EXIT);
 	}
-	*commands = parse_input(line);
+	ret = parse_input(line, commands);
 	free(line);
-	if (*commands == NULL)
-		return (MALLOC_ERR);
-	return (SUCCESS);
+	return (ret);
 }
 
 int			handle_execution(t_xe *xe)
@@ -115,6 +110,8 @@ static int			main_loop(t_xe *xe)
 	ret = get_input(&xe->commands);
 	if (ret == SUCCESS)
 		ret = handle_execution(xe);
+	else if (ret == PARSING_ERR)
+		ret = SUCCESS;
 	return (ret);
 }
 

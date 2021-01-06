@@ -2,22 +2,23 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-char	**extract_vars(char *str, t_list *var_positions, char **env, int stat_loc)
+#include <stdio.h>
+char	**extract_vars(char *str, t_list *var_properties, char **env, int stat_loc)
 {
-	t_var_pos	*cur_var_pos;
+	t_var_props	*cur_var_props;
 	char		**ret;
 	char		*var_name;
 	size_t		i;
 
-	ret = malloc(sizeof(char *) * (ft_lstsize(var_positions) + 1));
+	ret = malloc(sizeof(char *) * (ft_lstsize(var_properties) + 1));
 	if (ret == NULL)
 		return (NULL);
-	ft_bzero(ret, sizeof(char *) * (ft_lstsize(var_positions) + 1));
+	ft_bzero(ret, sizeof(char *) * (ft_lstsize(var_properties) + 1));
 	i = 0;
-	while (var_positions != NULL)
+	while (var_properties != NULL)
 	{
-		cur_var_pos = var_positions->content;
-		var_name = ft_substr(str, cur_var_pos->start, cur_var_pos->len);
+		cur_var_props = var_properties->content;
+		var_name = ft_substr(str, cur_var_props->start, cur_var_props->len);
 		if (var_name == NULL)
 		{
 			free_str_array(ret);
@@ -25,7 +26,7 @@ char	**extract_vars(char *str, t_list *var_positions, char **env, int stat_loc)
 		}
 		if (*var_name == '~')
 			ret[i] = get_var_value(env, "HOME");
-		if (*var_name == '?')
+		else if (*var_name == '?')
 			ret[i] = ft_itoa(stat_loc);
 		else
 			ret[i] = get_var_value(env, var_name);
@@ -36,22 +37,22 @@ char	**extract_vars(char *str, t_list *var_positions, char **env, int stat_loc)
 			return (NULL);
 		}
 		i++;
-		var_positions = var_positions->next;
+		var_properties = var_properties->next;
 	}
 	return (ret);
 }
 
-size_t	resize_token(char *str, t_list *var_positions, char **var_values)
+size_t	resize_token(char *str, t_list *var_properties, char **var_values)
 {
 	size_t		ret;
-	t_var_pos	*cur_var_pos;
+	t_var_props	*cur_var_props;
 
 	ret = ft_strlen(str);
-	while (var_positions != NULL)
+	while (var_properties != NULL)
 	{
-		cur_var_pos = var_positions->content;
-		ret -= cur_var_pos->len;
-		var_positions = var_positions->next;
+		cur_var_props = var_properties->content;
+		ret -= cur_var_props->len;
+		var_properties = var_properties->next;
 	}
 	while (*var_values != NULL)
 	{
@@ -66,31 +67,31 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	char		**var_values;
 	char		*ret;
 	size_t		token_len;
-	t_list		*var_positions;
-	t_var_pos	*var;
+	t_list		*var_properties;
+	t_var_props	*var;
 	size_t		i_ret; // temp name
 	size_t		j_input; // temp name
 	size_t		k_value; // temp name
 	size_t		l_values; // temp name
 
-	// if (token->var_positions == NULL)
+	// if (token->var_properties == NULL)
 	// 	return (ft_strdup(token->str));
-	var_values = extract_vars(token->str, token->var_positions, env, stat_loc);
+	var_values = extract_vars(token->str, token->var_properties, env, stat_loc);
 	if (var_values == NULL)
 		return (NULL);
-	token_len = resize_token(token->str, token->var_positions, var_values);
+	token_len = resize_token(token->str, token->var_properties, var_values);
 	ret = (char *)malloc(sizeof(char) * (token_len + 2)); // + 2?
 	if (ret == NULL)
 		return (NULL);
 	i_ret = 0;
 	j_input = 0;
 	l_values = 0;
-	var_positions = token->var_positions;
+	var_properties = token->var_properties;
 	while (i_ret < token_len)
 	{
-		if (var_positions != NULL) // && if imbriqué?
+		if (var_properties != NULL) // && if imbriqué?
 		{
-			var = var_positions->content;
+			var = var_properties->content;
 			if (/*var != NULL && */j_input == var->start)
 			{
 				//if (var_values[l_values] != NULL)
@@ -104,7 +105,7 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 				j_input /*= var->start + var->len*/+= var->len;
 				//}
 				//}
-				var_positions = var_positions->next;
+				var_properties = var_properties->next;
 				l_values++;
 			}
 		}

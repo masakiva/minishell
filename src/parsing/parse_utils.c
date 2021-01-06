@@ -8,7 +8,7 @@ void	print_tokens(t_list *commands)
 	t_list		*tokens;
 	t_token		*token;
 	t_list		*vars;
-	t_var_pos	*var;
+	t_var_props	*var;
 
 	j = 0;
 	while (commands != NULL)
@@ -23,9 +23,9 @@ void	print_tokens(t_list *commands)
 			token = (t_token *)tokens->content;
 			printf("%zu = %s\n", i, token->str);
 			printf("token len = %zu\n", ft_strlen(token->str));
-			if (token->var_positions != NULL)
+			if (token->var_properties != NULL)
 			{
-				vars = token->var_positions;
+				vars = token->var_properties;
 				while (vars != NULL)
 				{
 					var = vars->content;
@@ -57,7 +57,7 @@ void		free_token(void *content)
 
 	token = (t_token *)content;
 	free(token->str);
-	ft_lstclear(&token->var_positions, free_content);
+	ft_lstclear(&token->var_properties, free_content);
 	free(token);
 }
 
@@ -96,28 +96,29 @@ int		new_command(t_list **commands)
 	return (SUCCESS);
 }
 
-int		add_variable(t_list **var_list, size_t start, size_t len)
+int		add_variable(t_list **var_list, size_t start, size_t len, t_byte split_flag)
 {
 	t_list		*link;
-	t_var_pos	*var_pos;
+	t_var_props	*var_props;
 
-	var_pos = (t_var_pos *)malloc(sizeof(t_var_pos));
-	if (var_pos == NULL)
+	var_props = (t_var_props *)malloc(sizeof(t_var_props));
+	if (var_props == NULL)
 		return (FAILURE);
-	var_pos->start = start;
-	var_pos->len = len;
-	link = ft_lstnew(var_pos);
+	var_props->start = start;
+	var_props->len = len;
+	var_props->split_flag = split_flag;
+	link = ft_lstnew(var_props);
 	if (link != NULL)
 		ft_lstadd_back(var_list, link);
 	else
 	{
-		free(var_pos);
+		free(var_props);
 		return (FAILURE);
 	}
 	return (SUCCESS);
 }
 
-char	*parse_variable(char *line, t_state_machine *machine)
+char	*parse_variable(char *line, t_state_machine *machine, t_byte split_flag)
 {
 	size_t		var_start;
 	size_t		var_len;
@@ -141,7 +142,8 @@ char	*parse_variable(char *line, t_state_machine *machine)
 	if (reset_buf(machine) == FAILURE)
 		return (NULL);
 	var_start = ft_strlen(machine->cur_token->str) - var_len;
-	if (add_variable(&machine->cur_token->var_positions, var_start, var_len) == FAILURE)
+	if (add_variable(&machine->cur_token->var_properties, var_start, var_len,
+				split_flag) == FAILURE)
 	{
 		free_token(machine->cur_token);
 		return (NULL);
@@ -186,7 +188,7 @@ int		reset_buf(t_state_machine *machine)
 	}
 	if (res == NULL)
 	{
-		ft_lstclear(&machine->cur_token->var_positions, free_content);
+		ft_lstclear(&machine->cur_token->var_properties, free_content);
 		free(machine->cur_token);
 		return (FAILURE);
 	}

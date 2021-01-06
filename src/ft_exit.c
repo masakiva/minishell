@@ -1,6 +1,5 @@
 #include "minishell.h"
-#include <string.h>
-#include <stdio.h>
+#include <stdio.h> // perror
 
 void		putstr_stderr(const char *str)
 {
@@ -27,11 +26,11 @@ static int			err_output(enum e_retcode err_code)
 	putstr_stderr("Error\n");
 	if (err_code <= ARG_ERR)
 	{
-		putstr_stderr(err_msg(err_code - 3));
+		putstr_stderr(err_msg(err_code - 4));
 		putstr_stderr("\n");
 	}
 	else
-		perror(err_msg(err_code - 3));
+		perror(err_msg(err_code - 4));
 	exit(EXIT_FAILURE);
 }
 
