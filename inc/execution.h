@@ -26,10 +26,9 @@ enum		e_cmd_code
 typedef int			(*t_exec)(char **args, t_xe *xe);
 
 /*
-**	main functions
+**	main function
 */
 
-char	**prepare_args(t_command *command, char **env, int stat_loc);
 int		execute_cmd(char **args, t_xe *xe);
 
 /*

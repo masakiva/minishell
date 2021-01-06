@@ -3,7 +3,7 @@
 
 # include "minishell.h"
 
-# define BUF_SIZE		16 // for parsing
+# define BUF_SIZE		4096
 
 enum e_state
 {

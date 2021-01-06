@@ -1,6 +1,7 @@
 #include "minishell.h"
 #include "signals.h"
 #include "parsing.h"
+#include "pre_execution.h"
 #include "execution.h"
 
 #include <sys/types.h> // waitpid
