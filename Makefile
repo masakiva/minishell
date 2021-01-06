@@ -29,6 +29,7 @@ INC_DIR		= inc/
 HDR	+= minishell.h
 HDR	+= signals.h
 HDR	+= parsing.h
+HDR	+= pre_execution.h
 HDR	+= execution.h
 
 vpath %.h $(INC_DIR)

@@ -61,5 +61,6 @@ man bash -> QUOTING
 	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
 
 testeur https://github.com/cacharle/minishell_test.git
+https://github.com/lienardale/alientest_minishell.git
 
 Les redirections doivent être effectuées à l'intérieur d'un fork(), il faut donc fork avant prepare_commands (hormis pour cd et env).
