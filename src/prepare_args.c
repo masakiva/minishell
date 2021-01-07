@@ -145,37 +145,75 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	}
 }
 
+static int	check_split_flag(t_token *cur_token)
+{
+	t_list		*ptr;
+	t_var_props	*tmp;
+
+	ptr = cur_token->var_properties;
+	while (ptr != NULL)
+	{
+		tmp = ptr->content;
+		if (tmp->split_flag == NOT_TO_SPLIT)
+			return (0);
+		else
+			ptr = ptr->next;
+	}
+	return (1);
+}
+
+char **split_var_to_args(char **args, t_token *cur_token, char **env, int stat_loc)
+{
+	char	*str;
+	char	**tmp;
+	char	***array;
+	int		i;
+
+	array = &args;
+	str = expand_token_vars(cur_token, env, stat_loc);
+	tmp = ft_split(str, ' ');
+	i = 0;
+	while (tmp[i] != NULL)
+	{
+		*array = push_str_to_array(*array, tmp[i]);
+		i++;
+	}
+	return (*array);
+}
+
 char	**prepare_args(t_command *command, char **env, int stat_loc)
 {
 	t_list		*tokens;
 	t_token		*cur_token;
 	char		**args;
 	char		*cur_arg;
-	size_t		i;
 
 	tokens = command->tokens;
-	args = (char **)malloc(sizeof(char *) * (ft_lstsize(tokens) + 1));
+	args = (char**)malloc(sizeof(char*));
 	if (args == NULL)
 		return (NULL); // MALLOC_ERR
-	ft_bzero(args, sizeof(char *) * (ft_lstsize(tokens) + 1));
-	i = 0;
+	args[0] = NULL;
 	while (tokens != NULL)
 	{
 		cur_token = ft_lstshift(&tokens);
-		cur_arg = expand_token_vars(cur_token, env, stat_loc);
-		if (cur_arg == NULL)
-		{
-			free_str_array(args);
-			return (NULL); // MALLOC_ERR
-		}
-		if (cur_token->redir != NO_REDIR)
-			apply_redir(cur_arg, cur_token->redir); // error?
+		if (check_split_flag(cur_token) == 1)
+			args = split_var_to_args(args, cur_token, env, stat_loc);
 		else
 		{
-			args[i] = cur_arg;
-			i++;
+			cur_arg = expand_token_vars(cur_token, env, stat_loc);
+			if (cur_arg == NULL)
+			{
+				free_str_array(args);
+				return (NULL); // MALLOC_ERR
+			}
+			if (cur_token->redir != NO_REDIR)
+				apply_redir(cur_arg, cur_token->redir); // error?
+			else
+			{
+				args = push_str_to_array(args, cur_arg);
+			}
+			free_token(cur_token);
 		}
-		free_token(cur_token);
 	}
 	free(command);
 	//	ft_printarray_fd(args, 1);
