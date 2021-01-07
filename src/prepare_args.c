@@ -154,7 +154,7 @@ char	**extract_vars_and_split(char *str, t_list *var_properties, char **env, int
 		else
 			cur_str = get_var_value(env, var_name);
 		free(var_name);
-		tmp = ft_split(cur_str, ' ');
+		tmp = ft_split(cur_str, ' '); // isspace?
 		i = 0;
 		while (tmp[i] != NULL)
 		{
@@ -208,8 +208,8 @@ static int	check_split_flag(t_token *cur_token)
 	t_var_props	*tmp;
 
 	ptr = cur_token->var_properties;
-	if (ft_lstsize(ptr) != 1)
-		return (1);
+	//if (ft_lstsize(ptr) != 1)
+		//return (1);
 	while (ptr != NULL)
 	{
 		tmp = ptr->content;
