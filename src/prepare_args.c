@@ -75,8 +75,8 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	size_t		k_value;
 	size_t		l_values;
 
-	// if (token->var_properties == NULL)
-	// 	return (ft_strdup(token->str));
+	if (token->var_properties == NULL)
+		return (ft_strdup(token->str));
 	var_values = extract_vars(token->str, token->var_properties, env, stat_loc);
 	if (var_values == NULL)
 		return (NULL);
@@ -88,8 +88,6 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	j_input = 0;
 	l_values = 0;
 	var_properties = token->var_properties;
-	if (var_properties == NULL)
-		return (token->str);
 	while (i_ret < token_len)
 	{
 		if (var_properties != NULL) 
@@ -272,6 +270,7 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 			else
 			{
 				args = push_str_to_array(args, cur_arg);
+				free(cur_arg);
 			}
 		}
 		free_token(cur_token);
