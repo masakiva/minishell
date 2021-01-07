@@ -88,6 +88,8 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	j_input = 0;
 	l_values = 0;
 	var_properties = token->var_properties;
+	if (var_properties == NULL)
+		return (token->str);
 	while (i_ret < token_len)
 	{
 		if (var_properties != NULL) 
