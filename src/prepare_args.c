@@ -117,6 +117,66 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	return (ret);
 }
 
+char	**extract_vars_and_split(char *str, t_list *var_properties, char **env, int stat_loc)
+{
+	t_var_props	*cur_var_props;
+	char		**ret;
+	char		**tmp;
+	char		*var_name;
+	char		*cur_str;
+	int			i;
+
+	ret = malloc(sizeof(char *));
+	if (ret == NULL)
+		return (NULL);
+	ret[0] = NULL;
+	while (var_properties != NULL)
+	{
+		cur_var_props = var_properties->content;
+		var_name = ft_substr(str, cur_var_props->start, cur_var_props->len);
+		if (var_name == NULL)
+		{
+			free_str_array(ret);
+			return (NULL);
+		}
+		if (*var_name == '~')
+			cur_str = get_var_value(env, "HOME");
+		else if (*var_name == '?')
+			cur_str = ft_itoa(stat_loc);
+		else
+			cur_str = get_var_value(env, var_name);
+		free(var_name);
+		tmp = ft_split(cur_str, ' ');
+		i = 0;
+		while (tmp[i] != NULL)
+		{
+			ret = push_str_to_array(ret, tmp[i]);
+			i++;
+		}
+		var_properties = var_properties->next;
+	}
+	return (ret);
+}
+
+char	**expand_token_and_split(t_token *token, char **env, int stat_loc)
+{
+	char		**ret;
+	char		*str;
+
+	if (ft_lstsize(token->var_properties) == 1)
+		ret = extract_vars_and_split(token->str, token->var_properties, env, stat_loc);
+	else
+	{
+		str = expand_token_vars(token, env, stat_loc);
+		ret = (char**)malloc(sizeof(char*));
+		if (ret == NULL)
+			return (NULL); // MALLOC_ERR
+		ret[0] = NULL;
+		ret = push_str_to_array(ret, str);
+	}
+	return (ret);
+}
+
 void	apply_redir(char *cur_arg, enum e_redir_op redir)
 {
 	int			src_fd;
@@ -164,14 +224,12 @@ static int	check_split_flag(t_token *cur_token)
 
 char **split_var_to_args(char **args, t_token *cur_token, char **env, int stat_loc)
 {
-	char	*str;
 	char	**tmp;
 	char	***array;
 	int		i;
 
 	array = &args;
-	str = expand_token_vars(cur_token, env, stat_loc);
-	tmp = ft_split(str, ' ');
+	tmp = expand_token_and_split(cur_token, env, stat_loc);
 	i = 0;
 	while (tmp[i] != NULL)
 	{
@@ -197,7 +255,9 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 	{
 		cur_token = ft_lstshift(&tokens);
 		if (check_split_flag(cur_token) == 1)
+		{
 			args = split_var_to_args(args, cur_token, env, stat_loc);
+		}
 		else
 		{
 			cur_arg = expand_token_vars(cur_token, env, stat_loc);
