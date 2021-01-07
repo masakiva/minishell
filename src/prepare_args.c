@@ -64,15 +64,16 @@ size_t	resize_token(char *str, t_list *var_properties, char **var_values)
 
 char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 {
+	char		***ptr;
 	char		**var_values;
 	char		*ret;
 	size_t		token_len;
 	t_list		*var_properties;
 	t_var_props	*var;
-	size_t		i_ret; // temp name
-	size_t		j_input; // temp name
-	size_t		k_value; // temp name
-	size_t		l_values; // temp name
+	size_t		i_ret;
+	size_t		j_input;
+	size_t		k_value;
+	size_t		l_values;
 
 	// if (token->var_properties == NULL)
 	// 	return (ft_strdup(token->str));
@@ -89,30 +90,37 @@ char	*expand_token_vars(t_token *token, char **env, int stat_loc)
 	var_properties = token->var_properties;
 	while (i_ret < token_len)
 	{
-		if (var_properties != NULL) // && if imbriqué?
-		{
+		if (var_properties != NULL) 
 			var = var_properties->content;
-			if (/*var != NULL && */j_input == var->start)
+		if (var != NULL && j_input == var->start)
+		{
+			if (var_values[l_values] != NULL)
 			{
-				//if (var_values[l_values] != NULL)
-				//{
-				//j_input = var->start + var->len;
-				//if (ft_strlen(var_values[l_values]) != 0)
-				//{
-				k_value = 0;
-				while (var_values[l_values][k_value] != '\0')
-					ret[i_ret++] = var_values[l_values][k_value++]; // strcpy? memccpy?
-				j_input /*= var->start + var->len*/+= var->len;
-				//}
-				//}
-				var_properties = var_properties->next;
-				l_values++;
+				j_input = var->start + var->len;
+				if (ft_strlen(var_values[l_values]) != 0)
+				{
+					k_value = 0;
+					while (var_values[l_values][k_value])
+					{
+						ret[i_ret] = var_values[l_values][k_value];
+						k_value++;
+						i_ret++;
+					}
+					j_input = var->start + var->len;
+				}
 			}
+			var_properties = var_properties->next;
+			l_values++;
 		}
 		else
-			ret[i_ret++] = token->str[j_input++];
+		{
+			ret[i_ret] = token->str[j_input];
+			i_ret++;
+			j_input++;
+		}
 	}
 	ret[i_ret] = '\0';
+	ptr = &var_values; // ??
 	free_str_array(var_values);
 	return (ret);
 }
@@ -161,19 +169,8 @@ char	**extract_vars_and_split(char *str, t_list *var_properties, char **env, int
 char	**expand_token_and_split(t_token *token, char **env, int stat_loc)
 {
 	char		**ret;
-	char		*str;
 
-	if (ft_lstsize(token->var_properties) == 1)
-		ret = extract_vars_and_split(token->str, token->var_properties, env, stat_loc);
-	else
-	{
-		str = expand_token_vars(token, env, stat_loc);
-		ret = (char**)malloc(sizeof(char*));
-		if (ret == NULL)
-			return (NULL); // MALLOC_ERR
-		ret[0] = NULL;
-		ret = push_str_to_array(ret, str);
-	}
+	ret = extract_vars_and_split(token->str, token->var_properties, env, stat_loc);
 	return (ret);
 }
 
@@ -211,10 +208,12 @@ static int	check_split_flag(t_token *cur_token)
 	t_var_props	*tmp;
 
 	ptr = cur_token->var_properties;
+	if (ft_lstsize(ptr) != 1)
+		return (1);
 	while (ptr != NULL)
 	{
 		tmp = ptr->content;
-		if (tmp->split_flag == NOT_TO_SPLIT)
+		if (tmp->split_flag == TO_SPLIT)
 			return (0);
 		else
 			ptr = ptr->next;
@@ -254,7 +253,7 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 	while (tokens != NULL)
 	{
 		cur_token = ft_lstshift(&tokens);
-		if (check_split_flag(cur_token) == 1)
+		if (check_split_flag(cur_token) == 0)
 		{
 			args = split_var_to_args(args, cur_token, env, stat_loc);
 		}
@@ -272,8 +271,8 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 			{
 				args = push_str_to_array(args, cur_arg);
 			}
-			free_token(cur_token);
 		}
+		free_token(cur_token);
 	}
 	free(command);
 	//	ft_printarray_fd(args, 1);
