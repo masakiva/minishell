@@ -47,6 +47,7 @@ int		ft_env(char **args, t_xe *xe);
 */
 
 t_byte		shift_options(char ***args, char *op_chars);
+int		env_replace_var(char *var_name, char *value, t_xe *xe);
 int			check_var_name(char *var, ssize_t name_len);
 
 #endif

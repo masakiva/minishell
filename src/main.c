@@ -134,8 +134,6 @@ static int			main_loop(t_xe *xe)
 	int			ret;
 
 	ret = get_input(&xe->commands);
-	(void)signum;
-	(void)signum;
 	if (ret == SUCCESS)
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 	else if (ret == PARSING_ERR)
@@ -143,16 +141,11 @@ static int			main_loop(t_xe *xe)
 	return (ret);
 }
 
-#include <stdio.h>
-
 int		exec_env_init(t_xe *xe, char **env_source)
 {
 	char		*shlvl;
-	char		**new;
 	char		*val;
 	int			tmp;
-	int			i;
-	int			j;
 
 	xe->env = dup_str_array(env_source);
 	shlvl = get_var_value(xe->env, SHLVL_STR);
@@ -160,29 +153,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	tmp = ft_atoi(shlvl);
 	tmp += 1;
 	val = ft_itoa(tmp);
-	new = malloc(sizeof(char*) * 3);
-	new[0] = ft_strdup("export");
-	new[1] = malloc(sizeof(char) * (ft_strlen(SHLVL_STR) + ft_strlen(val) + 2));
-	new[2] = NULL;
-	if (new == NULL)
-		return (MALLOC_ERR);
-	i = 0;
-	while (SHLVL_STR[i] != '\0')
-	{
-		new[1][i] = SHLVL_STR[i];
-		i++;
-	}
-	new[1][i] = '=';
-	i += 1;
-	j = 0;
-	while (val[j] != '\0')
-	{
-		new[1][i + j] = val[j];
-		j++;
-	}
-	new[1][i + j] = '\0';
-//	printf("shlvl = %d\n", tmp);
-	ft_export(new, xe);
+	env_replace_var(SHLVL_STR, val, xe);
 	return (0);
 }
 

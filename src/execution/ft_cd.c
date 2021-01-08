@@ -5,6 +5,7 @@
 int		ft_cd(char **args, t_xe *xe)
 {
 	char	*path;
+	char	*oldpwd;
 
 	if (args[1] == NULL)
 		path = get_var_value(xe->env, "HOME");
@@ -13,12 +14,18 @@ int		ft_cd(char **args, t_xe *xe)
 	if (path == NULL)
 		; // err
 	errno = 0;
+	oldpwd = getcwd(NULL, 0);
 	if (chdir(path) == ERROR)
 	{
 		perror("cd");
 		free(path);
-		return (FAILURE);
+		free(oldpwd);
+		return (SUCCESS); //notify failure anyway ?
 	}
+	env_replace_var("OLDPWD", oldpwd, xe);
+	free(path);
+	path = getcwd(NULL, 0);
+	env_replace_var("PWD", path, xe);
 	free(path);
 	return (SUCCESS);
 }
