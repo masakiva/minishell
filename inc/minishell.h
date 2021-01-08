@@ -32,6 +32,8 @@
 
 # define BUILTINS		"echo/cd/pwd/export/unset/env/exit"
 
+# define SHLVL_STR		"SHLVL"
+
 # define TO_SPLIT		1
 # define NOT_TO_SPLIT	0
 

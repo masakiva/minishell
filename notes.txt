@@ -11,6 +11,8 @@ man bash -> "Word splitting"
 	removal.
 export fd='$fs'
 
+fichier src/test a supprimer
+
 if redirecting to variable that should be splitted
 ========> error message : "bash: $d : redirection ambiguë"
 
