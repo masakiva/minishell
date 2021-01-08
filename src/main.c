@@ -134,6 +134,8 @@ static int			main_loop(t_xe *xe)
 	int			ret;
 
 	ret = get_input(&xe->commands);
+	(void)signum;
+	(void)signum;
 	if (ret == SUCCESS)
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 	else if (ret == PARSING_ERR)

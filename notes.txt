@@ -33,6 +33,8 @@ ls -la | grep oct | tr -dc '0-9'
 
 segfault quand on fait ctrl-d directement a la premiere commande de minishell
 
+references pour gestion des signaux : https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
+
 commande "."
 builtins: set stat_loc?
 mkdir ok; cd ok; rmdir ../ok; pwd
