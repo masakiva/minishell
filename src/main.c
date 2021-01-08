@@ -118,7 +118,10 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				wait(NULL);
 				i++;
 			}
-			return (ret);
+			if (ret == SUCCESS)
+				return (handle_execution(xe, STDIN_FILENO, 0));
+			else
+				return (ret);
 		}
 	}
 	else
