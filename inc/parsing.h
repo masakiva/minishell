@@ -7,12 +7,12 @@
 
 enum e_state
 {
+	SPACE,
 	LETTER,
 	QUOTE,
 	BACKSLASH,
 	DOLLAR,
 	TILDE,
-	SPACE,
 	ANGLE_BRACKET,
 	SEMICOLON,
 	PIPE,

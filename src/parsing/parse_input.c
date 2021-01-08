@@ -252,8 +252,8 @@ char	*letter(char *line, t_list **commands, t_state_machine *machine)
 #include <stdio.h>
 int		parse_input(char *line, t_list **commands)
 {
-	static t_parse	process[NB_STATES - 1] = {letter, quote, backslash,
-		dollar, tilde, space, angle_bracket, semicolon, pipe_};
+	static t_parse	process[NB_STATES - 1] = {space, letter, quote, backslash,
+		dollar, tilde, angle_bracket, semicolon, pipe_};
 	t_state_machine		machine;
 	//t_list *commands; a mettre dans la machine pour retirer les (void)commands; de toutes les fonctions de process? et retirer cur_token? (ajouter a la fin *commands = machine->commands;)
 
