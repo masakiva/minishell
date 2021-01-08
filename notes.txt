@@ -11,6 +11,9 @@ man bash -> "Word splitting"
 	removal.
 export fd='$fs'
 
+if redirecting to variable that should be splitted
+========> error message : "bash: $d : redirection ambiguë"
+
 
 parsing errors
 
