@@ -61,6 +61,8 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 			if (xe->gpid == 0)
 			{
 				//xe->child = 1;
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, SIG_DFL);
 				close(fd[0]);// error
 			//	dup2(fd_in, STDIN_FILENO);
 				if (fd_in != STDIN_FILENO)

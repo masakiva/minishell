@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-void	apply_redir(char *cur_arg, enum e_redir_op redir)
+void	apply_redir(char **cur_arg, enum e_redir_op redir)
 {
 	int			src_fd;
 	int			redir_fd;
@@ -12,6 +12,12 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	int			flags;
 
 	mode = 0;
+	if (ft_arraylen(cur_arg) != 1)
+	{
+		printf("redirection ambiguë\n");
+		free_str_array(cur_arg);
+		return ;
+	}
 	if (redir == FILEIN)
 	{
 		src_fd = STDIN_FILENO;
@@ -55,7 +61,7 @@ char	**prepare_args(t_command *command, char **env, int stat_loc)
 			return (NULL); // MALLOC_ERR
 		}
 		if (cur_token->redir != NO_REDIR)
-			apply_redir(cur_args[0], cur_token->redir); // error?
+			apply_redir(cur_args, cur_token->redir); // error?
 		else
 		{
 			args = merge_str_array(args, cur_args);

@@ -9,6 +9,7 @@ SRC	+= signal_handling.c
 SRC	+= parse_input.c
 SRC	+= parse_utils.c
 SRC	+= prepare_args.c
+#SRC	+= test.c #alternative to prepare_args.c
 
 SRC	+= launch_command.c
 SRC	+= options.c
