@@ -69,5 +69,7 @@ man bash -> QUOTING
 
 testeur https://github.com/cacharle/minishell_test.git
 https://github.com/lienardale/alientest_minishell.git
+basile: https://docs.google.com/spreadsheets/d/1pD3UEKayYV_LiHoYz8N6aOimqS9gxfg3TlZgQ1CFS3A/edit#gid=1627853444
++ tests d'adeline!
 
 Les redirections doivent être effectuées à l'intérieur d'un fork(), il faut donc fork avant prepare_commands (hormis pour cd et env).
