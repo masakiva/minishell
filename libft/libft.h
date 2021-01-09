@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/12/27 14:57:35 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/10 00:34:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,5 +114,6 @@ void			sort_str_array(char **array);
 void			*ft_lstshift(t_list **lst);
 
 void			ft_swap(void **a, void **b);
+char			*strjoin_free(char *s1, char const *s2);
 
 #endif

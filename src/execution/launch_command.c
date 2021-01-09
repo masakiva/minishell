@@ -122,7 +122,7 @@ int		execute_cmd(char **args, t_xe *xe)
 {
 	int				i;
 	int				ret;
-	enum e_cmd_code		cmd_code;
+	enum e_cmd_code	cmd_code;
 	const t_exec	command[8] = {ft_echo, ft_cd, ft_pwd,
 		ft_export, ft_unset, ft_env,
 		launch_exit, launch_ext};

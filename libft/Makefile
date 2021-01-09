@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2020/12/26 23:01:48 by mvidal-a         ###   ########.fr        #
+#    Updated: 2021/01/09 18:32:21 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,6 +71,7 @@ SRCS_CUSTOM	+= rm_str_from_array.c
 SRCS_CUSTOM	+= sort_str_array.c
 SRCS_CUSTOM	+= ft_lstshift.c
 SRCS_CUSTOM	+= ft_swap.c
+SRCS_CUSTOM	+= strjoin_free.c
 
 VPATH		= part_1:part_2:bonus:custom
 

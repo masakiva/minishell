@@ -21,7 +21,7 @@ parsing errors
 
 command loop (semicolon) -> dans handle_commands?
 
-SHLVL
+ajouter des errno = 0;?
 
 quit apres une erreur de parsing? (fonction error())
 par exemple export d=\

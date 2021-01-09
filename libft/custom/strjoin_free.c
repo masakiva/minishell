@@ -1,38 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_str_to_array.c                                :+:      :+:    :+:   */
+/*   strjoin_free.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/22 12:48:07 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/09 18:45:23 by mvidal-a         ###   ########.fr       */
+/*   Created: 2021/01/09 18:31:27 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/01/10 00:34:08 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-char	**push_str_to_array(char **array, char *str)
+char	*strjoin_free(char *s1, char const *s2)
 {
-	size_t	array_size;
-	char	**new_array;
-	size_t	i;
+	char	*join;
 
-	if (str == NULL)
-		return (NULL);
-	array_size = ft_arraylen(array);
-	new_array = (char **)malloc(sizeof(char *) * (array_size + 2));
-	if (new_array == NULL)
-		return (NULL);
-	i = 0;
-	while (i < array_size)
-	{
-		new_array[i] = array[i];
-		i++;
-	}
-	new_array[i] = str;
-	new_array[i + 1] = NULL;
-	free(array);
-	return (new_array);
+	join = ft_strjoin(s1, s2);
+	free(s1);
+	return (join);
 }

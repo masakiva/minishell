@@ -9,14 +9,11 @@ enum e_state
 {
 	SPACE,
 	LETTER,
-	QUOTE,
+//	QUOTE,
 	BACKSLASH,
-	DOLLAR,
-	TILDE,
-	ANGLE_BRACKET,
-	SEMICOLON,
-	PIPE,
-	//METACHAR, // a la place des n precedents
+//	DOLLAR,
+//	TILDE,
+//	ANGLE_BRACKET,
 	END,
 	NB_STATES
 };
@@ -35,20 +32,22 @@ enum e_parsing_error
 
 typedef struct		s_state_machine
 {
-	enum e_state			state;
-	enum e_parsing_error	error;
-	char					buf[BUF_SIZE];
-	size_t					len;
-	t_token					*cur_token;
-}							t_state_machine;
+	char			buf[BUF_SIZE];
+	size_t			len;
+	char			**args;
+	char			*cur_arg;
+	enum e_state	state;
+	t_byte			pipe_flag;
+	uint8_t			pad[3];
+}					t_state_machine;
 
-typedef char	*(*t_parse)(char *, t_list **, t_state_machine *);
+typedef char	*(*t_parse)(t_state_machine *, char *);
 
 /*
 **	main function
 */
 
-int		parse_input(char *line, t_list **commands);
+char	**parse_one_command(char **line, t_byte *pipe_flag);
 
 /*
 **	utils
@@ -57,8 +56,8 @@ int		parse_input(char *line, t_list **commands);
 int		new_command(t_list **commands);
 int		add_variable(t_list **var_list, size_t start, size_t len, t_byte split_flag);
 char	*parse_variable(char *line, t_state_machine *machine, t_byte split_flag);
-int		link_token(t_list **tokens, t_state_machine *machine);
+int		add_arg(t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
-int		add_to_buf(char c, t_state_machine *machine);
+int		add_to_buf(t_state_machine *machine, char c);
 
 #endif

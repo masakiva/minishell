@@ -79,7 +79,7 @@ static int	ft_env_append_from_exp(char *var, t_xe *xe, ssize_t equalsign_pos)
 	ft_memcpy(new_var, var, equalsign_pos - 1);
 	ft_strlcpy(new_var + equalsign_pos - 1,
 				var + equalsign_pos, ft_strlen(var));
-	new_array = push_str_to_array(xe->env, new_var);
+	new_array = push_str_to_array(xe->env, ft_strdup(new_var));
 	if (new_array == NULL)
 		return (MALLOC_ERR);
 	free(new_var);
@@ -122,7 +122,7 @@ static int	ft_env_set_from_exp(char *var, t_xe *xe, ssize_t equalsign_pos)
 			return (MALLOC_ERR);
 		xe->exported = new_array;
 	}
-	new_array = push_str_to_array(xe->env, var);
+	new_array = push_str_to_array(xe->env, ft_strdup(var));
 	if (new_array == NULL)
 		return (MALLOC_ERR);
 	xe->env = new_array;
@@ -171,7 +171,7 @@ static int	ft_exported_export(char *var, t_xe *xe)
 	if (get_var_pos(xe->env, var, ft_strlen(var)) == NOT_FOUND
 			&& get_var_pos(xe->exported, var, ft_strlen(var)) == NOT_FOUND)
 	{
-		new_array = push_str_to_array(xe->exported, var);
+		new_array = push_str_to_array(xe->exported, ft_strdup(var));
 		if (new_array == NULL)
 			return (MALLOC_ERR);
 		xe->exported = new_array;

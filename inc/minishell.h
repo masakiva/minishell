@@ -93,7 +93,6 @@ typedef struct		s_xe
 	int		stat_loc;
 	char	**env;
 	char	**exported;
-	t_list	*commands;
 }					t_xe;
 
 
