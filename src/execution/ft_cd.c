@@ -8,7 +8,7 @@ int		ft_cd(char **args, t_xe *xe)
 	char	*oldpwd;
 
 	if (args[1] == NULL)
-		path = get_var_value(xe->env, "HOME");
+		path = get_var_value(xe->env, "HOME", 4);
 	else
 		path = ft_strdup(args[1]);
 	if (path == NULL)

@@ -17,10 +17,6 @@ if redirecting to variable that should be splitted
 ========> error message : "bash: $d : redirection ambiguë"
 
 
-parsing errors
-
-command loop (semicolon) -> dans handle_commands?
-
 ajouter des errno = 0;?
 
 quit apres une erreur de parsing? (fonction error())

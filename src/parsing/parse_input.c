@@ -24,66 +24,6 @@
 //	return (PARSING_ERR);
 //}
 //
-//char	*dollar(t_state_machine *machine, char *line)
-//{
-//	line++;
-//	if (*line == '"' || *line == '\'')
-//		machine->state = QUOTE;
-//	else if (*line == '?' || ft_isalnum(*line) || *line == '_')
-//	{
-//		line = parse_variable(line, machine, TO_SPLIT);
-//		if (line == NULL)
-//			return (NULL);
-//		machine->state = LETTER;
-//	}
-//	else
-//	{
-//		add_to_buf(machine, '$');
-//		machine->state = LETTER;
-//	}
-//	return (line);
-//}
-//
-//char	*quote(t_state_machine *machine, char *line)
-//{
-//	char	quote_style;
-//
-//	(void)commands;
-//	quote_style = *line;
-//	line++;
-//	while (*line != quote_style && *line != '\0')
-//	{
-//		if (quote_style == '"' && *line == '$')
-//		{
-//			line++;
-//			if (*line == '?' || ft_isalnum(*line) || *line == '_')
-//			{
-//				line = parse_variable(line, machine, NOT_TO_SPLIT);
-//				if (line == NULL)
-//					return (NULL);
-//			}
-//			else
-//				add_to_buf(machine, '$');
-//		}
-//		else
-//		{
-//			if (quote_style == '"' && *line == '\\'
-//					&& ft_isset(line[1], "\\\"$"))
-//				line++;
-//			add_to_buf(machine, *line);
-//			line++;
-//		}
-//	}
-//	if (*line == '\0')
-//		machine->error = ft_index("'\"", quote_style);
-//	else
-//	{
-//		line++;
-//		machine->state = LETTER;
-//	}
-//	return (line);
-//}
-//
 //char	*angle_bracket(t_state_machine *machine, char *line)
 //{
 //	(void)commands;
@@ -107,30 +47,89 @@
 //	}
 //	return (line);
 //}
-//
-//char	*tilde(t_state_machine *machine, char *line)
-//{
-//	line++;
-//	add_to_buf(machine, '~');
-//	if (reset_buf(machine) == FAILURE)
-//		return (NULL);
-//	if (machine->cur_token->str[1] == '\0'
-//			&& (ft_isset(*line, "/><;|") || ft_isspace(*line) || *line == '\0'))
-//	{
-//		if (add_variable(&machine->cur_token->var_properties, 0, 1, TO_SPLIT)
-//				== FAILURE)
-//		{
-//			free_token(machine->cur_token);
-//			return (NULL);
-//		}
-//	}
-//	machine->state = LETTER;
-//	return (line);
-//}
+
+char	*quoted_dollar(t_state_machine *machine, char *line)
+{
+	if (*line == '?')
+	{
+		if (parse_exit_status(machine) == FAILURE)
+			return (NULL);
+		line++;
+	}
+	else if (ft_isalnum(*line) || *line == '_')
+	{
+		line = parse_quoted_variable(machine, line);
+		if (line == NULL)
+			return (NULL);
+	}
+	else
+		add_to_buf(machine, '$');
+	machine->state = DOUBLE_QUOTE;
+	return (line);
+}
+
+char	*quoted_backslash(t_state_machine *machine, char *line)
+{
+	if (!ft_isset(*line, "\\\"$"))
+		add_to_buf(machine, '\\');
+	machine->state = DOUBLE_QUOTE;
+	return (line);
+}
+
+char	*double_quote(t_state_machine *machine, char *line)
+{
+	if (*line == '"')
+		machine->state = LETTER;
+	else if (*line == '$')
+		machine->state = QUOTED_DOLLAR;
+	else if (*line == '\\')
+		machine->state = QUOTED_BACKSLASH;
+	else
+		add_to_buf(machine, *line);
+	line++;
+	return (line);
+}
+
+char	*single_quote(t_state_machine *machine, char *line)
+{
+	while (*line != '\'')
+	{
+		add_to_buf(machine, *line);
+		line++;
+	}
+	line++;
+	machine->state = LETTER;
+	return (line);
+}
+
+char	*dollar(t_state_machine *machine, char *line)
+{
+	if (*line == '"' || *line == '\'')
+		machine->state = LETTER;
+	else if (*line == '?')
+	{
+		if (parse_exit_status(machine) == FAILURE)
+			return (NULL);
+		line++;
+		machine->state = LETTER;
+	}
+	else if (ft_isalnum(*line) || *line == '_')
+	{
+		line = parse_variable(machine, line);
+		if (line == NULL)
+			return (NULL);
+		machine->state = LETTER; // don't finish arg when empty var value
+	}
+	else
+	{
+		add_to_buf(machine, '$');
+		machine->state = LETTER;
+	}
+	return (line);
+}
 
 char	*backslash(t_state_machine *machine, char *line)
 {
-	line++;
 	add_to_buf(machine, *line);
 	line++;
 	machine->state = LETTER;
@@ -163,15 +162,7 @@ char	*space(t_state_machine *machine, char *line)
 
 char	*letter(t_state_machine *machine, char *line)
 {
-	if (*line == '\\')
-		machine->state = BACKSLASH;
-//	else if (*line == '"' || *line == '\'')
-//		machine->state = QUOTE;
-//	else if (*line == '$')
-//		machine->state = DOLLAR;
-//	else if (*line == '~')
-//		machine->state = TILDE;
-	else if (ft_isspace(*line) || ft_isset(*line, ";|"/*"><;|"*/) || *line == '\0')
+	if (ft_isspace(*line) || ft_isset(*line, ";|"/*"><;|"*/) || *line == '\0')
 	{
 		if (add_arg(machine) == FAILURE)
 			return (NULL);
@@ -179,20 +170,34 @@ char	*letter(t_state_machine *machine, char *line)
 	}
 	else
 	{
-		add_to_buf(machine, *line);
+		if (*line == '\\')
+			machine->state = BACKSLASH;
+		else if (*line == '$')
+			machine->state = DOLLAR;
+		else if (*line == '\'')
+			machine->state = SINGLE_QUOTE;
+		else if (*line == '"')
+			machine->state = DOUBLE_QUOTE;
+		else
+			add_to_buf(machine, *line);
 		line++;
 	}
 	return (line);
 }
 
-char	**parse_one_command(char **line, t_byte *pipe_flag)
+char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_flag)
 {
-	static t_parse	process[NB_STATES - 1] = {space, letter, backslash};
+	static t_parse	process[NB_STATES - 1] = {space, letter, backslash, dollar,
+		single_quote, double_quote, quoted_backslash, quoted_dollar};
 	t_state_machine	machine;
 	char			*orig_line;
 
+	if ((*line)[0] == '.' && (*line)[1] == '\0')
+		exit(EXIT_FAILURE);
 	orig_line = *line;
 	ft_bzero(&machine, sizeof(machine));
+	machine.env = env;
+	machine.stat_loc = stat_loc;
 	while (machine.state != END)
 	{
 		*line = process[machine.state](&machine, *line);

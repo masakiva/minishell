@@ -153,10 +153,11 @@ static int			main_loop(t_xe *xe)
 		//check_syntax(line);
 		while (empty_command(line) == FALSE)
 		{
-			args = parse_one_command(&line, &pipe_flag);
+			args = parse_one_command(&line, xe->env, xe->stat_loc, &pipe_flag);
 			if (args == NULL)
 				return (MALLOC_ERR);
-			(void)xe;
+			if (pipe_flag == TRUE)
+				;
 			//ret = handle_execution(xe, args, STDIN_FILENO, 0);
 		}
 		free(line);
@@ -171,7 +172,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	int			tmp;
 
 	xe->env = dup_str_array(env_source);
-	shlvl = get_var_value(xe->env, SHLVL_STR);
+	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));
 //	printf("shlvl = %s\n", shlvl);
 	tmp = ft_atoi(shlvl);
 	tmp += 1;

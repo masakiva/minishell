@@ -9,10 +9,12 @@ enum e_state
 {
 	SPACE,
 	LETTER,
-//	QUOTE,
 	BACKSLASH,
-//	DOLLAR,
-//	TILDE,
+	DOLLAR,
+	SINGLE_QUOTE,
+	DOUBLE_QUOTE,
+	QUOTED_BACKSLASH,
+	QUOTED_DOLLAR,
 //	ANGLE_BRACKET,
 	END,
 	NB_STATES
@@ -36,9 +38,11 @@ typedef struct		s_state_machine
 	size_t			len;
 	char			**args;
 	char			*cur_arg;
+	char			**env;
 	enum e_state	state;
+	int				stat_loc;
 	t_byte			pipe_flag;
-	uint8_t			pad[3];
+	uint8_t			pad[7];
 }					t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);
@@ -47,7 +51,7 @@ typedef char	*(*t_parse)(t_state_machine *, char *);
 **	main function
 */
 
-char	**parse_one_command(char **line, t_byte *pipe_flag);
+char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_flag);
 
 /*
 **	utils
@@ -55,7 +59,9 @@ char	**parse_one_command(char **line, t_byte *pipe_flag);
 
 int		new_command(t_list **commands);
 int		add_variable(t_list **var_list, size_t start, size_t len, t_byte split_flag);
-char	*parse_variable(char *line, t_state_machine *machine, t_byte split_flag);
+int		parse_exit_status(t_state_machine *machine);
+char	*parse_quoted_variable(t_state_machine *machine, char *line);
+char	*parse_variable(t_state_machine *machine, char *line);
 int		add_arg(t_state_machine *machine);
 int		reset_buf(t_state_machine *machine);
 int		add_to_buf(t_state_machine *machine, char c);

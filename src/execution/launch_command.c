@@ -58,7 +58,7 @@ static int	launch_ext(char **args, t_xe *xe)
 	char	**path;
 	int		dir_index;
 
-	tmp = get_var_value(xe->env, "PATH"); // and with PATH unset?
+	tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
 	if (tmp == NULL)
 		return (M_ERROR);
 	path = ft_split(tmp, ':');

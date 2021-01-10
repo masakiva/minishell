@@ -6,19 +6,16 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:42:49 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/01 17:15:22 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/10 14:24:53 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*get_var_value(char **vars, char *name)
+char	*get_var_value(char **vars, char *name, size_t name_len)
 {
-	size_t		name_len;
-
-	if (vars != NULL)
+	if (vars != NULL && name_len != 0)
 	{
-		name_len = ft_strlen(name);
 		while (*vars != NULL)
 		{
 			if ((size_t)ft_index(*vars, '=') == name_len

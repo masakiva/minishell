@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/10 00:34:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/10 14:50:24 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,19 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *),
 
 int				get_next_line(int fd, char **line);
 ssize_t			ft_index(char *haystack, char needle);
+void			ft_swap(void **a, void **b);
+
 int				ft_isspace(int c);
-
-int				ft_strcmp(const char *s1, const char *s2);
 int				ft_isset(char c, char *set);
+int				ft_strcmp(const char *s1, const char *s2);
+char			*strjoin_free(char *s1, char const *s2);
 
-char			*get_var_value(char **vars, char *name);
+void			*ft_lstshift(t_list **lst);
+
+size_t			ft_varnamelen(char *str);
+char			*get_var_value(char **vars, char *name, size_t name_len);
 ssize_t			get_var_pos(char **vars, char *name, size_t name_len);
+
 void			ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
@@ -111,9 +117,5 @@ char			**push_str_to_array(char **array, char *str);
 char			**rm_str_from_array(char **array, size_t str_pos);
 void			sort_str_array(char **array);
 
-void			*ft_lstshift(t_list **lst);
-
-void			ft_swap(void **a, void **b);
-char			*strjoin_free(char *s1, char const *s2);
 
 #endif
