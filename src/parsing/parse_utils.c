@@ -32,8 +32,9 @@ char	*new_redir_info(t_state_machine *machine, char *line)
 	}
 	else
 		redir_type = FILEOUT;
-	push_int_to_array((int *)machine->redir_types, ft_arraylen(machine->redir_paths),
-			(int)redir_type);
+	machine->redir_types =
+		(enum e_redir_op *)push_int_to_array((int *)machine->redir_types,
+				ft_arraylen(machine->redir_paths), (int)redir_type);
 	return (line);
 }
 

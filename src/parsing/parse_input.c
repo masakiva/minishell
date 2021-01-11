@@ -179,6 +179,7 @@ char	*letter(t_state_machine *machine, char *line)
 	return (line);
 }
 
+//#include <stdio.h>
 char	**parse_one_command(char **line, char **env, int stat_loc, t_command *command)
 {
 	static t_parse	process[NB_STATES - 1] = {space, letter, backslash, dollar,
@@ -201,6 +202,8 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_command *comma
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;
 //	ft_printarray_fd(machine.args, STDOUT_FILENO);
+//	printf("REDIR PATHS:\n");
+//	ft_printarray_fd(machine.redir_paths, STDOUT_FILENO);
 	return (machine.args);// could be saved directly in command
 }
 
