@@ -118,7 +118,45 @@ enum e_cmd_code	get_cmd_code(char *arg)
 	return (ELSE);
 }
 
-int		execute_cmd(char **args, t_xe *xe)
+void	apply_redir(char *cur_arg, enum e_redir_op redir)
+{
+	int			src_fd;
+	int			redir_fd;
+	mode_t		mode;
+	int			flags;
+
+	mode = 0;
+	if (redir == FILEIN)
+	{
+		src_fd = STDIN_FILENO;
+		flags = O_RDONLY;
+	}
+	else
+	{
+		src_fd = STDOUT_FILENO;
+		flags = O_WRONLY | O_CREAT;
+		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+		if (redir == APPEND)
+			flags |= O_APPEND;
+	}
+	redir_fd = open(cur_arg, flags, mode);
+	if (redir_fd >= 0) // else error?
+	{
+		dup2(redir_fd, src_fd); // error
+	}
+}
+
+void	apply_redirs(t_list *redirs)
+{
+	t_redir		*redir;
+
+	while ((redir = ft_lstshift(redirs)) != NULL)
+	{
+		apply_redir(redir->path, redir->type);
+	}
+}
+
+int		execute_cmd(char **args, t_list *redirs, t_xe *xe)
 {
 	int				i;
 	int				ret;
@@ -128,6 +166,8 @@ int		execute_cmd(char **args, t_xe *xe)
 		launch_exit, launch_ext};
 
 	i = 0;
+	if (redirs != NULL)
+		apply_redirs(xe, redirs);
 //	printf("arg0 = %s\n", args[0]);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)

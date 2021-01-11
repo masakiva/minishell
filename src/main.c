@@ -73,7 +73,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				//dprintf(xe->backup_stdout, "list: child = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
 				//dprintf(xe->backup_stdout, "args0: child = %s\n", args[0]);
 				//dprintf(xe->backup_stdout, "args1: child = %s\n", args[1]);
-				ret = execute_cmd(cur_command->args, xe);// error
+				ret = execute_cmd(cur_command->args, cur_command->redirs,xe);// error
 				return (CLEAN_EXIT);
 			}
 			else
@@ -92,7 +92,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				if (dup2(fd_in, STDIN_FILENO) != -1)
 					close(fd_in);
 			}
-			ret = execute_cmd(cur_command->args, xe);// error
+			ret = execute_cmd(cur_command->args, cur_command->redirs, xe);// error
 			dup2(xe->backup_stdout, STDOUT_FILENO);
 			dup2(xe->backup_stdin, STDIN_FILENO);
 			i = 0;
