@@ -36,10 +36,12 @@ static int			err_output(enum e_retcode err_code)
 
 int					ft_exit(enum e_retcode ret, t_xe *xe)
 {
-	(void)xe;
 	if (ret > CLEAN_EXIT)
 		err_output(ret);
 	else if (ret < CLEAN_EXIT)// temp
 		putstr_stderr("ERROR CODE ERROR");// temp
+	free_str_array(xe->exported); // besoin de free?
+	free_str_array(xe->env); // besoin de free?
+	free(xe);
 	exit(EXIT_SUCCESS);
 }
