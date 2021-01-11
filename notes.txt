@@ -11,11 +11,20 @@ man bash -> "Word splitting"
 	removal.
 export fd='$fs'
 
+add_to_buf malloc error!
+
 fichier src/test a supprimer
 
 if redirecting to variable that should be splitted
 ========> error message : "bash: $d : redirection ambiguë"
 
+env -i ./minishell (run minishell with empty environment)
+
+compare with bash:
+"cat | exit"
+"sleep 5 | sleep 5 | sleep 5|"
+
+run "yes", abort with CTRL-\ and check "echo $?" -> 131 (130 for CTRL-C)
 
 ajouter des errno = 0;?
 

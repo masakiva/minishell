@@ -1,5 +1,42 @@
 #include "parsing.h"
 
+int		*push_int_to_array(int *array, size_t array_size, int nb)
+{
+	int		*new_array;
+	size_t	i;
+
+	new_array = (int *)malloc(sizeof(int) * (array_size + 1));
+	if (new_array == NULL)
+		return (NULL);
+	i = 0;
+	while (i < array_size)
+	{
+		new_array[i] = array[i];
+		i++;
+	}
+	new_array[i] = nb;
+	free(array);
+	return (new_array);
+}
+
+char	*new_redir_info(t_state_machine *machine, char *line)
+{
+	enum e_redir_op	redir_type;
+
+	if (*line == '<')
+		redir_type = FILEIN;
+	else if (line[1] == '>')
+	{
+		redir_type = APPEND;
+		line++;
+	}
+	else
+		redir_type = FILEOUT;
+	push_int_to_array((int *)machine->redir_types, ft_arraylen(machine->redir_paths),
+			(int)redir_type);
+	return (line);
+}
+
 int		parse_exit_status(t_state_machine *machine)
 {
 	char	*value;
@@ -100,13 +137,14 @@ int		add_arg(t_state_machine *machine)
 {
 	if (reset_buf(machine) == FAILURE)
 		return (FAILURE);
-	machine->args = push_str_to_array(machine->args, machine->cur_arg);
-	if (machine->args == NULL)
+	*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack, machine->cur_arg);
+	if (*machine->cur_token_stack == NULL)
 	{
 		free(machine->cur_arg);
 		return (FAILURE);
 	}
 	machine->cur_arg = NULL;
+	machine->cur_token_stack = &machine->args;
 	return (SUCCESS);
 }
 
@@ -151,4 +189,3 @@ void		free_commands(t_list **commands)
 {
 	ft_lstclear(commands, free_command);
 }
-

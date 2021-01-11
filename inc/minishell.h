@@ -62,17 +62,11 @@ enum e_redir_op
 	APPEND
 };
 
-typedef struct		s_redir
-{
-	char			*path;
-	enum e_redir_op	type;
-	uint8_t			pad[4];
-}					t_redir;
-
 typedef struct		s_command
 {
 	char		**args;
-	t_list		*redirs;
+	char		**redir_paths;
+	enum e_redir_op		*redir_types;
 	t_byte		pipe_flag;
 	uint8_t		pad[7];
 }					t_command;
