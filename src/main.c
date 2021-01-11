@@ -101,10 +101,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				wait(NULL);
 				i++;
 			}
-			if (ret == SUCCESS)
-				return (handle_execution(xe, STDIN_FILENO, 0));
-			else
-				return (ret);
+			return (ret);
 		}
 	}
 	else
@@ -158,6 +155,7 @@ int		main(int argc, char **argv, char **env_source)
 	if (xe == NULL)
 		return (ft_exit(MALLOC_ERR, xe));
 	ft_bzero(xe, sizeof(t_xe));
+	xe->commands = NULL;
 	if (xe == NULL)
 		ret = MALLOC_ERR;
 	else if (argc != 1)
@@ -169,7 +167,7 @@ int		main(int argc, char **argv, char **env_source)
 	{
 		xe->backup_stdin = dup(STDIN_FILENO);
 		xe->backup_stdout = dup(STDOUT_FILENO);
-		signal_handler(); // err?
+	//	signal_handler(); // err?
 		exec_env_init(xe, env_source);
 		if (xe->env == NULL)
 			ret = MALLOC_ERR;

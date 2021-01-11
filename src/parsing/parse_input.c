@@ -206,14 +206,14 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_fla
 	}
 	*pipe_flag = machine.pipe_flag;
 	if (*line != NULL)
-		*line = ft_strdup(*line);
+		*line = ft_strdup(orig_line);
 	free(orig_line);
 	if (*line == NULL)
 	{
 		free_str_array(machine.args);
 		return (NULL);
 	}
-	ft_printarray_fd(machine.args, STDOUT_FILENO);
+//	ft_printarray_fd(machine.args, STDOUT_FILENO);
 	return (machine.args);
 }
 
@@ -241,6 +241,7 @@ int		parse_commands(t_xe *xe, char *line)
 		if (cur_command->args == NULL)
 			return (MALLOC_ERR);
 		cur_list->content = cur_command;
+		cur_list->next = NULL;
 		ft_lstadd_back(&(xe->commands), cur_list);
 	}
 	return (SUCCESS);
