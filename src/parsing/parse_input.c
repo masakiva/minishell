@@ -23,30 +23,24 @@
 //		*commands = NULL;/////// no need to free?
 //	return (PARSING_ERR);
 //}
-//
-//char	*angle_bracket(t_state_machine *machine, char *line)
-//{
-//	(void)commands;
+
+char	*angle_bracket(t_state_machine *machine, char *line)
+{
 //	if (reset_buf(machine) == FAILURE)
 //		return(NULL);
 //	if (machine->cur_token->redir != NO_REDIR)
 //		machine->error = REDIR_PATH_INVALID;
 //	else
 //	{
-//		if (*line == '<')
-//			machine->cur_token->redir = FILEIN;
-//		else if (line[1] == '>')
-//		{
-//			machine->cur_token->redir = APPEND;
-//			line++;
-//		}
-//		else
-//			machine->cur_token->redir = FILEOUT;
-//		line++;
-//		machine->state = SPACE;
+	line = new_redir_info(machine, line);
+	if (line == NULL)
+		return (NULL);
+	line++;
+	machine->state = SPACE;
+	machine->cur_token_stack = &machine->redir_paths;
 //	}
-//	return (line);
-//}
+	return (line);
+}
 
 char	*quoted_dollar(t_state_machine *machine, char *line)
 {
@@ -140,8 +134,8 @@ char	*space(t_state_machine *machine, char *line)
 {
 	if (ft_isspace(*line))
 		line++;
-//	else if (*line == '>' || *line == '<')
-//		machine->state = ANGLE_BRACKET;
+	else if (*line == '>' || *line == '<')
+		machine->state = ANGLE_BRACKET;
 	else if (*line == '|')
 	{
 		machine->state = END;
@@ -162,7 +156,7 @@ char	*space(t_state_machine *machine, char *line)
 
 char	*letter(t_state_machine *machine, char *line)
 {
-	if (ft_isspace(*line) || ft_isset(*line, ";|"/*"><;|"*/) || *line == '\0')
+	if (ft_isspace(*line) || ft_isset(*line, "><;|") || *line == '\0')
 	{
 		if (add_arg(machine) == FAILURE)
 			return (NULL);
@@ -185,10 +179,11 @@ char	*letter(t_state_machine *machine, char *line)
 	return (line);
 }
 
-char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_flag)
+//#include <stdio.h>
+char	**parse_one_command(char **line, char **env, int stat_loc, t_command *command)
 {
 	static t_parse	process[NB_STATES - 1] = {space, letter, backslash, dollar,
-		single_quote, double_quote, quoted_backslash, quoted_dollar};
+		single_quote, double_quote, quoted_backslash, quoted_dollar, angle_bracket};
 	t_state_machine	machine;
 
 	if ((*line)[0] == '.' && (*line)[1] == '\0')
@@ -196,15 +191,20 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_fla
 	ft_bzero(&machine, sizeof(machine));
 	machine.env = env;
 	machine.stat_loc = stat_loc;
+	machine.cur_token_stack = &machine.args;
 	while (machine.state != END)
 	{
 		*line = process[machine.state](&machine, *line);
 		if (*line == NULL)
 			break ;
 	}
-	*pipe_flag = machine.pipe_flag;
+	command->pipe_flag = machine.pipe_flag;
+	command->redir_paths = machine.redir_paths;
+	command->redir_types = machine.redir_types;
 //	ft_printarray_fd(machine.args, STDOUT_FILENO);
-	return (machine.args);
+//	printf("REDIR PATHS:\n");
+//	ft_printarray_fd(machine.redir_paths, STDOUT_FILENO);
+	return (machine.args);// could be saved directly in command
 }
 
 int			empty_command(char *line)
@@ -227,7 +227,8 @@ int		parse_commands(t_xe *xe, char *line)
 		cur_command = malloc(sizeof(t_command));
 		if (cur_list == NULL || cur_command == NULL)
 			return (MALLOC_ERR);
-		cur_command->args = parse_one_command(&line, xe->env, xe->stat_loc, &(cur_command->pipe_flag));
+		cur_command->args = parse_one_command(&line, xe->env, xe->stat_loc,
+				cur_command);
 		if (cur_command->args == NULL)
 			return (MALLOC_ERR);
 		cur_list->content = cur_command;
