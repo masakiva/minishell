@@ -52,6 +52,7 @@ typedef char	*(*t_parse)(t_state_machine *, char *);
 */
 
 char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_flag);
+int		parse_commands(t_xe *xe, char *line);
 
 /*
 **	utils

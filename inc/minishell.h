@@ -91,6 +91,7 @@ typedef struct		s_xe
 	int		backup_stdin;
 	int		backup_stdout;
 	int		stat_loc;
+	t_list	*commands;
 	char	**env;
 	char	**exported;
 }					t_xe;

@@ -137,3 +137,18 @@ int		add_to_buf(t_state_machine *machine, char c)
 	machine->len++;
 	return (SUCCESS);
 }
+
+void		free_command(void *content)
+{
+	t_command	*command;
+
+	command = (t_command *)content;
+	free_str_array(command->args);
+	free(command);
+}
+
+void		free_commands(t_list **commands)
+{
+	ft_lstclear(commands, free_command);
+}
+

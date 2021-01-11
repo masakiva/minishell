@@ -216,3 +216,32 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_fla
 	ft_printarray_fd(machine.args, STDOUT_FILENO);
 	return (machine.args);
 }
+
+int			empty_command(char *line)
+{
+	while (ft_isspace(*line))
+		line++;
+	if (*line == '\0')
+		return (TRUE);
+	return (FALSE);
+}
+
+int		parse_commands(t_xe *xe, char *line)
+{
+	t_list		*cur_list;
+	t_command	*cur_command;
+
+	while (empty_command(line) == FALSE)
+	{
+		cur_list = malloc(sizeof(t_list));
+		cur_command = malloc(sizeof(t_command));
+		if (cur_list == NULL || cur_command == NULL)
+			return (MALLOC_ERR);
+		cur_command->args = parse_one_command(&line, xe->env, xe->stat_loc, &(cur_command->pipe_flag));
+		if (cur_command->args == NULL)
+			return (MALLOC_ERR);
+		cur_list->content = cur_command;
+		ft_lstadd_back(&(xe->commands), cur_list);
+	}
+	return (SUCCESS);
+}
