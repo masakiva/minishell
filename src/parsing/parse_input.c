@@ -186,8 +186,8 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_command *comma
 		single_quote, double_quote, quoted_backslash, quoted_dollar, angle_bracket};
 	t_state_machine	machine;
 
-	if ((*line)[0] == '.' && (*line)[1] == '\0')
-		exit(EXIT_FAILURE);
+//	if ((*line)[0] == '.' && (*line)[1] == '\0')
+//		exit(EXIT_FAILURE);
 	ft_bzero(&machine, sizeof(machine));
 	machine.env = env;
 	machine.stat_loc = stat_loc;
