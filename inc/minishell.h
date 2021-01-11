@@ -62,25 +62,17 @@ enum e_redir_op
 	APPEND
 };
 
-typedef struct		s_var_props
+typedef struct		s_redir
 {
-	size_t	start;
-	size_t	len;
-	t_byte	split_flag;
-	uint8_t	pad[7];
-}					t_var_props;
-
-typedef struct		s_token
-{
-	char			*str;
-	t_list			*var_properties;
-	enum e_redir_op	redir;
+	char			*path;
+	enum e_redir_op	type;
 	uint8_t			pad[4];
-}					t_token;
+}					t_redir;
 
 typedef struct		s_command
 {
 	char		**args;
+	t_list		*redirs;
 	t_byte		pipe_flag;
 	uint8_t		pad[7];
 }					t_command;

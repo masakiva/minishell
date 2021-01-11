@@ -1,0 +1,71 @@
+'make lib' -> quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
+
+man bash -> "Word splitting"
+	Explicit  null  arguments ("" or '') are retained and passed to commands as
+	empty strings.  Unquoted implicit null arguments, resulting from the expansion
+	of parameters that have no values, are removed.  If a parameter with no value
+	is expanded within double quotes, a null argument results and is retained and
+	passed to a command as an empty string.   When a quoted null argument appears
+	as part of a word whose expansion is non-null, the null argument is removed.
+	That is, the word -d'' becomes -d after word splitting and null argu‐ ment
+	removal.
+export fd='$fs'
+
+fichier src/test a supprimer
+
+if redirecting to variable that should be splitted
+========> error message : "bash: $d : redirection ambiguë"
+
+
+ajouter des errno = 0;?
+
+quit apres une erreur de parsing? (fonction error())
+par exemple export d=\
+
+testlines pour multipipes :
+cat | cat | ls
+cat /dev/urandom | cat
+ls -la | grep oct | tr -dc '0-9'
+
+segfault quand on fait ctrl-d directement a la premiere commande de minishell
+
+references pour gestion des signaux : https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
+
+commande "."
+builtins: set stat_loc?
+mkdir ok; cd ok; rmdir ../ok; pwd
+
+header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
+
+trop bizarre la len d'un token ne peut pas etre superieure a 4095 sur linux
+et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
+>>!!Gnl recursif limite par la taille de la stack ? -> verifier ulimit -a !!
+
+https://brennan.io/2015/01/16/write-a-shell-in-c/
+redirections https://catonmat.net/bash-one-liners-explained-part-three
+multiple redirections https://stackoverflow.com/questions/20081653/two-redirection-operators-in-one-command
+redirection and pipe explanation https://askubuntu.com/questions/172982/what-is-the-difference-between-redirection-and-pipe/1074550#1074550
+
+forks https://www.youtube.com/watch?v=ss1-REMJ9GA
+pipes https://www.youtube.com/watch?v=dhFkwGRSVGk
+signals https://www.youtube.com/watch?v=83M5-NPDeWs
+
+Shell Command Language https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
+man bash https://www.gnu.org/software/bash/manual/html_node/index.html
+
+man bash -> QUOTING
+	non-quoted \ : écrit littéralement le caractère qui suit, à l’exception de <newline>
+	'' : - écrit littéralement ce qui est entre single quotes
+		 - ' ou \' ne peuvent pas apparaitre entre single quotes
+	"" : - écrit littéralement sauf pour $, `, \ et ! si history expansion est activé
+		 - $ et ` gardent leur special meaning
+		 - \ reste un escape char seulement pour $, `, ", \, ou <newline>
+		 - * et @ ont un special meaning entre double quotes
+	https://stackoverflow.com/questions/25941394/how-does-bash-deal-with-nested-quotes
+
+testeur https://github.com/cacharle/minishell_test.git
+https://github.com/lienardale/alientest_minishell.git
+basile: https://docs.google.com/spreadsheets/d/1pD3UEKayYV_LiHoYz8N6aOimqS9gxfg3TlZgQ1CFS3A/edit#gid=1627853444
++ tests d'adeline!
+
+Les redirections doivent être effectuées à l'intérieur d'un fork(), il faut donc fork avant prepare_commands (hormis pour cd et env).
