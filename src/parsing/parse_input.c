@@ -190,11 +190,9 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_fla
 	static t_parse	process[NB_STATES - 1] = {space, letter, backslash, dollar,
 		single_quote, double_quote, quoted_backslash, quoted_dollar};
 	t_state_machine	machine;
-	char			*orig_line;
 
 	if ((*line)[0] == '.' && (*line)[1] == '\0')
 		exit(EXIT_FAILURE);
-	orig_line = *line;
 	ft_bzero(&machine, sizeof(machine));
 	machine.env = env;
 	machine.stat_loc = stat_loc;
@@ -205,14 +203,6 @@ char	**parse_one_command(char **line, char **env, int stat_loc, t_byte *pipe_fla
 			break ;
 	}
 	*pipe_flag = machine.pipe_flag;
-	if (*line != NULL)
-		*line = ft_strdup(orig_line);
-	free(orig_line);
-	if (*line == NULL)
-	{
-		free_str_array(machine.args);
-		return (NULL);
-	}
 //	ft_printarray_fd(machine.args, STDOUT_FILENO);
 	return (machine.args);
 }
