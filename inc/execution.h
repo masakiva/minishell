@@ -29,7 +29,7 @@ typedef int			(*t_exec)(char **args, t_xe *xe);
 **	main function
 */
 
-int		execute_cmd(char **args, t_xe *xe);
+int		execute_cmd(char **args, t_list *redirs, t_xe *xe);
 
 /*
 **	builtins

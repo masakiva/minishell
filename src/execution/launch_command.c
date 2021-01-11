@@ -5,6 +5,10 @@
 #include <stdio.h> // perror
 #include <dirent.h> // readdir, opendir
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
 static int	launch_exit(char **args, t_xe *xe)
 {
 	(void)args;
@@ -150,7 +154,9 @@ void	apply_redirs(t_list *redirs)
 {
 	t_redir		*redir;
 
-	while ((redir = ft_lstshift(redirs)) != NULL)
+	(void)redirs;
+	return ;
+	while ((redir = ft_lstshift(&redirs)) != NULL)
 	{
 		apply_redir(redir->path, redir->type);
 	}
@@ -167,7 +173,7 @@ int		execute_cmd(char **args, t_list *redirs, t_xe *xe)
 
 	i = 0;
 	if (redirs != NULL)
-		apply_redirs(xe, redirs);
+		apply_redirs(redirs);
 //	printf("arg0 = %s\n", args[0]);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)

@@ -98,6 +98,11 @@ typedef struct		s_xe
 /*
 **	free utils
 */
+int			handle_execution(t_xe *xe, int fd_in, int proc);
+
+/*
+**	free utils
+*/
 
 void		print_tokens(t_list *tokens); // temp
 void	free_token(void *content);

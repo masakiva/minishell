@@ -7,7 +7,6 @@
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
 
-
 static int			get_input(char **line)
 {
 	int		ret;
@@ -26,90 +25,6 @@ static int			get_input(char **line)
 		return (CLEAN_EXIT);
 	}
 	return (ret);
-}
-
-int			handle_execution(t_xe *xe, int fd_in, int proc)
-{
-	int			i;
-	int			fd[2];
-	int			ret;
-	t_command	*cur_command;
-
-	ret = SUCCESS;
-	xe->gpid = -1;
-	cur_command = NULL;
-	if (xe->commands != NULL)
-		cur_command = ft_lstshift(&(xe->commands));
-	if (cur_command != NULL) // le contraire possible?
-	{
-		if ((cur_command->args) == NULL)
-		{
-			free_command(cur_command);
-		//	cur_command = ft_lstshift(&(xe->commands));
-		//	il faudrait plutôt partir sur une recursion ici
-			dup2(xe->backup_stdout, STDOUT_FILENO);
-			dup2(xe->backup_stdin, STDIN_FILENO);
-			return (SUCCESS);
-		}
-		else if (cur_command->pipe_flag == TRUE)
-		{
-			pipe(fd);// error?
-			xe->gpid = fork();// error?
-			if (xe->gpid == 0)
-			{
-				//xe->child = 1;
-				signal(SIGINT, SIG_DFL);
-				signal(SIGQUIT, SIG_DFL);
-				close(fd[0]);// error
-			//	dup2(fd_in, STDIN_FILENO);
-				if (fd_in != STDIN_FILENO)
-				{
-					if (dup2(fd_in, STDIN_FILENO) != -1)
-						close(fd_in);
-				}
-		//		dup2(fd[1], STDOUT_FILENO);
-				if (dup2(fd[1], STDOUT_FILENO) != -1)// error
-					close(fd[1]);
-				//dprintf(xe->backup_stdout, "list: child = %s\n", ((t_token *)((t_list *)cur_command->tokens)->content)->str);
-				//dprintf(xe->backup_stdout, "args0: child = %s\n", args[0]);
-				//dprintf(xe->backup_stdout, "args1: child = %s\n", args[1]);
-				ret = execute_cmd(cur_command->args, cur_command->redirs,xe);// error
-				return (CLEAN_EXIT);
-			}
-			else
-			{
-				//xe->child = 0;
-				close(fd[1]);// error
-				close(fd_in);
-				free_command(cur_command);
-				return (handle_execution(xe, fd[0], proc + 1));
-			}
-		}
-		else
-		{
-			if (fd_in != STDIN_FILENO)
-			{
-				if (dup2(fd_in, STDIN_FILENO) != -1)
-					close(fd_in);
-			}
-			ret = execute_cmd(cur_command->args, cur_command->redirs, xe);// error
-			dup2(xe->backup_stdout, STDOUT_FILENO);
-			dup2(xe->backup_stdin, STDIN_FILENO);
-			i = 0;
-			while (i < proc)
-			{
-				wait(NULL);
-				i++;
-			}
-			return (ret);
-		}
-	}
-	else
-	{
-		dup2(xe->backup_stdout, STDOUT_FILENO);
-		dup2(xe->backup_stdin, STDIN_FILENO);
-		return (SUCCESS);
-	}
 }
 
 static int			main_loop(t_xe *xe)
