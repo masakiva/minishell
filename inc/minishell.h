@@ -80,7 +80,7 @@ typedef struct		s_token
 
 typedef struct		s_command
 {
-	t_list		*tokens;
+	char		**args;
 	t_byte		pipe_flag;
 	uint8_t		pad[7];
 }					t_command;

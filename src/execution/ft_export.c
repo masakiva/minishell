@@ -37,7 +37,7 @@ int		print_export(char **env, char **exported)
 
 	variables = sort_variables(env, exported);
 	if (variables == NULL)
-		return (FAILURE);
+		return (MALLOC_ERR);
 	i = 0;
 	while (variables[i] != NULL)
 	{

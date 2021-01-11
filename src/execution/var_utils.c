@@ -7,11 +7,15 @@ int		env_replace_var(char *var_name, char *value, t_xe *xe)
 	int			j;
 
 	new = malloc(sizeof(char*) * 3);
-	new[0] = ft_strdup("export");
-	new[1] = malloc(sizeof(char) * (ft_strlen(var_name) + ft_strlen(value) + 2));
-	new[2] = NULL;
 	if (new == NULL)
 		return (MALLOC_ERR);
+	new[0] = ft_strdup("export");
+	if (new[0] == NULL)
+		return (MALLOC_ERR);
+	new[1] = malloc(sizeof(char) * (ft_strlen(var_name) + ft_strlen(value) + 2));
+	if (new[1] == NULL)
+		return (MALLOC_ERR);
+	new[2] = NULL;
 	i = 0;
 	while (var_name[i] != '\0')
 	{

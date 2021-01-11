@@ -7,6 +7,7 @@
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
 
+
 static int			get_input(char **line)
 {
 	int		ret;
@@ -189,6 +190,8 @@ int		main(int argc, char **argv, char **env_source)
 	(void)argv;
 	ret = SUCCESS;
 	xe = (t_xe *)malloc(sizeof(t_xe));
+	if (xe == NULL)
+		return (ft_exit(MALLOC_ERR, xe));
 	ft_bzero(xe, sizeof(t_xe));
 	if (xe == NULL)
 		ret = MALLOC_ERR;
