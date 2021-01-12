@@ -33,10 +33,10 @@ static int			main_loop(t_xe *xe)
 	char		*line;
 
 	ret = get_input(&line);
+	xe->line = line;
 	if (ret == SUCCESS)
 	{
 		//check_syntax(line);
-		parse_commands(xe, line);
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		free(line);
 	}
@@ -59,7 +59,6 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	tmp += 1;
 	val = ft_itoa(tmp);
 	env_replace_var(SHLVL_STR, val, xe);
-	xe->commands = NULL;
 	xe->backup_stdin = dup(STDIN_FILENO);
 	xe->backup_stdout = dup(STDOUT_FILENO);
 	return (SUCCESS);

@@ -64,7 +64,10 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		wait(NULL);
 		i++;
 	}
-	return (ret);
+	if (ret != SUCCESS)
+		return (ret);
+	else
+		return (handle_execution(xe, STDIN_FILENO, 0));
 }
 
 int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
@@ -78,7 +81,7 @@ int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
-		return (SUCCESS);
+		return (handle_execution(xe, STDIN_FILENO, 0));
 	}
 	else if (cur_command->pipe_flag == TRUE)
 	{
@@ -95,10 +98,10 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	t_command	*cur_command;
 
 	xe->gpid = -1;
-	cur_command = NULL;
-	if (xe->commands != NULL)
-		cur_command = ft_lstshift(&(xe->commands));
-	if (cur_command != NULL) // le contraire possible?
+	cur_command = parse_commands(xe);
+	if (cur_command == NULL)
+		return (MALLOC_ERR);
+	if (cur_command->pipe_flag != LINE_END) // le contraire possible?
 	{
 		return (handle_command(cur_command, xe, fd_in, proc));
 	}

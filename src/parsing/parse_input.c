@@ -216,24 +216,25 @@ int			empty_command(char *line)
 	return (FALSE);
 }
 
-int		parse_commands(t_xe *xe, char *line)
+t_command	*parse_commands(t_xe *xe)
 {
-	t_list		*cur_list;
 	t_command	*cur_command;
 
-	while (empty_command(line) == FALSE)
+	cur_command = malloc(sizeof(t_command));
+	if (cur_command == NULL)
+		return (NULL);
+	cur_command->pipe_flag = FALSE;
+	if (empty_command(xe->line) == FALSE)
 	{
-		cur_list = malloc(sizeof(t_list));
-		cur_command = malloc(sizeof(t_command));
-		if (cur_list == NULL || cur_command == NULL)
-			return (MALLOC_ERR);
-		cur_command->args = parse_one_command(&line, xe->env, xe->stat_loc,
+		cur_command->args = parse_one_command(&(xe->line), xe->env, xe->stat_loc,
 				cur_command);
 		if (cur_command->args == NULL)
-			return (MALLOC_ERR);
-		cur_list->content = cur_command;
-		cur_list->next = NULL;
-		ft_lstadd_back(&(xe->commands), cur_list);
+			return (NULL);
+		return (cur_command);
 	}
-	return (SUCCESS);
+	else
+	{
+		cur_command->pipe_flag = LINE_END;
+		return (cur_command);
+	}
 }

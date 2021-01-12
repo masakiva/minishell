@@ -26,6 +26,8 @@
 # define TRUE		1
 # define FALSE		0
 
+# define LINE_END	2
+
 # define _XOPEN_SOURCE // qu'est-ce?
 
 # define FT_PS1			"$ "
@@ -78,7 +80,7 @@ typedef struct		s_xe
 	int		backup_stdin;
 	int		backup_stdout;
 	int		stat_loc;
-	t_list	*commands;
+	char	*line;
 	char	**env;
 	char	**exported;
 }					t_xe;
