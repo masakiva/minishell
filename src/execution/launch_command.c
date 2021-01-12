@@ -102,7 +102,7 @@ static int	launch_ext(char **args, t_xe *xe)
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
-		//signal_handler();
+		signal_handler();
 	}
 //	free_str_array(path);
 	return (ret);

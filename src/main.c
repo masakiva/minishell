@@ -10,6 +10,7 @@
 static int			get_input(char **line)
 {
 	int		ret;
+	char	*tmp;
 
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 	{
@@ -21,10 +22,20 @@ static int			get_input(char **line)
 		return (GNL_ERR);
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
-		free(*line);
-		return (CLEAN_EXIT);
+		if (ft_strcmp(*line , "") == 0)
+			return (CLEAN_EXIT);
+		else
+		{
+			while (ret != SUCCESS)
+			{
+				ft_putstr_fd("  \b\b", STDIN_FILENO);
+				ret = get_next_line(STDIN_FILENO, &tmp);
+				*line = ft_strjoin(*line, tmp);
+			}
+			return (ret);
+		}
 	}
-	return (ret);
+	return (SUCCESS);
 }
 
 static int			main_loop(t_xe *xe)
@@ -81,7 +92,7 @@ int		main(int argc, char **argv, char **env_source)
 		ret = ARG_ERR;
 	else
 	{
-	//	signal_handler(); // err?
+		signal_handler(); // err?
 		ret = exec_env_init(xe, env_source);
 		if (ret != SUCCESS)
 			return (ft_exit(ret, xe));
