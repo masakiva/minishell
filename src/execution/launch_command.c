@@ -158,19 +158,19 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	}
 }
 
-void	apply_redirs(t_list *redirs)
+void	apply_redirs(char **redir_paths, enum e_redir_op *redir_types)
 {
-	t_redir		*redir;
+	int		i;
 
-	(void)redirs;
-	return ;
-	while ((redir = ft_lstshift(&redirs)) != NULL)
+	i = 0;
+	while (redir_paths[i] != NULL)
 	{
-		apply_redir(redir->path, redir->type);
+		apply_redir(redir_paths[i], redir_types[i]);
+		i++;
 	}
 }
 
-int		execute_cmd(char **args, t_list *redirs, t_xe *xe)
+int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
 {
 	int				i;
 	int				ret;
@@ -180,8 +180,8 @@ int		execute_cmd(char **args, t_list *redirs, t_xe *xe)
 		launch_exit, launch_ext};
 
 	i = 0;
-	if (redirs != NULL)
-		apply_redirs(redirs);
+	if (redir_paths != NULL)
+		apply_redirs(redir_paths, redir_types);
 //	printf("arg0 = %s\n", args[0]);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)

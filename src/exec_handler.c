@@ -32,7 +32,7 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	if (xe->gpid == 0)
 	{
 		child_setup(fd, fd_in);
-		ret = execute_cmd(cur_command->args, cur_command->redirs, xe);// error
+		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
 		return (CLEAN_EXIT);
 	}
 	else
@@ -55,7 +55,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		if (dup2(fd_in, STDIN_FILENO) != -1)
 			close(fd_in);
 	}
-	ret = execute_cmd(cur_command->args, cur_command->redirs, xe);// error
+	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
 	dup2(xe->backup_stdout, STDOUT_FILENO);
 	dup2(xe->backup_stdin, STDIN_FILENO);
 	i = 0;
