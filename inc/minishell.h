@@ -48,6 +48,7 @@ enum		e_retcode
 {
 	PARSING_ERR = 2,
 	CLEAN_EXIT,
+	HOME_NOT_SET,
 	ARG_ERR,
 	MALLOC_ERR,
 	WRITE_ERR,

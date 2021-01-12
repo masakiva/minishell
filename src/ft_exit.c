@@ -13,6 +13,7 @@ void		putstr_stderr(const char *str)
 static const char	*err_msg(int err_code)
 {
 	const char	*msg[] = {
+		"HOME not set",
 		"Minishell takes no argument",
 		"Memory allocation failure",
 		"Cannot write on standard output",
@@ -31,6 +32,7 @@ static int			err_output(enum e_retcode err_code)
 	}
 	else
 		perror(err_msg(err_code - 4));
+	write(1, "exit 1\n", 8);
 	exit(EXIT_FAILURE);
 }
 
@@ -43,5 +45,6 @@ int					ft_exit(enum e_retcode ret, t_xe *xe)
 	free_str_array(xe->exported); // besoin de free?
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
+	write(1, "exit\n", 6);
 	exit(EXIT_SUCCESS);
 }

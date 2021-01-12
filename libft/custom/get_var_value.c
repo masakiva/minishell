@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/19 13:42:49 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/10 14:24:53 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/12 10:54:08 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ char	*get_var_value(char **vars, char *name, size_t name_len)
 			vars++;
 		}
 	}
-	return (ft_strdup(""));
+	return (NULL);
 }
