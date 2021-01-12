@@ -27,12 +27,12 @@ static int			err_output(enum e_retcode err_code)
 	putstr_stderr("Error\n");
 	if (err_code <= ARG_ERR)
 	{
-		putstr_stderr(err_msg(err_code - 4));
+		putstr_stderr(err_msg(err_code - 3));
 		putstr_stderr("\n");
 	}
 	else
-		perror(err_msg(err_code - 4));
-	write(1, "exit 1\n", 8);
+		perror(err_msg(err_code - 3));
+	write(1, "exit 1\n", 7);
 	exit(EXIT_FAILURE);
 }
 
@@ -45,6 +45,6 @@ int					ft_exit(enum e_retcode ret, t_xe *xe)
 	free_str_array(xe->exported); // besoin de free?
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
-	write(1, "exit\n", 6);
+	write(1, "exit\n", 5);
 	exit(EXIT_SUCCESS);
 }

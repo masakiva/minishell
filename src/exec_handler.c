@@ -98,10 +98,12 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	t_command	*cur_command;
 
 	xe->gpid = -1;
-	cur_command = parse_commands(xe);
+	cur_command = parse_one_command(xe);
 	if (cur_command == NULL)
 		return (MALLOC_ERR);
-	if (cur_command->pipe_flag != LINE_END) // le contraire possible?
+	(void)fd_in;
+	(void)proc;
+	if (cur_command->args != NULL)
 	{
 		return (handle_command(cur_command, xe, fd_in, proc));
 	}

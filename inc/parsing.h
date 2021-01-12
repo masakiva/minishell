@@ -59,8 +59,8 @@ int		check_syntax(char *line);
 **	main function
 */
 
-char	**parse_one_command(char **line, char **env, int stat_loc, t_command *command);
-t_command	*parse_commands(t_xe *xe);
+int		parse_input(char **line, char **env, int stat_loc, t_command *command);
+t_command	*parse_one_command(t_xe *xe);
 
 /*
 **	utils

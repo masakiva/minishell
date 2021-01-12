@@ -49,6 +49,7 @@ static int			main_loop(t_xe *xe)
 	{
 		check_syntax(line);
 		ret = handle_execution(xe, STDIN_FILENO, 0);
+		//printf("ret = %d\n", ret);
 		free(line);
 	}
 	return (ret);

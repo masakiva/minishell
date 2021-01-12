@@ -86,7 +86,6 @@ int			blank_str(char *line) // duplicate of empty_command
 	return (FALSE);
 }
 
-#include <stdio.h>
 char	*parse_variable(t_state_machine *machine, char *line)
 {
 	size_t	var_name_len;
@@ -145,7 +144,6 @@ int		add_arg(t_state_machine *machine)
 		return (FAILURE);
 	}
 	machine->cur_arg = NULL;
-	machine->cur_token_stack = &machine->args;
 	return (SUCCESS);
 }
 

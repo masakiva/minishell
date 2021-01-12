@@ -15,7 +15,7 @@ int		parsing_error(void)
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 //	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
-	return (PARSING_ERR);
+	return (PARSING_ERR); // define to remove
 }
 
 int		check_syntax(char *line)

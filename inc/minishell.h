@@ -1,6 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+#include <stdio.h> // temp, for printf
+
 /*
 **	**********************************
 **	**		GENERAL INCLUDES		**
@@ -26,8 +28,6 @@
 # define TRUE		1
 # define FALSE		0
 
-# define LINE_END	2
-
 # define _XOPEN_SOURCE // qu'est-ce?
 
 # define FT_PS1			"$ "
@@ -48,8 +48,8 @@
 
 enum		e_retcode
 {
-	PARSING_ERR = 2,
-	CLEAN_EXIT,
+	PARSING_ERR, //to remove
+	CLEAN_EXIT = 2,
 	HOME_NOT_SET,
 	ARG_ERR,
 	MALLOC_ERR,
@@ -67,11 +67,11 @@ enum e_redir_op
 
 typedef struct		s_command
 {
-	char		**args;
-	char		**redir_paths;
+	char				**args;
+	char				**redir_paths;
 	enum e_redir_op		*redir_types;
-	t_byte		pipe_flag;
-	uint8_t		pad[7];
+	t_byte				pipe_flag;
+	uint8_t				pad[7];
 }					t_command;
 
 typedef struct		s_xe
