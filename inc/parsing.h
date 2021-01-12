@@ -51,6 +51,11 @@ typedef struct		s_state_machine
 typedef char	*(*t_parse)(t_state_machine *, char *);
 
 /*
+**	check_syntax.c
+*/
+int		check_syntax(char *line);
+
+/*
 **	main function
 */
 

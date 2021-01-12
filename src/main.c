@@ -47,7 +47,7 @@ static int			main_loop(t_xe *xe)
 	xe->line = line;
 	if (ret == SUCCESS)
 	{
-		//check_syntax(line);
+		check_syntax(line);
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		free(line);
 	}

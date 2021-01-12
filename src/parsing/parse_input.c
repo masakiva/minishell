@@ -1,29 +1,5 @@
 #include "parsing.h"
 
-//int		parsing_error(t_list **commands, t_state_machine *machine)
-//{
-//	static char		*err_msg[NB_PARSING_ERRORS] = {
-//		"=== no error (here for padding) ===",
-//		"No matching single quote",
-//		"No matching double quote",
-//		"Multiline inputs are currently not supported",
-//		"Redirection path invalid",
-//		"No redirection path specified",
-//		"Empty command before ; or |"};
-//
-//	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
-//	ft_putstr_fd(err_msg[machine->error], STDERR_FILENO);
-//	ft_putchar_fd('\n', STDERR_FILENO);
-//	if (machine->cur_token != NULL)
-//	{
-//		free_token(machine->cur_token);
-//		free_commands(commands);
-//	}
-//	else
-//		*commands = NULL;/////// no need to free?
-//	return (PARSING_ERR);
-//}
-
 char	*angle_bracket(t_state_machine *machine, char *line)
 {
 //	if (reset_buf(machine) == FAILURE)
