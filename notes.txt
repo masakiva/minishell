@@ -31,6 +31,9 @@ compare with bash:
 "cat | exit"
 "sleep 5 | sleep 5 | sleep 5|"
 
+syntax test :
+"ls |" -> différent de "ls ;" ?
+
 references pour gestion des signaux : https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
 
 commande "."

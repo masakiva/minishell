@@ -24,7 +24,7 @@ int		check_syntax(char *line)
 	t_byte	flags;
 	
 	i = 0;
-	flags = S_BEGIN;
+	flags = S_EMPTY;
 	while (line[i])
 	{
 		if (flags & S_BACKSL)
@@ -57,17 +57,21 @@ int		check_syntax(char *line)
 			{
 				if (!(flags & S_REDIR))
 					flags += S_REDIR;
+				else
+					return (parsing_error(REDIR_PATH_MISSING));
 			}
 			else if (line[i] == ';' || line[i] == '|')
 			{
 				if (flags & S_REDIR)
 					return (parsing_error(REDIR_PATH_MISSING));
-				if (flags & S_BEGIN)
+				if (flags & S_EMPTY)
 					return (parsing_error(EMPTY_CMD));
 				else
-					flags += S_BEGIN;
-			//	if (!(flags & S_CMDSEP))
-			//		flags += S_CMDSEP;
+					flags += S_EMPTY;
+				if (!(flags & S_CMDSEP))
+					flags += S_CMDSEP;
+				else
+					return (parsing_error(EMPTY_CMD));
 			}
 			else
 			{
@@ -75,9 +79,11 @@ int		check_syntax(char *line)
 				{
 					if (flags & S_REDIR)
 						flags -= S_REDIR;
+					if (flags & S_EMPTY)
+						flags -= S_EMPTY;
+					if (flags & S_CMDSEP)
+						flags -= S_CMDSEP;
 				}
-				if (flags & S_BEGIN)
-					flags -= S_BEGIN;
 			}
 			i++;
 		}
