@@ -13,7 +13,6 @@ void		putstr_stderr(const char *str)
 static const char	*err_msg(int err_code)
 {
 	const char	*msg[] = {
-		"HOME not set",
 		"Minishell takes no argument",
 		"Memory allocation failure",
 		"Cannot write on standard output",

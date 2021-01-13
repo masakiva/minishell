@@ -10,6 +10,12 @@
 # define ENTIRE_STR	-1
 # define NOT_FOUND	-1
 
+enum		e_exec_errcode
+{
+	HOME_NOT_SET = 7,
+	FILE_NOT_FOUND
+};
+
 enum		e_cmd_code
 {
 	ECHO,
@@ -41,6 +47,12 @@ int		ft_cd(char **args, t_xe *xe);
 int		ft_export(char **args, t_xe *xe);
 int		ft_unset(char **args, t_xe *xe);
 int		ft_env(char **args, t_xe *xe);
+
+/*
+**	utils
+*/
+
+int		exec_error(int err_code);
 
 /*
 **	utils

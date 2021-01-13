@@ -56,7 +56,6 @@ int	search_exec(char **path, char *name)
 
 static int	child_task(char **path, char **args, t_xe *xe)
 {
-	char	*tmp;
 	char	*cmd;
 	int		dir_index;
 
@@ -67,12 +66,10 @@ static int	child_task(char **path, char **args, t_xe *xe)
 	if (dir_index == NOT_FOUND)
 	{
 		free_str_array(path);
-		return (FAILURE); // other error code
+		return (FILE_NOT_FOUND); // other error code
 	}
 	cmd = ft_strjoin(path[dir_index], "/");
-	tmp = cmd;
 	cmd = ft_strjoin(cmd, args[0]);
-	free(tmp);
 	if (execve(cmd, args, xe->env) == ERROR)
 		perror("External function error:");
 	free(cmd); // does not free if execve succeeds
@@ -81,8 +78,8 @@ static int	child_task(char **path, char **args, t_xe *xe)
 
 static int	launch_ext(char **args, t_xe *xe)
 {
-	pid_t	pid;
 	int		ret;
+	pid_t	pid;
 	char	*tmp;
 	char	**path;
 
@@ -94,9 +91,12 @@ static int	launch_ext(char **args, t_xe *xe)
 	free(tmp);
 	if (path == NULL)
 		return (M_ERROR);
+//	free_str_array(path);
 	pid = fork();
 	if (pid == 0)
+	{
 		ret = child_task(path, args, xe);
+	}
 	else
 	{
 		signal(SIGINT, SIG_IGN);
@@ -104,7 +104,6 @@ static int	launch_ext(char **args, t_xe *xe)
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
 		signal_handler();
 	}
-//	free_str_array(path);
 	return (ret);
 }
 
@@ -187,8 +186,8 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
 	ret = command[cmd_code](args, xe);
-	if (ret == FAILURE)
-		ft_putstr_fd("COMMAND ERROR\n", 1);
+	if (ret > GNL_ERR)
+		return (exec_error(ret - 7));
 	free_str_array(args);
 	return (ret);
 }
