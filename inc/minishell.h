@@ -48,13 +48,12 @@
 
 enum		e_retcode
 {
-	PARSING_ERR, //to remove
 	CLEAN_EXIT = 2,
 	HOME_NOT_SET,
 	ARG_ERR,
 	MALLOC_ERR,
 	WRITE_ERR,
-	GNL_ERR
+	GNL_ERR,
 };
 
 enum e_redir_op

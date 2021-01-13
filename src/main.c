@@ -7,10 +7,22 @@
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
 
+static int			handle_eof(char **line, int ret)
+{
+	char	*tmp;
+
+	while (ret != SUCCESS)
+	{
+		ft_putstr_fd("  \b\b", STDIN_FILENO);
+		ret = get_next_line(STDIN_FILENO, &tmp);
+		*line = ft_strjoin(*line, tmp);
+	}
+	return (ret);
+}
+
 static int			get_input(char **line)
 {
 	int		ret;
-	char	*tmp;
 
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 	{
@@ -22,18 +34,10 @@ static int			get_input(char **line)
 		return (GNL_ERR);
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
-		if (ft_strcmp(*line , "") == 0)
+		if (ft_strcmp(*line, "") == 0)
 			return (CLEAN_EXIT);
 		else
-		{
-			while (ret != SUCCESS)
-			{
-				ft_putstr_fd("  \b\b", STDIN_FILENO);
-				ret = get_next_line(STDIN_FILENO, &tmp);
-				*line = ft_strjoin(*line, tmp);
-			}
-			return (ret);
-		}
+			return (handle_eof(line, ret));
 	}
 	return (SUCCESS);
 }
@@ -48,7 +52,7 @@ static int			main_loop(t_xe *xe)
 	if (ret == SUCCESS)
 	{
 		if ((ret = check_syntax(line)) != SUCCESS)
-			return (ret);
+			return (SUCCESS); // necessitates SUCCESS to avoid exiting but needs further error management
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		//printf("ret = %d\n", ret);
 		free(line);
@@ -58,9 +62,9 @@ static int			main_loop(t_xe *xe)
 
 int		exec_env_init(t_xe *xe, char **env_source)
 {
-	char		*shlvl;
-	char		*val;
-	int			tmp;
+	char	*shlvl;
+	char	*val;
+	int		tmp;
 	int		ret;
 
 	xe->env = dup_str_array(env_source);
@@ -80,7 +84,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 int		main(int argc, char **argv, char **env_source)
 {
 	int		ret;
-	t_xe 	*xe;
+	t_xe	*xe;
 
 	(void)argv;
 	ret = SUCCESS;
