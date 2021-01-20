@@ -6,6 +6,7 @@
 
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
+#include <fcntl.h>
 
 static int			handle_eof(char **line, int ret)
 {
@@ -81,6 +82,20 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	return (SUCCESS);
 }
 
+int		read_from_file(t_xe *xe, char **argv)
+{
+	int	fd;
+	int	flags;
+
+	flags = O_RDONLY;
+	fd = open(argv[1], flags);
+	if (fd < 0)
+		return (-1);
+	dup2(fd, STDIN_FILENO);
+	xe->backup_stdin = dup(STDIN_FILENO);
+	return (SUCCESS);
+}
+
 int		main(int argc, char **argv, char **env_source)
 {
 	int		ret;
@@ -94,8 +109,17 @@ int		main(int argc, char **argv, char **env_source)
 	ft_bzero(xe, sizeof(t_xe));
 	if (xe == NULL)
 		ret = MALLOC_ERR;
-	else if (argc != 1)
+	else if (argc > 2)
 		ret = ARG_ERR;
+	else if (argc == 2)
+	{
+		ret = exec_env_init(xe, env_source);
+		ret = read_from_file(xe, argv);
+		if (ret != SUCCESS)
+			return (ft_exit(ret, xe));
+		while (ret == SUCCESS)
+			ret = main_loop(xe);
+	}
 	else
 	{
 		signal_handler(); // err?
