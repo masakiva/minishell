@@ -81,7 +81,7 @@ int					ft_error(int ret, t_xe *xe)
 	if (ret >= SQUOTE_MISSING)// temp
 		return (parsing_error(ret - 9, xe));
 	else if (ret >= HOME_NOT_SET)
-		return (exec_error(ret - 7, xe));
+		return (exec_error(ret, xe));
 	else if (ret > CLEAN_EXIT)
 		err_output(ret);
 	else

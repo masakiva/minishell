@@ -85,6 +85,9 @@ static int	launch_ext(char **args, t_xe *xe)
 	char	**path;
 
 	ret = SUCCESS;
+	ret = get_var_pos(xe->env, "PATH", 4); // and with PATH unset?
+	if (ret == -1)
+		return (NO_SUCH_FILE);
 	tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
 	if (tmp == NULL)
 		return (M_ERROR);
