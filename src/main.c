@@ -53,7 +53,7 @@ static int			main_loop(t_xe *xe)
 	if (ret == SUCCESS)
 	{
 		if ((ret = check_syntax(line)) != SUCCESS)
-			return (SUCCESS); // necessitates SUCCESS to avoid exiting but needs further error management
+			return (parsing_error(ret, &(xe->stat_loc))); // necessitates SUCCESS to avoid exiting but needs further error management
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		//printf("ret = %d\n", ret);
 		free(line);

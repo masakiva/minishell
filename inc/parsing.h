@@ -62,6 +62,7 @@ typedef char	*(*t_parse)(t_state_machine *, char *);
 /*
 **	check_syntax.c
 */
+int		parsing_error(int err_code, int	*stat_loc);
 int		check_syntax(char *line);
 
 /*

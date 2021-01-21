@@ -1,6 +1,6 @@
 #include "parsing.h"
 
-int		parsing_error(int err_code)
+int		parsing_error(int err_code, int *stat_loc)
 {
 	const char		*err_msg[NB_PARSING_ERRORS] = {
 		"=== no error (here for padding) ===",
@@ -15,7 +15,8 @@ int		parsing_error(int err_code)
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
-	return (err_code);
+	*stat_loc = 2;
+	return (SUCCESS);
 }
 
 void	check_others(t_byte *flags, char c)
@@ -103,17 +104,17 @@ int		check_bsl_and_quotes(t_byte *flags, char c)
 int		final_checks(int flags)
 {
 	if (flags & S_BACKSL)
-		return (parsing_error(ESCAPE_NL));
+		return (ESCAPE_NL);
 	if (flags & S_APPEND)
-		return (parsing_error(REDIR_PATH_MISSING));
+		return (REDIR_PATH_MISSING);
 	if (flags & S_R_REDIR)
-		return (parsing_error(REDIR_PATH_MISSING));
+		return (REDIR_PATH_MISSING);
 	if (flags & S_L_REDIR)
-		return (parsing_error(REDIR_PATH_MISSING));
+		return (REDIR_PATH_MISSING);
 	if (flags & S_QUOTE)
-		return (parsing_error(SQUOTE_MISSING));
+		return (SQUOTE_MISSING);
 	if (flags & S_DQUOTE)
-		return (parsing_error(DQUOTE_MISSING));
+		return (DQUOTE_MISSING);
 	return (SUCCESS);
 }
 
@@ -136,7 +137,7 @@ int		check_syntax(char *line)
 		{
 			ret = check_bsl_and_quotes(&flags, line[i]);
 			if (ret != SUCCESS)
-				return (parsing_error(ret));
+				return (ret);
 			i++;
 		}
 	}

@@ -38,8 +38,13 @@ int		ft_unset(char **args, t_xe *xe)
 				return (MALLOC_ERR);
 		}
 		else
+		{
 			putstr_stderr("unset: Variable identifier (name) invalid\n"); // leaks si le write marche pas
+			xe->stat_loc = 1;
+			return (SUCCESS);
+		}
 		args++;
 	}
+	xe->stat_loc = 0;
 	return (SUCCESS);
 }

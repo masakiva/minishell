@@ -26,6 +26,7 @@ int		ft_cd(char **args, t_xe *xe)
 		perror("cd");
 		free(path);
 		free(oldpwd);
+		xe->stat_loc = 1;
 		return (SUCCESS); //notify failure anyway ?
 	}
 	env_replace_var("OLDPWD", oldpwd, xe);
@@ -33,5 +34,6 @@ int		ft_cd(char **args, t_xe *xe)
 	path = getcwd(NULL, 0);
 	env_replace_var("PWD", path, xe);
 	free(path);
+	xe->stat_loc = 0;
 	return (SUCCESS);
 }

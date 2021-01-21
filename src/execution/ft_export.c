@@ -218,5 +218,6 @@ int		ft_export(char **args, t_xe *xe)
 		if (ft_export_checks(args + 1, xe) != SUCCESS)
 			return (MALLOC_ERR);
 	}
+	xe->stat_loc = 0;
 	return (SUCCESS);
 }

@@ -19,5 +19,6 @@ int		ft_echo(char **args, t_xe *xe)
 	}
 	if (!(options & ECHO_N_OPTION))
 		ft_putchar_fd('\n', STDOUT_FILENO);
+	xe->stat_loc = 0;
 	return (SUCCESS);
 }
