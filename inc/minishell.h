@@ -100,7 +100,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc);
 **	free utils
 */
 
-void		print_tokens(t_list *tokens); // temp
+void	print_tokens(t_list *tokens); // temp
 void	free_token(void *content);
 void	free_command(void *content);
 void	free_commands(t_list **commands);
@@ -110,6 +110,7 @@ void	free_commands(t_list **commands);
 */
 
 void		putstr_stderr(const char *str);
+int			ft_error(int ret, t_xe *xe);
 int			ft_exit(enum e_retcode retcode, t_xe *xe);
 
 #endif

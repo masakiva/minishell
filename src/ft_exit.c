@@ -73,11 +73,10 @@ static int			err_output(int err_code)
 	}
 	else if (err_code < HOME_NOT_SET)
 		perror(err_msg(err_code - 3));
-	write(1, "exit\n", 7);
-	exit(EXIT_FAILURE);
+	return (SUCCESS);
 }
 
-int					ft_exit(enum e_retcode ret, t_xe *xe)
+int					ft_error(int ret, t_xe *xe)
 {
 	if (ret >= SQUOTE_MISSING)// temp
 		return (parsing_error(ret - 9, xe));
@@ -87,6 +86,12 @@ int					ft_exit(enum e_retcode ret, t_xe *xe)
 		err_output(ret);
 	else
 		putstr_stderr("ERROR CODE ERROR");// temp
+	return (SUCCESS);
+}
+
+int					ft_exit(enum e_retcode ret, t_xe *xe)
+{
+	ft_error(ret, xe);
 	free_str_array(xe->exported); // besoin de free?
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
