@@ -26,6 +26,8 @@ void	check_others(t_byte *flags, char c)
 			*flags -= S_R_REDIR;
 		if (*flags & S_L_REDIR)
 			*flags -= S_L_REDIR;
+		if (*flags & S_APPEND)
+			*flags -= S_APPEND;
 		if (*flags & S_EMPTY)
 			*flags -= S_EMPTY;
 		if (*flags & S_CMDSEP)

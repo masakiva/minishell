@@ -73,7 +73,7 @@ static int	child_task(char **path, char **args, t_xe *xe)
 	if (execve(cmd, args, xe->env) == ERROR)
 		perror("External function error:");
 	free(cmd); // does not free if execve succeeds
-	return (SUCCESS);
+	return (CLEAN_EXIT);
 }
 
 static int	launch_ext(char **args, t_xe *xe)
