@@ -13,7 +13,7 @@
 enum		e_exec_errcode
 {
 	HOME_NOT_SET = 7,
-	FILE_NOT_FOUND
+	NO_SUCH_FILE
 };
 
 enum		e_cmd_code
@@ -52,7 +52,7 @@ int		ft_env(char **args, t_xe *xe);
 **	utils
 */
 
-int		exec_error(int err_code);
+int		exec_error(int err_code, t_xe *xe);
 
 /*
 **	utils

@@ -66,7 +66,7 @@ static int	child_task(char **path, char **args, t_xe *xe)
 	if (dir_index == NOT_FOUND)
 	{
 		free_str_array(path);
-		return (FILE_NOT_FOUND); // other error code
+		return (NO_SUCH_FILE); // other error code
 	}
 	cmd = ft_strjoin(path[dir_index], "/");
 	cmd = ft_strjoin(cmd, args[0]);
@@ -187,7 +187,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 		return (MALLOC_ERR);
 	ret = command[cmd_code](args, xe);
 	if (ret >= HOME_NOT_SET)
-		return (exec_error(ret - 7));
+		return (exec_error(ret, xe));
 	free_str_array(args);
 	return (ret);
 }

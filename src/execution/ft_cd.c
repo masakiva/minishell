@@ -4,14 +4,16 @@
 
 int		ft_cd(char **args, t_xe *xe)
 {
+	int		ret;
 	char	*path;
 	char	*oldpwd;
 
 	if (args[1] == NULL)
 	{
-		path = get_var_value(xe->env, "HOME", 4);
-		if (path == NULL)
+		ret = get_var_pos(xe->env, "HOME", 4);
+		if (ret == -1)
 			return (HOME_NOT_SET);
+		path = get_var_value(xe->env, "HOME", 4);
 	}
 	else
 		path = ft_strdup(args[1]);
