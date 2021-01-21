@@ -22,8 +22,10 @@ void	check_others(t_byte *flags, char c)
 {
 	if (!(ft_isspace(c)))
 	{
-		if (*flags & S_REDIR)
-			*flags -= S_REDIR;
+		if (*flags & S_R_REDIR)
+			*flags -= S_R_REDIR;
+		if (*flags & S_L_REDIR)
+			*flags -= S_L_REDIR;
 		if (*flags & S_EMPTY)
 			*flags -= S_EMPTY;
 		if (*flags & S_CMDSEP)
@@ -33,10 +35,22 @@ void	check_others(t_byte *flags, char c)
 
 int		check_redirs_and_cmdsep(t_byte *flags, char c)
 {
-	if (c == '>' || c == '<')
+	if (c == '>')
 	{
-		if (!(*flags & S_REDIR))
-			*flags += S_REDIR;
+		if ((*flags & S_R_REDIR))
+		{
+			*flags += S_APPEND;
+			*flags -= S_R_REDIR;
+		}
+		else if (!(*flags & S_R_REDIR) && !(*flags & S_L_REDIR))
+			*flags += S_R_REDIR;
+		else
+			return (REDIR_PATH_MISSING);
+	}
+	else if (c == '<')
+	{
+		if (!(*flags & S_L_REDIR) && !(*flags & S_R_REDIR))
+			*flags += S_L_REDIR;
 		else
 			return (REDIR_PATH_MISSING);
 	}
@@ -46,7 +60,7 @@ int		check_redirs_and_cmdsep(t_byte *flags, char c)
 			*flags += S_CMDSEP;
 		else
 			return (EMPTY_CMD);
-		if (*flags & S_REDIR)
+		if (*flags & S_R_REDIR || *flags & S_L_REDIR)
 			return (REDIR_PATH_MISSING);
 		if (*flags & S_EMPTY)
 			return (EMPTY_CMD);
@@ -88,7 +102,11 @@ int		final_checks(int flags)
 {
 	if (flags & S_BACKSL)
 		return (parsing_error(ESCAPE_NL));
-	if (flags & S_REDIR)
+	if (flags & S_APPEND)
+		return (parsing_error(REDIR_PATH_MISSING));
+	if (flags & S_R_REDIR)
+		return (parsing_error(REDIR_PATH_MISSING));
+	if (flags & S_L_REDIR)
 		return (parsing_error(REDIR_PATH_MISSING));
 	if (flags & S_QUOTE)
 		return (parsing_error(SQUOTE_MISSING));

@@ -9,8 +9,10 @@
 # define S_BACKSL	0x02
 # define S_QUOTE	0x04
 # define S_DQUOTE	0x08
-# define S_REDIR	0x10
-# define S_CMDSEP	0x20
+# define S_R_REDIR	0x10
+# define S_L_REDIR	0x20
+# define S_APPEND	0x40
+# define S_CMDSEP	0x80
 
 enum e_state
 {
