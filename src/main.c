@@ -53,7 +53,7 @@ static int			main_loop(t_xe *xe)
 	if (ret == SUCCESS)
 	{
 		if ((ret = check_syntax(line)) != SUCCESS)
-			return (parsing_error(ret, &(xe->stat_loc))); // necessitates SUCCESS to avoid exiting but needs further error management
+			return (ret); // necessitates SUCCESS to avoid exiting but needs further error management
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		//printf("ret = %d\n", ret);
 		free(line);
@@ -127,7 +127,7 @@ int		main(int argc, char **argv, char **env_source)
 		ret = exec_env_init(xe, env_source);
 		if (ret != SUCCESS)
 			return (ft_exit(ret, xe));
-		while (ret == SUCCESS)
+		while (ret != CLEAN_EXIT)
 			ret = main_loop(xe);
 	}
 	return (ft_exit(ret, xe));

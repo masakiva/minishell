@@ -31,8 +31,7 @@ enum e_state
 
 enum e_parsing_error
 {
-	NO_ERROR,
-	SQUOTE_MISSING,
+	SQUOTE_MISSING = 9,
 	DQUOTE_MISSING,
 	ESCAPE_NL,
 	REDIR_PATH_INVALID,
@@ -62,7 +61,7 @@ typedef char	*(*t_parse)(t_state_machine *, char *);
 /*
 **	check_syntax.c
 */
-int		parsing_error(int err_code, int	*stat_loc);
+int		parsing_error(int err_code, t_xe *xe);
 int		check_syntax(char *line);
 
 /*
