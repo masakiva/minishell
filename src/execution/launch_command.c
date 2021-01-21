@@ -186,7 +186,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
 	ret = command[cmd_code](args, xe);
-	if (ret > GNL_ERR)
+	if (ret >= HOME_NOT_SET)
 		return (exec_error(ret - 7));
 	free_str_array(args);
 	return (ret);
