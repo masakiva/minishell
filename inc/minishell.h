@@ -75,6 +75,7 @@ typedef struct		s_command
 typedef struct		s_xe
 {
 	pid_t	gpid;
+	int		child;
 	int		backup_stdin;
 	int		backup_stdout;
 	int		stat_loc;

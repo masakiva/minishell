@@ -15,5 +15,8 @@ int		exec_error(int err_code, t_xe *xe)
 		xe->stat_loc = 1;
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
-	return (SUCCESS);
+	if (xe->child == 1)
+		return (CLEAN_EXIT);
+	else
+		return (SUCCESS);
 }

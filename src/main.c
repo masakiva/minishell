@@ -69,6 +69,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	int		ret;
 
 	xe->env = dup_str_array(env_source);
+	xe->child = 0;
 	if (xe->env == NULL)
 		ret = MALLOC_ERR;
 	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));

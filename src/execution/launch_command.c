@@ -59,6 +59,7 @@ static int	child_task(char **path, char **args, t_xe *xe)
 	char	*cmd;
 	int		dir_index;
 
+	xe->child = 1;
 	if (ft_strchr(args[0], '/') != NULL)
 		if (execve(args[0], args, xe->env) == ERROR)
 			perror("External function error:");
