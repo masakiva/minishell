@@ -130,6 +130,7 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	}
 	free(var_value);
 	line += var_name_len;
+	machine->var_state = TRUE;
 	return (line);
 }
 
@@ -137,7 +138,9 @@ int		add_arg(t_state_machine *machine)
 {
 	if (reset_buf(machine) == FAILURE)
 		return (FAILURE);
-	*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack, machine->cur_arg);
+	if (machine->var_state == FALSE || machine->cur_arg[0] != '\0')
+		*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack, machine->cur_arg);
+	machine->var_state = FALSE;
 	if (*machine->cur_token_stack == NULL)
 	{
 		free(machine->cur_arg);

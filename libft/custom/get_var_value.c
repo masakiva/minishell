@@ -24,5 +24,5 @@ char	*get_var_value(char **vars, char *name, size_t name_len)
 			vars++;
 		}
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }
