@@ -79,6 +79,7 @@ typedef struct		s_xe
 	int		backup_stdin;
 	int		backup_stdout;
 	int		stat_loc;
+	uint8_t	pad[4];
 	char	*line;
 	char	**env;
 	char	**exported;
