@@ -66,7 +66,7 @@ static const char	*err_msg(int err_code)
 
 static int			err_output(int err_code)
 {
-	putstr_stderr("Error\n");
+	putstr_stderr("Error: ");
 	if (err_code == ARG_ERR || err_code == AMBIG_REDIR)
 	{
 		putstr_stderr(err_msg(err_code - 4));

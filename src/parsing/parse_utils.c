@@ -164,8 +164,8 @@ int		add_arg(t_state_machine *machine)
 	else if (machine->cur_token_stack == &machine->redir_paths)
 	{
 		machine->redir_types[0] = AMBIG;
-		free(machine->cur_arg);
-		machine->cur_arg = NULL;
+		free(machine->cur_arg); // Double free
+		machine->cur_arg = NULL; // Double free
 		return (FAILURE);
 	}
 	return (SUCCESS);

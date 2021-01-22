@@ -175,7 +175,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 	command->args = machine.args;
 	if (*line == NULL)
 	{
-		if (machine.redir_types[0] == TRUE)
+		if (machine.redir_types[0] == AMBIG)
 			return (AMBIG_REDIR);
 		return (FAILURE);
 	}
