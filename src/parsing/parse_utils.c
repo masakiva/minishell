@@ -101,6 +101,12 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	i = 0;
 	if (ft_isspace(var_value[i]) && machine->cur_arg[0] != '\0')
 	{
+		if (machine->cur_token_stack == &machine->redir_paths)
+		{
+			machine->ambig_redir = TRUE;
+			free(var_value);
+			return (NULL);
+		}
 		if (add_arg(machine) == FAILURE)
 		{
 			free(var_value);
@@ -114,6 +120,12 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	{
 		if (ft_isspace(var_value[i]))
 		{
+			if (machine->cur_token_stack == &machine->redir_paths)
+			{
+				machine->ambig_redir = TRUE;
+				free(var_value);
+				return (NULL);
+			}
 			if (add_arg(machine) == FAILURE)
 			{
 				free(var_value);
@@ -148,6 +160,12 @@ int		add_arg(t_state_machine *machine)
 			return (FAILURE);
 		}
 		machine->cur_arg = NULL;
+	}
+	else if (machine->cur_token_stack == &machine->redir_paths)
+	{
+		machine->ambig_redir = TRUE;
+		free(machine->cur_arg);
+		return (FAILURE);
 	}
 	return (SUCCESS);
 }

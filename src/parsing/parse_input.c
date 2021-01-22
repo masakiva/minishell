@@ -2,19 +2,12 @@
 
 char	*angle_bracket(t_state_machine *machine, char *line)
 {
-//	if (reset_buf(machine) == FAILURE)
-//		return(NULL);
-//	if (machine->cur_token->redir != NO_REDIR)
-//		machine->error = REDIR_PATH_INVALID;
-//	else
-//	{
 	line = new_redir_info(machine, line);
 	if (line == NULL)
 		return (NULL);
 	line++;
 	machine->state = SPACE;
 	machine->cur_token_stack = &machine->redir_paths;
-//	}
 	return (line);
 }
 
@@ -181,7 +174,11 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 	command->redir_types = machine.redir_types;
 	command->args = machine.args;
 	if (*line == NULL)
+	{
+		if (machine.ambig_redir == TRUE)
+			return (AMBIG_REDIR);
 		return (FAILURE);
+	}
 //	ft_printarray_fd(machine.args, STDOUT_FILENO);
 //	printf("REDIR PATHS:\n");
 //	ft_printarray_fd(machine.redir_paths, STDOUT_FILENO);
@@ -208,8 +205,10 @@ t_command	*parse_one_command(t_xe *xe)
 	ret = parse_input(&xe->line, xe->env, xe->stat_loc, cur_command);
 	if (ret == FAILURE)
 	{
-		free(cur_command);
+		free(cur_command); // et args, redir_paths et types
 		return (NULL);
 	}
+	else if (ret == AMBIG_REDIR)
+		;
 	return (cur_command);
 }

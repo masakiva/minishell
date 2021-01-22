@@ -101,14 +101,16 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	cur_command = parse_one_command(xe);
 	if (cur_command == NULL)
 		return (MALLOC_ERR);
-	if (cur_command->args != NULL)
-	{
-		return (handle_command(cur_command, xe, fd_in, proc));
-	}
-	else
-	{
-		dup2(xe->backup_stdout, STDOUT_FILENO);
-		dup2(xe->backup_stdin, STDIN_FILENO);
+(void)fd_in;
+(void)proc;
+//	if (cur_command->args != NULL)
+//	{
+//		return (handle_command(cur_command, xe, fd_in, proc));
+//	}
+//	else
+//	{
+//		dup2(xe->backup_stdout, STDOUT_FILENO);
+//		dup2(xe->backup_stdin, STDIN_FILENO);
 		return (SUCCESS);
-	}
+//	}
 }

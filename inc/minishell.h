@@ -54,6 +54,7 @@ enum		e_retcode
 	MALLOC_ERR,
 	WRITE_ERR,
 	GNL_ERR,
+	AMBIG_REDIR
 };
 
 enum e_redir_op
