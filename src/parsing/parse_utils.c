@@ -164,8 +164,7 @@ int		add_arg(t_state_machine *machine)
 	else if (machine->cur_token_stack == &machine->redir_paths)
 	{
 		machine->redir_types[0] = AMBIG;
-		free(machine->cur_arg); // Double free
-		machine->cur_arg = NULL; // Double free
+		free(machine->cur_arg); // Double free with parse input, remove this one ?
 		return (FAILURE);
 	}
 	return (SUCCESS);

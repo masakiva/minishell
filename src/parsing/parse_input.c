@@ -168,7 +168,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 		if (*line == NULL)
 			break ;
 	}
-	free(machine.cur_arg);
+//	free(machine.cur_arg); //Double free, remove this one ?
 	command->pipe_flag = machine.pipe_flag;
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;
