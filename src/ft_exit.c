@@ -39,7 +39,7 @@ int		exec_error(int err_code, t_xe *xe)
 
 	(void)err_msg;
 	ft_putstr_fd("minishell: command error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - 7], STDERR_FILENO);
+	ft_putstr_fd(err_msg[err_code - 8], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	// have to set stat_loc as well !!!
 	if (err_code == HOME_NOT_SET)
@@ -47,7 +47,7 @@ int		exec_error(int err_code, t_xe *xe)
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
 	if (xe->child == 1)
-		return (CLEAN_EXIT);
+		return (CHILD_EXIT);
 	else
 		return (SUCCESS);
 }
@@ -68,23 +68,33 @@ static int			err_output(int err_code)
 	putstr_stderr("Error\n");
 	if (err_code == ARG_ERR)
 	{
-		putstr_stderr(err_msg(err_code - 3));
+		putstr_stderr(err_msg(err_code - 4));
 		putstr_stderr("\n");
 	}
 	else if (err_code < HOME_NOT_SET)
-		perror(err_msg(err_code - 3));
+		perror(err_msg(err_code - 4));
 	return (SUCCESS);
+}
+
+int				clean_and_exit(int ret, t_xe *xe)
+{
+	free_str_array(xe->exported); // besoin de free?
+	free_str_array(xe->env); // besoin de free?
+	free(xe);
+	if (ret != CHILD_EXIT)
+		write(1, "exit\n", 5);
+	exit(EXIT_SUCCESS);
 }
 
 int					ft_error(int ret, t_xe *xe)
 {
-	if (ret == CLEAN_EXIT)
-		return (ft_exit(ret, xe));
+	if (ret == CLEAN_EXIT || ret == CHILD_EXIT)
+		return (clean_and_exit(ret, xe));
 	else if (ret >= SQUOTE_MISSING)// temp
-		return (parsing_error(ret - 9, xe));
+		return (parsing_error(ret - 10, xe));
 	else if (ret >= HOME_NOT_SET)
 		return (exec_error(ret, xe));
-	else if (ret > CLEAN_EXIT)
+	else if (ret > CHILD_EXIT)
 		err_output(ret);
 	else
 		putstr_stderr("ERROR CODE ERROR");// temp
@@ -94,9 +104,5 @@ int					ft_error(int ret, t_xe *xe)
 int					ft_exit(enum e_retcode ret, t_xe *xe)
 {
 	ft_error(ret, xe);
-	free_str_array(xe->exported); // besoin de free?
-	free_str_array(xe->env); // besoin de free?
-	free(xe);
-	write(1, "exit\n", 5);
-	exit(EXIT_SUCCESS);
+	return (clean_and_exit(ret, xe));
 }

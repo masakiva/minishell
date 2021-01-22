@@ -31,7 +31,7 @@ enum e_state
 
 enum e_parsing_error
 {
-	SQUOTE_MISSING = 9,
+	SQUOTE_MISSING = 10,
 	DQUOTE_MISSING,
 	ESCAPE_NL,
 	REDIR_PATH_INVALID,

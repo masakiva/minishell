@@ -65,16 +65,13 @@ static int	child_task(char **path, char **args, t_xe *xe)
 			perror("External function error:");
 	dir_index = search_exec(path, args[0]);
 	if (dir_index == NOT_FOUND)
-	{
-		free_str_array(path);
 		return (NO_SUCH_FILE); // other error code
-	}
 	cmd = ft_strjoin(path[dir_index], "/");
 	cmd = ft_strjoin(cmd, args[0]);
 	if (execve(cmd, args, xe->env) == ERROR)
 		perror("External function error:");
 	free(cmd); // does not free if execve succeeds
-	return (CLEAN_EXIT);
+	return (CHILD_EXIT);
 }
 
 static int	launch_ext(char **args, t_xe *xe)
@@ -95,7 +92,6 @@ static int	launch_ext(char **args, t_xe *xe)
 	free(tmp);
 	if (path == NULL)
 		return (M_ERROR);
-//	free_str_array(path);
 	pid = fork();
 	if (pid == 0)
 	{

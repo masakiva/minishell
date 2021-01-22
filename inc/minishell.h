@@ -49,6 +49,7 @@
 enum		e_retcode
 {
 	CLEAN_EXIT = 2,
+	CHILD_EXIT,
 	ARG_ERR,
 	MALLOC_ERR,
 	WRITE_ERR,
