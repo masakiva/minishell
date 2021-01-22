@@ -137,6 +137,7 @@ char	*letter(t_state_machine *machine, char *line)
 		if (add_arg(machine) == FAILURE)
 			return (NULL);
 		machine->cur_token_stack = &machine->args;
+		machine->var_state = FALSE;
 		machine->state = SPACE;
 	}
 	else
@@ -174,6 +175,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 		if (*line == NULL)
 			break ;
 	}
+	free(machine.cur_arg);
 	command->pipe_flag = machine.pipe_flag;
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;

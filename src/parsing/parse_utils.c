@@ -139,14 +139,16 @@ int		add_arg(t_state_machine *machine)
 	if (reset_buf(machine) == FAILURE)
 		return (FAILURE);
 	if (machine->var_state == FALSE || machine->cur_arg[0] != '\0')
-		*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack, machine->cur_arg);
-	machine->var_state = FALSE;
-	if (*machine->cur_token_stack == NULL)
 	{
-		free(machine->cur_arg);
-		return (FAILURE);
+		*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack,
+				machine->cur_arg);
+		if (*machine->cur_token_stack == NULL)
+		{
+			free(machine->cur_arg);
+			return (FAILURE);
+		}
+		machine->cur_arg = NULL;
 	}
-	machine->cur_arg = NULL;
 	return (SUCCESS);
 }
 
