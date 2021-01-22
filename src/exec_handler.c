@@ -103,6 +103,11 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	cur_command = parse_one_command(xe);
 	if (cur_command == NULL)
 		return (MALLOC_ERR);
+	if (cur_command->redir_types != NULL && cur_command->redir_types[0] == AMBIG)
+	{
+		free_command(cur_command);
+		return (AMBIG_REDIR);
+	}
 	if (cur_command->args != NULL)
 	{
 		return (handle_command(cur_command, xe, fd_in, proc));

@@ -62,7 +62,8 @@ enum e_redir_op
 	NO_REDIR,
 	FILEIN,
 	FILEOUT,
-	APPEND
+	APPEND,
+	AMBIG
 };
 
 typedef struct		s_command

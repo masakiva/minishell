@@ -209,6 +209,6 @@ t_command	*parse_one_command(t_xe *xe)
 		return (NULL);
 	}
 	else if (ret == AMBIG_REDIR)
-		;
+		cur_command->redir_types[0] = AMBIG;
 	return (cur_command);
 }

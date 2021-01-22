@@ -12,7 +12,7 @@
 
 enum		e_exec_errcode
 {
-	HOME_NOT_SET = 8,
+	HOME_NOT_SET = 9,
 	NO_SUCH_FILE
 };
 

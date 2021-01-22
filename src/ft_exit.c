@@ -24,7 +24,7 @@ int		parsing_error(int err_code, t_xe *xe)
 
 	(void)err_msg;
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code], STDERR_FILENO);
+	ft_putstr_fd(err_msg[err_code - 11], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	xe->stat_loc = 2;
 	return (SUCCESS);
@@ -39,7 +39,7 @@ int		exec_error(int err_code, t_xe *xe)
 
 	(void)err_msg;
 	ft_putstr_fd("minishell: command error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - 8], STDERR_FILENO);
+	ft_putstr_fd(err_msg[err_code - 9], STDERR_FILENO);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	// have to set stat_loc as well !!!
 	if (err_code == HOME_NOT_SET)
@@ -54,11 +54,12 @@ int		exec_error(int err_code, t_xe *xe)
 
 static const char	*err_msg(int err_code)
 {
-	const char	*msg[] = {
+	const char	*msg[5] = {
 		"Minishell takes no argument",
 		"Memory allocation failure",
 		"Cannot write on standard output",
-		"Cannot read standard input (GNL error)"};
+		"Cannot read standard input (GNL error)"
+		"Ambiguous redirection"};
 
 	return (msg[err_code]);
 }
@@ -91,7 +92,7 @@ int					ft_error(int ret, t_xe *xe)
 	if (ret == CLEAN_EXIT || ret == CHILD_EXIT)
 		return (clean_and_exit(ret, xe));
 	else if (ret >= SQUOTE_MISSING)// temp
-		return (parsing_error(ret - 10, xe));
+		return (parsing_error(ret, xe));
 	else if (ret >= HOME_NOT_SET)
 		return (exec_error(ret, xe));
 	else if (ret > CHILD_EXIT)
