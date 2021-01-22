@@ -104,7 +104,11 @@ static int	launch_ext(char **args, t_xe *xe)
 		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
 		free_str_array(path);
-		if (xe->stat_loc > 256)
+		if (WIFSIGNALED(xe->stat_loc)) // check this return value
+		{
+			xe->stat_loc = 128 + WTERMSIG(xe->stat_loc);
+		}
+		else if (xe->stat_loc > 256)
 			xe->stat_loc = xe->stat_loc / 256;
 		signal_handler();
 	}

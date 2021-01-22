@@ -63,7 +63,11 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	i = 0;
 	while (i < proc)
 	{
-		wait(NULL);
+		wait(&xe->stat_loc);
+		if (WIFSIGNALED(xe->stat_loc)) // check this return value!
+		{
+			xe->stat_loc += 128;
+		}
 		i++;
 	}
 	if (ret != SUCCESS)
