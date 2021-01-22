@@ -58,7 +58,7 @@ static const char	*err_msg(int err_code)
 		"Minishell takes no argument",
 		"Memory allocation failure",
 		"Cannot write on standard output",
-		"Cannot read standard input (GNL error)"
+		"Cannot read standard input (GNL error)",
 		"Ambiguous redirection"};
 
 	return (msg[err_code]);
@@ -67,7 +67,7 @@ static const char	*err_msg(int err_code)
 static int			err_output(int err_code)
 {
 	putstr_stderr("Error\n");
-	if (err_code == ARG_ERR)
+	if (err_code == ARG_ERR || err_code == AMBIG_REDIR)
 	{
 		putstr_stderr(err_msg(err_code - 4));
 		putstr_stderr("\n");

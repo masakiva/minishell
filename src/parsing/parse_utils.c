@@ -165,6 +165,7 @@ int		add_arg(t_state_machine *machine)
 	{
 		machine->ambig_redir = TRUE;
 		free(machine->cur_arg);
+		machine->cur_arg = NULL;
 		return (FAILURE);
 	}
 	return (SUCCESS);
