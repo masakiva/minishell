@@ -33,7 +33,8 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	{
 		child_setup(fd, fd_in);
 		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
-		return (CLEAN_EXIT);
+		free_command(cur_command);
+		return (CHILD_EXIT);
 	}
 	else
 	{
@@ -56,6 +57,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 			close(fd_in);
 	}
 	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
+	free_command(cur_command);
 	dup2(xe->backup_stdout, STDOUT_FILENO);
 	dup2(xe->backup_stdin, STDIN_FILENO);
 	i = 0;
@@ -101,16 +103,15 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	cur_command = parse_one_command(xe);
 	if (cur_command == NULL)
 		return (MALLOC_ERR);
-(void)fd_in;
-(void)proc;
-//	if (cur_command->args != NULL)
-//	{
-//		return (handle_command(cur_command, xe, fd_in, proc));
-//	}
-//	else
-//	{
-//		dup2(xe->backup_stdout, STDOUT_FILENO);
-//		dup2(xe->backup_stdin, STDIN_FILENO);
+	if (cur_command->args != NULL)
+	{
+		return (handle_command(cur_command, xe, fd_in, proc));
+	}
+	else
+	{
+		free_command(cur_command);
+		dup2(xe->backup_stdout, STDOUT_FILENO);
+		dup2(xe->backup_stdin, STDIN_FILENO);
 		return (SUCCESS);
-//	}
+	}
 }

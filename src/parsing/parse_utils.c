@@ -204,6 +204,8 @@ void		free_command(void *content)
 
 	command = (t_command *)content;
 	free_str_array(command->args);
+	free_str_array(command->redir_paths);
+	free(command->redir_types);
 	free(command);
 }
 

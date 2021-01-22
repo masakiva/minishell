@@ -205,7 +205,7 @@ t_command	*parse_one_command(t_xe *xe)
 	ret = parse_input(&xe->line, xe->env, xe->stat_loc, cur_command);
 	if (ret == FAILURE)
 	{
-		free(cur_command); // et args, redir_paths et types
+		free_command(cur_command); // et args, redir_paths et types
 		return (NULL);
 	}
 	else if (ret == AMBIG_REDIR)

@@ -192,6 +192,5 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	ret = command[cmd_code](args, xe);
 	if (ret >= HOME_NOT_SET)
 		return (ret);
-	free_str_array(args);
 	return (ret);
 }
