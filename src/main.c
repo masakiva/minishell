@@ -36,7 +36,10 @@ static int			get_input(char **line)
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
 		if (ft_strcmp(*line, "") == 0)
+		{
+			free(*line);
 			return (CLEAN_EXIT);
+		}
 		else
 			return (handle_eof(line, ret));
 	}
@@ -49,13 +52,16 @@ static int			main_loop(t_xe *xe)
 	char		*line;
 
 	ret = get_input(&line);
-	xe->line = line;
 	if (ret == SUCCESS)
 	{
-		if ((ret = check_syntax(line)) != SUCCESS)
+		xe->line = line;
+		ret = check_syntax(line);
+		if (ret != SUCCESS)
+		{
+			free(line);
 			return (ft_error(ret, xe));
+		}
 		ret = handle_execution(xe, STDIN_FILENO, 0);
-		//printf("ret = %d\n", ret);
 		free(line);
 		if (ret != SUCCESS)
 			return (ft_error(ret, xe));

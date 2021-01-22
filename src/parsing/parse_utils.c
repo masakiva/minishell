@@ -103,7 +103,7 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	{
 		if (machine->cur_token_stack == &machine->redir_paths)
 		{
-			machine->ambig_redir = TRUE;
+			machine->redir_types[0] = AMBIG;
 			free(var_value);
 			return (NULL);
 		}
@@ -122,7 +122,7 @@ char	*parse_variable(t_state_machine *machine, char *line)
 		{
 			if (machine->cur_token_stack == &machine->redir_paths)
 			{
-				machine->ambig_redir = TRUE;
+				machine->redir_types[0] = AMBIG;
 				free(var_value);
 				return (NULL);
 			}
@@ -163,7 +163,7 @@ int		add_arg(t_state_machine *machine)
 	}
 	else if (machine->cur_token_stack == &machine->redir_paths)
 	{
-		machine->ambig_redir = TRUE;
+		machine->redir_types[0] = AMBIG;
 		free(machine->cur_arg);
 		machine->cur_arg = NULL;
 		return (FAILURE);

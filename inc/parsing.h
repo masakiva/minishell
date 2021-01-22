@@ -54,8 +54,7 @@ typedef struct		s_state_machine
 	int				stat_loc;
 	t_byte			pipe_flag;
 	t_byte			var_state;
-	t_byte			ambig_redir;
-	uint8_t			pad[5];
+	uint8_t			pad[6];
 }					t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);
