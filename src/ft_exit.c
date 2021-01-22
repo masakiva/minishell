@@ -78,7 +78,9 @@ static int			err_output(int err_code)
 
 int					ft_error(int ret, t_xe *xe)
 {
-	if (ret >= SQUOTE_MISSING)// temp
+	if (ret == CLEAN_EXIT)
+		return (ft_exit(ret, xe));
+	else if (ret >= SQUOTE_MISSING)// temp
 		return (parsing_error(ret - 9, xe));
 	else if (ret >= HOME_NOT_SET)
 		return (exec_error(ret, xe));

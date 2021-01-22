@@ -84,10 +84,10 @@ static int	launch_ext(char **args, t_xe *xe)
 	char	*tmp;
 	char	**path;
 
-	ret = SUCCESS;
 	ret = get_var_pos(xe->env, "PATH", 4); // and with PATH unset?
 	if (ret == -1)
 		return (NO_SUCH_FILE);
+	ret = SUCCESS;
 	tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
 	if (tmp == NULL)
 		return (M_ERROR);
@@ -100,13 +100,16 @@ static int	launch_ext(char **args, t_xe *xe)
 	if (pid == 0)
 	{
 		ret = child_task(path, args, xe);
+		free_str_array(path);
 	}
 	else
 	{
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
-		xe->stat_loc = xe->stat_loc / 256;
+		free_str_array(path);
+		if (xe->stat_loc > 256)
+			xe->stat_loc = xe->stat_loc / 256;
 		signal_handler();
 	}
 	return (ret);

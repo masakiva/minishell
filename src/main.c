@@ -56,9 +56,9 @@ static int			main_loop(t_xe *xe)
 			return (ft_error(ret, xe));
 		ret = handle_execution(xe, STDIN_FILENO, 0);
 		//printf("ret = %d\n", ret);
+		free(line);
 		if (ret != SUCCESS)
 			return (ft_error(ret, xe));
-		free(line);
 	}
 	return (ret);
 }
