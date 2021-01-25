@@ -42,7 +42,10 @@ char	*quoted_backslash(t_state_machine *machine, char *line)
 char	*double_quote(t_state_machine *machine, char *line)
 {
 	if (*line == '"')
+	{
 		machine->state = LETTER;
+		machine->quote_state = TRUE;
+	}
 	else if (*line == '$')
 		machine->state = QUOTED_DOLLAR;
 	else if (*line == '\\')
@@ -62,6 +65,7 @@ char	*single_quote(t_state_machine *machine, char *line)
 	}
 	line++;
 	machine->state = LETTER;
+	machine->quote_state = TRUE;
 	return (line);
 }
 
@@ -130,6 +134,7 @@ char	*letter(t_state_machine *machine, char *line)
 		if (add_arg(machine) == FAILURE)
 			return (NULL);
 		machine->cur_token_stack = &machine->args;
+		machine->var_token_count = 0;
 		machine->var_state = FALSE;
 		machine->state = SPACE;
 	}
@@ -168,7 +173,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 		if (*line == NULL)
 			break ;
 	}
-//	free(machine.cur_arg); //Double free, remove this one ?
+	free(machine.cur_arg); //Double free, remove this one ?
 	command->pipe_flag = machine.pipe_flag;
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;

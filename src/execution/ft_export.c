@@ -41,7 +41,7 @@ int		print_export(char **env, char **exported)
 	i = 0;
 	while (variables[i] != NULL)
 	{
-		ft_putstr_fd("export ", STDOUT_FILENO);// change fd
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);// change fd
 		equalsign_pos = ft_index(variables[i], '=');
 		if (equalsign_pos != NOT_FOUND)
 		{

@@ -50,11 +50,13 @@ typedef struct		s_state_machine
 	char			**redir_paths;
 	char			***cur_token_stack;
 	enum e_redir_op	*redir_types;
+	size_t			var_token_count;
 	enum e_state	state;
 	int				stat_loc;
 	t_byte			pipe_flag;
 	t_byte			var_state;
-	uint8_t			pad[6];
+	t_byte			quote_state;
+	uint8_t			pad[5];
 }					t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);

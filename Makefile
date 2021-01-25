@@ -10,8 +10,6 @@ SRC	+= parse_input.c
 SRC += check_syntax.c
 SRC	+= parse_utils.c
 SRC	+= exec_handler.c
-#SRC	+= prepare_args.c
-#SRC	+= test.c #alternative to prepare_args.c
 
 SRC	+= launch_command.c
 SRC	+= options.c

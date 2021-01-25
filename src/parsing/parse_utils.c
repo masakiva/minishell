@@ -101,17 +101,12 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	i = 0;
 	if (ft_isspace(var_value[i]) && machine->cur_arg[0] != '\0')
 	{
-		if (machine->cur_token_stack == &machine->redir_paths)
-		{
-			machine->redir_types[0] = AMBIG;
-			free(var_value);
-			return (NULL);
-		}
 		if (add_arg(machine) == FAILURE)
 		{
 			free(var_value);
 			return (NULL);
 		}
+		machine->var_token_count++;
 		i++;
 	}
 	while (ft_isspace(var_value[i]))
@@ -120,18 +115,13 @@ char	*parse_variable(t_state_machine *machine, char *line)
 	{
 		if (ft_isspace(var_value[i]))
 		{
-			if (machine->cur_token_stack == &machine->redir_paths)
-			{
-				machine->redir_types[0] = AMBIG;
-				free(var_value);
-				return (NULL);
-			}
 			if (add_arg(machine) == FAILURE)
 			{
 				free(var_value);
 				return (NULL);
 			}
-			i++;
+			machine->var_token_count++;
+			i++; // optional
 			if (blank_str(var_value + i) == TRUE)
 				break ;
 			while (ft_isspace(var_value[i]))
@@ -150,23 +140,23 @@ int		add_arg(t_state_machine *machine)
 {
 	if (reset_buf(machine) == FAILURE)
 		return (FAILURE);
-	if (machine->var_state == FALSE || machine->cur_arg[0] != '\0')
+	if (machine->cur_token_stack == &machine->redir_paths
+			&& ((machine->var_token_count >= 1 && machine->cur_arg[0] != '\0')
+				|| (machine->var_state == TRUE && machine->var_token_count == 0
+					&& machine->cur_arg[0] == '\0')))
+	{
+		machine->redir_types[0] = AMBIG;
+		return (FAILURE);
+	}
+	else if (machine->quote_state == TRUE || machine->cur_arg[0] != '\0')
 	{
 		*machine->cur_token_stack = push_str_to_array(*machine->cur_token_stack,
 				machine->cur_arg);
 		if (*machine->cur_token_stack == NULL)
-		{
-			free(machine->cur_arg);
 			return (FAILURE);
-		}
 		machine->cur_arg = NULL;
 	}
-	else if (machine->cur_token_stack == &machine->redir_paths)
-	{
-		machine->redir_types[0] = AMBIG;
-		free(machine->cur_arg); // Double free with parse input, remove this one ?
-		return (FAILURE);
-	}
+	machine->quote_state = FALSE;
 	return (SUCCESS);
 }
 

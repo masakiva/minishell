@@ -12,7 +12,9 @@ man bash -> "Word splitting"
 
 add_to_buf malloc error!
 
-fichier src/test a supprimer
+print newline after "^C" for CTRL-C signal ("cat")
+
+create file when redirecting output without doing anything ("> a")
 
 if redirecting to variable that should be splitted
 ========> error message : "bash: $d : redirection ambiguë"
