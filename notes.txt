@@ -14,6 +14,8 @@ add_to_buf malloc error!
 
 print newline after "^C" for CTRL-C signal ("cat")
 
+echo > $unknown_var ; ls
+
 create file when redirecting output without doing anything ("> a")
 
 if redirecting to variable that should be splitted

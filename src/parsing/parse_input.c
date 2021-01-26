@@ -177,11 +177,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 	command->redir_types = machine.redir_types;
 	command->args = machine.args;
 	if (*line == NULL)
-	{
-		if (machine.redir_types[0] == AMBIG)
-			return (AMBIG_REDIR);
 		return (FAILURE);
-	}
 	return (SUCCESS);
 }
 
@@ -196,7 +192,7 @@ t_command	*parse_one_command(t_xe *xe)
 	ret = parse_input(&xe->line, xe->env, xe->stat_loc, cur_command);
 	if (ret == FAILURE)
 	{
-		free_command(cur_command); // et args, redir_paths et types
+		free_command(cur_command);
 		return (NULL);
 	}
 	return (cur_command);

@@ -137,7 +137,6 @@ int		add_arg(t_state_machine *machine)
 					&& machine->cur_arg[0] == '\0')))
 	{
 		machine->redir_types[0] = AMBIG;
-		return (FAILURE);
 	}
 	else if (machine->quote_state == TRUE || machine->cur_arg[0] != '\0')
 	{
