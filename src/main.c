@@ -56,15 +56,10 @@ static int			main_loop(t_xe *xe)
 	{
 		xe->line = line;
 		ret = check_syntax(line);
-		if (ret != SUCCESS)
-		{
-			free(line);
-			return (ft_error(ret, xe));
-		}
-		ret = handle_execution(xe, STDIN_FILENO, 0);
+		if (ret == SUCCESS)
+			ret = handle_execution(xe, STDIN_FILENO, 0);
 		free(line);
-		if (ret != SUCCESS)
-			return (ft_error(ret, xe));
+		ret = ft_error(ret, xe);
 	}
 	return (ret);
 }
@@ -74,12 +69,11 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	char	*shlvl;
 	char	*val;
 	int		tmp;
-	int		ret;
 
 	xe->env = dup_str_array(env_source);
 	xe->child = 0;
 	if (xe->env == NULL)
-		ret = MALLOC_ERR;
+		return (MALLOC_ERR);
 	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));
 //	printf("shlvl = %s\n", shlvl);
 	tmp = ft_atoi(shlvl);
@@ -91,15 +85,15 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	return (SUCCESS);
 }
 
-int		read_from_file(t_xe *xe, char **argv)
+int		read_from_file(t_xe *xe, char *file)
 {
 	int	fd;
 	int	flags;
 
 	flags = O_RDONLY;
-	fd = open(argv[1], flags);
-	if (fd < 0)
-		return (-1);
+	fd = open(file, flags);
+	if (fd == ERROR)
+		return (-1); // another error code
 	dup2(fd, STDIN_FILENO);
 	xe->backup_stdin = dup(STDIN_FILENO);
 	return (SUCCESS);
@@ -116,16 +110,15 @@ int		main(int argc, char **argv, char **env_source)
 	if (xe == NULL)
 		return (ft_exit(MALLOC_ERR, xe));
 	ft_bzero(xe, sizeof(t_xe));
-	if (xe == NULL)
-		ret = MALLOC_ERR;
-	else if (argc > 2)
+	if (argc > 2)
 		ret = ARG_ERR;
 	else if (argc == 2)
 	{
+		//signal_handler(); ?
 		ret = exec_env_init(xe, env_source);
-		ret = read_from_file(xe, argv);
-		if (ret != SUCCESS)
-			return (ft_exit(ret, xe));
+		ret = read_from_file(xe, argv[1]);
+		if (ret != SUCCESS) // needed?
+			return (ft_exit(ret, xe)); // needed?
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
 	}
@@ -133,9 +126,9 @@ int		main(int argc, char **argv, char **env_source)
 	{
 		signal_handler(); // err?
 		ret = exec_env_init(xe, env_source);
-		if (ret != SUCCESS)
-			return (ft_exit(ret, xe));
-		while (ret != CLEAN_EXIT && ret != FAILURE && ret != CHILD_EXIT)
+		if (ret != SUCCESS) // needed?
+			return (ft_exit(ret, xe)); // needed?
+		while (ret != CLEAN_EXIT && ret != FAILURE && ret != CHILD_EXIT) // why not while (ret == SUCCESS) ?
 			ret = main_loop(xe);
 	}
 	return (ft_exit(ret, xe));

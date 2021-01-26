@@ -97,8 +97,8 @@ int					ft_error(int ret, t_xe *xe)
 		return (exec_error(ret, xe));
 	else if (ret > CHILD_EXIT)
 		err_output(ret);
-	else
-		putstr_stderr("ERROR CODE ERROR");// temp
+	else if (ret != SUCCESS) // temp
+		putstr_stderr("ERROR CODE ERROR (printed for debug)");// temp
 	return (SUCCESS);
 }
 

@@ -77,15 +77,6 @@ char	*parse_quoted_variable(t_state_machine *machine, char *line)
 	return (line);
 }
 
-int			blank_str(char *line) // duplicate of empty_command
-{
-	while (ft_isspace(*line))
-		line++;
-	if (*line == '\0')
-		return (TRUE);
-	return (FALSE);
-}
-
 char	*parse_variable(t_state_machine *machine, char *line)
 {
 	size_t	var_name_len;

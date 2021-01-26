@@ -173,7 +173,7 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 		if (*line == NULL)
 			break ;
 	}
-	free(machine.cur_arg); //Double free, remove this one ?
+	free(machine.cur_arg);
 	command->pipe_flag = machine.pipe_flag;
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;
@@ -188,15 +188,6 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 //	printf("REDIR PATHS:\n");
 //	ft_printarray_fd(machine.redir_paths, STDOUT_FILENO);
 	return (SUCCESS);
-}
-
-int			empty_command(char *line)
-{
-	while (ft_isspace(*line))
-		line++;
-	if (*line == '\0')
-		return (TRUE);
-	return (FALSE);
 }
 
 t_command	*parse_one_command(t_xe *xe)

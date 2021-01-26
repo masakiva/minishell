@@ -21,7 +21,7 @@ SRC	+= ft_export.c
 SRC	+= ft_unset.c
 SRC	+= ft_env.c
 
-SRC	+= ft_exit.c
+SRC	+= ft_error.c
 
 vpath %.c $(SRC_DIR)
 

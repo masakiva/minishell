@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/10 14:50:24 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/26 12:18:43 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ ssize_t			ft_index(char *haystack, char needle);
 void			ft_swap(void **a, void **b);
 
 int				ft_isspace(int c);
+int				blank_str(char *line);
 int				ft_isset(char c, char *set);
 int				ft_strcmp(const char *s1, const char *s2);
 char			*strjoin_free(char *s1, char const *s2);
