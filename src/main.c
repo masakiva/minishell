@@ -6,7 +6,7 @@
 
 #include <sys/types.h> // waitpid
 #include <sys/wait.h> // waitpid
-#include <fcntl.h>
+#include <fcntl.h> // open
 
 static int			handle_eof(char **line, int ret)
 {
@@ -67,19 +67,22 @@ static int			main_loop(t_xe *xe)
 int		exec_env_init(t_xe *xe, char **env_source)
 {
 	char	*shlvl;
-	char	*val;
 	int		tmp;
 
 	xe->env = dup_str_array(env_source);
-	xe->child = 0;
 	if (xe->env == NULL)
 		return (MALLOC_ERR);
 	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));
-//	printf("shlvl = %s\n", shlvl);
+	if (shlvl == NULL)
+		return (MALLOC_ERR);
 	tmp = ft_atoi(shlvl);
+	free(shlvl);
 	tmp += 1;
-	val = ft_itoa(tmp);
-	env_replace_var(SHLVL_STR, val, xe);
+	shlvl = ft_itoa(tmp);
+	if (shlvl == NULL)
+		return (MALLOC_ERR);
+	env_replace_var(SHLVL_STR, shlvl, xe);
+	free(shlvl);
 	xe->backup_stdin = dup(STDIN_FILENO);
 	xe->backup_stdout = dup(STDOUT_FILENO);
 	return (SUCCESS);
@@ -122,7 +125,7 @@ int		main(int argc, char **argv, char **env_source)
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
 	}
-	else
+	else // merge with else if (argc == 2) ?
 	{
 		signal_handler(); // err?
 		ret = exec_env_init(xe, env_source);

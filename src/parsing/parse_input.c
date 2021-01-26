@@ -161,8 +161,6 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 		single_quote, double_quote, quoted_backslash, quoted_dollar, angle_bracket};
 	t_state_machine	machine;
 
-	if ((*line)[0] == '.' && (*line)[1] == '\0')
-		exit(EXIT_FAILURE);
 	ft_bzero(&machine, sizeof(machine));
 	machine.env = env;
 	machine.stat_loc = stat_loc;
@@ -184,9 +182,6 @@ int		parse_input(char **line, char **env, int stat_loc, t_command *command)
 			return (AMBIG_REDIR);
 		return (FAILURE);
 	}
-//	ft_printarray_fd(machine.args, STDOUT_FILENO);
-//	printf("REDIR PATHS:\n");
-//	ft_printarray_fd(machine.redir_paths, STDOUT_FILENO);
 	return (SUCCESS);
 }
 
