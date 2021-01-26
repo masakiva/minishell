@@ -1,51 +1,42 @@
-'make lib' -> quand on change un truc dans la lib, ou qu'on veut recompiler tout src sans recompiler la lib (par ex pour mettre/retirer d=0)
-
-man bash -> "Word splitting"
-	Explicit  null  arguments ("" or '') are retained and passed to commands as
-	empty strings.  Unquoted implicit null arguments, resulting from the expansion
-	of parameters that have no values, are removed.  If a parameter with no value
-	is expanded within double quotes, a null argument results and is retained and
-	passed to a command as an empty string.   When a quoted null argument appears
-	as part of a word whose expansion is non-null, the null argument is removed.
-	That is, the word -d'' becomes -d after word splitting and null argu‐ ment
-	removal.
-
-add_to_buf malloc error!
-
+arthur:
 print newline after "^C" for CTRL-C signal ("cat")
+same for CTRL-\, after "^\Quit"
 
-echo > $unknown_var ; ls
+CTRL-D apres avoir ecrit un debut de cmd
+
+echo > $unknown_var ; ls (redir ambigue mais il fait quand meme ls)
 
 create file when redirecting output without doing anything ("> a")
 
-if redirecting to variable that should be splitted
-========> error message : "bash: $d : redirection ambiguë"
+commande "."
 
-env -i ./minishell (run minishell with empty environment)
+compare with bash: "cat | exit"
 
-run "yes", abort with CTRL-\ and check "echo $?" -> 131 (130 for CTRL-C)
+"cat |"
+then "ls"
+
+
+
+
+
+masaki:
+add_to_buf malloc error!
+
+
+
+
 
 ajouter des errno = 0 ?
-
-testlines pour multipipes :
-cat | cat | ls
-cat /dev/urandom | cat
-ls -la | grep oct | tr -dc '0-9'
-compare with bash:
-"cat | exit"
-"sleep 5 | sleep 5 | sleep 5|"
-
-syntax test :
-"ls |" -> différent de "ls ;" ?
-
-references pour gestion des signaux : https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
-
-commande "."
 
 builtins: set stat_loc?
 
 mkdir ok; cd ok; rmdir ../ok; pwd
 
+
+
+
+
+references pour gestion des signaux : https://indradhanush.github.io/blog/writing-a-unix-shell-part-3/
 
 trop bizarre la len d'un token ne peut pas etre superieure a 4095 sur linux
 et on peut pas ecrire plus de 1023 (ou 2047?) chars apres le prompt sur mac
