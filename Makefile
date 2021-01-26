@@ -6,9 +6,13 @@ SRC_DIR		+= src/execution/
 
 SRC	+= main.c
 SRC	+= signal_handling.c
-SRC	+= parse_input.c
+
 SRC += check_syntax.c
+SRC	+= parsing_handler.c
+SRC += parsing_states1.c
+SRC += parsing_states2.c
 SRC	+= parse_utils.c
+
 SRC	+= exec_handler.c
 
 SRC	+= launch_command.c

@@ -49,7 +49,11 @@ int		parse_exit_status(t_state_machine *machine)
 	i = 0;
 	while (value[i] != '\0')
 	{
-		add_to_buf(machine, value[i]);
+		if (add_to_buf(machine, value[i]) == FAILURE)
+		{
+			free(value);
+			return (FAILURE);
+		}
 		i++;
 	}
 	free(value);
@@ -69,13 +73,21 @@ char	*parse_quoted_variable(t_state_machine *machine, char *line)
 	i = 0;
 	while (var_value[i] != '\0')
 	{
-		add_to_buf(machine, var_value[i]);
+		if (add_to_buf(machine, var_value[i]) == FAILURE)
+		{
+			free(var_value);
+			return (NULL);
+		}
 		i++;
 	}
 	free(var_value);
 	line += var_name_len;
 	return (line);
 }
+
+//int		add_var_arg(t_state_machine *machine)
+//{
+//}
 
 char	*parse_variable(t_state_machine *machine, char *line)
 {
@@ -118,7 +130,11 @@ char	*parse_variable(t_state_machine *machine, char *line)
 			while (ft_isspace(var_value[i]))
 				i++;
 		}
-		add_to_buf(machine, var_value[i]);
+		if (add_to_buf(machine, var_value[i]) == FAILURE)
+		{
+			free(var_value);
+			return (NULL);
+		}
 		i++;
 	}
 	free(var_value);

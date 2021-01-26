@@ -68,11 +68,25 @@ int		parsing_error(int err_code, t_xe *xe);
 int		check_syntax(char *line);
 
 /*
-**	main function
+**	main functions
 */
 
-int		parse_input(char **line, char **env, int stat_loc, t_command *command);
 t_command	*parse_one_command(t_xe *xe);
+int		parse_input(char **line, char **env, int stat_loc, t_command *command);
+
+/*
+**	parsing states
+*/
+
+char	*space(t_state_machine *machine, char *line);
+char	*letter(t_state_machine *machine, char *line);
+char	*backslash(t_state_machine *machine, char *line);
+char	*dollar(t_state_machine *machine, char *line);
+char	*single_quote(t_state_machine *machine, char *line);
+char	*double_quote(t_state_machine *machine, char *line);
+char	*quoted_backslash(t_state_machine *machine, char *line);
+char	*quoted_dollar(t_state_machine *machine, char *line);
+char	*angle_bracket(t_state_machine *machine, char *line);
 
 /*
 **	utils
