@@ -83,6 +83,7 @@ int				clean_and_exit(int ret, t_xe *xe)
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
 	if (ret != CHILD_EXIT)
+	if (isatty(STDIN_FILENO)) // temp pour le testeur
 		write(1, "exit\n", 5);
 	exit(EXIT_SUCCESS);
 }

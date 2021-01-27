@@ -33,9 +33,17 @@ char	*double_quote(t_state_machine *machine, char *line)
 
 char	*quoted_backslash(t_state_machine *machine, char *line)
 {
-	if (!ft_isset(*line, "\\\"$"))
+	if (ft_isset(*line, "\\\"$"))
+	{
+		if (add_to_buf(machine, *line) == FAILURE)
+			return (NULL);
+		line++;
+	}
+	else
+	{
 		if (add_to_buf(machine, '\\') == FAILURE)
 			return (NULL);
+	}
 	machine->state = DOUBLE_QUOTE;
 	return (line);
 }

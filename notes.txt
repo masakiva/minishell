@@ -4,9 +4,13 @@ same for CTRL-\, after "^\Quit"
 
 CTRL-D apres avoir ecrit un debut de cmd
 
-echo > $unknown_var ; ls (redir ambigue mais il fait quand meme ls)
+$unknown_var ; ls ; ls (premiere commande vide mais il fait quand meme ls)
+
+echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
 
 create file when redirecting output without doing anything ("> a")
+
+error when redir_in file does not exist ("< unknown_file")
 
 commande "."
 
@@ -14,6 +18,11 @@ compare with bash: "cat | exit"
 
 "cat |"
 then "ls"
+
+check_syntax:
+echo "'"
+echo '\'
+echo '"'
 
 
 
@@ -29,6 +38,7 @@ builtins: set stat_loc?
 
 mkdir ok; cd ok; rmdir ../ok; pwd
 
+cd: leaks in getcwd
 
 
 
