@@ -20,6 +20,7 @@ static int	search_path(DIR *dirp, char *name)
 {
 	struct dirent	*buf;
 
+	errno = 0; // to distinguish the NULL ret value: end of stream, or error
 	buf = readdir(dirp);
 	while (buf != NULL)
 	{
@@ -27,6 +28,8 @@ static int	search_path(DIR *dirp, char *name)
 			return (SUCCESS);
 		buf = readdir(dirp);
 	}
+	if (errno != 0)
+		;//error
 	return (FAILURE);
 }
 
@@ -100,8 +103,8 @@ static int	launch_ext(char **args, t_xe *xe)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, SIG_IGN); // error if SIG_ERR? (check errno)
+		signal(SIGQUIT, SIG_IGN); // error if SIG_ERR? (check errno)
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
 		free_str_array(path);
 		if (WIFSIGNALED(xe->stat_loc)) // check this return value
@@ -110,7 +113,7 @@ static int	launch_ext(char **args, t_xe *xe)
 		}
 		else if (xe->stat_loc > 256)
 			xe->stat_loc = xe->stat_loc / 256;
-		signal_handler();
+		signal_handler(); // err
 	}
 	return (ret);
 }
