@@ -11,7 +11,8 @@ SRC += check_syntax.c
 SRC	+= parsing_handler.c
 SRC += parsing_states1.c
 SRC += parsing_states2.c
-SRC	+= parse_utils.c
+SRC += parsing_vars_redirs.c
+SRC	+= parsing_utils.c
 
 SRC	+= exec_handler.c
 

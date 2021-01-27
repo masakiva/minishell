@@ -20,7 +20,6 @@ then "ls"
 
 
 masaki:
-add_to_buf malloc error!
 
 
 
