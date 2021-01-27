@@ -19,8 +19,7 @@ int		ft_cd(char **args, t_xe *xe)
 		path = ft_strdup(args[1]);
 	if (path == NULL)
 		return (SUCCESS); // err
-	errno = 0;
-	oldpwd = getcwd(NULL, 0);
+	oldpwd = getcwd(NULL, 0); // error
 	if (chdir(path) == ERROR)
 	{
 		perror("cd");

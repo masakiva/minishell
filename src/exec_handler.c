@@ -9,8 +9,8 @@
 
 void		child_setup(const int *fd, int fd_in)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL); // error if SIG_ERR? (check errno)
+	signal(SIGQUIT, SIG_DFL); // error if SIG_ERR? (check errno)
 	close(fd[0]);// error
 	if (fd_in != STDIN_FILENO)
 	{

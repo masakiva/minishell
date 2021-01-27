@@ -14,7 +14,7 @@
 # define S_APPEND	0x40
 # define S_CMDSEP	0x80
 
-enum e_state
+enum	e_state
 {
 	SPACE,
 	LETTER,
@@ -29,7 +29,7 @@ enum e_state
 	NB_STATES
 };
 
-enum e_parsing_error
+enum	e_parsing_error
 {
 	SQUOTE_MISSING = 11,
 	DQUOTE_MISSING,
@@ -40,7 +40,7 @@ enum e_parsing_error
 	NB_PARSING_ERRORS
 };
 
-typedef struct		s_state_machine
+typedef struct	s_state_machine
 {
 	char			buf[BUF_SIZE];
 	size_t			len;
@@ -57,49 +57,58 @@ typedef struct		s_state_machine
 	t_byte			var_state;
 	t_byte			quote_state;
 	uint8_t			pad[5];
-}					t_state_machine;
+}				t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);
 
 /*
 **	check_syntax.c
 */
-int		parsing_error(int err_code, t_xe *xe);
-int		check_syntax(char *line);
+int				parsing_error(int err_code, t_xe *xe);
+int				check_syntax(char *line);
 
 /*
 **	main functions
 */
 
-t_command	*parse_one_command(t_xe *xe);
-int		parse_input(char **line, char **env, int stat_loc, t_command *command);
+t_command		*parse_one_command(t_xe *xe);
+int				parse_input(char **line, char **env, int stat_loc,
+		t_command *command);
 
 /*
 **	parsing states
 */
 
-char	*space(t_state_machine *machine, char *line);
-char	*letter(t_state_machine *machine, char *line);
-char	*backslash(t_state_machine *machine, char *line);
-char	*dollar(t_state_machine *machine, char *line);
-char	*single_quote(t_state_machine *machine, char *line);
-char	*double_quote(t_state_machine *machine, char *line);
-char	*quoted_backslash(t_state_machine *machine, char *line);
-char	*quoted_dollar(t_state_machine *machine, char *line);
-char	*angle_bracket(t_state_machine *machine, char *line);
+char			*space(t_state_machine *machine, char *line);
+char			*letter(t_state_machine *machine, char *line);
+char			*backslash(t_state_machine *machine, char *line);
+char			*dollar(t_state_machine *machine, char *line);
+char			*single_quote(t_state_machine *machine, char *line);
+char			*double_quote(t_state_machine *machine, char *line);
+char			*quoted_backslash(t_state_machine *machine, char *line);
+char			*quoted_dollar(t_state_machine *machine, char *line);
+char			*angle_bracket(t_state_machine *machine, char *line);
+
+/*
+**	variables
+*/
+
+char			*parse_variable(t_state_machine *machine, char *line);
+int				parse_exit_status(t_state_machine *machine);
+char			*parse_quoted_variable(t_state_machine *machine, char *line);
+
+/*
+**	redirs
+*/
+
+char			*new_redir_info(t_state_machine *machine, char *line);
 
 /*
 **	utils
 */
 
-int		new_command(t_list **commands);
-char	*new_redir_info(t_state_machine *machine, char *line);
-int		add_variable(t_list **var_list, size_t start, size_t len, t_byte split_flag);
-int		parse_exit_status(t_state_machine *machine);
-char	*parse_quoted_variable(t_state_machine *machine, char *line);
-char	*parse_variable(t_state_machine *machine, char *line);
-int		add_arg(t_state_machine *machine);
-int		reset_buf(t_state_machine *machine);
-int		add_to_buf(t_state_machine *machine, char c);
+int				add_to_buf(t_state_machine *machine, char c);
+int				reset_buf(t_state_machine *machine);
+int				add_arg(t_state_machine *machine);
 
 #endif

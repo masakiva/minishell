@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/26 12:18:43 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/27 11:54:32 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,6 @@ char			**push_str_to_array(char **array, char *str);
 char			**rm_str_from_array(char **array, size_t str_pos);
 void			sort_str_array(char **array);
 
+int				*push_int_to_array(int *array, size_t array_size, int nb);
 
 #endif
