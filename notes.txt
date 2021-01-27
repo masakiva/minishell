@@ -16,13 +16,10 @@ echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
 
 create file when redirecting output without doing anything ("> a")
 
-<<<<<<< HEAD
 =======
 error when redir_in file does not exist ("< unknown_file")
 
 commande "."
-
->>>>>>> c9a0ae73937d8cb518ce2bf2028d3f3c378803ec
 compare with bash: "cat | exit"
 
 "cat |"

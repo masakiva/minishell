@@ -6,11 +6,12 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 12:14:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/27 12:18:48 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/27 16:53:11 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+#include "libft.h"
 
 static int	add_var_args(t_state_machine *machine, char *var_value)
 {

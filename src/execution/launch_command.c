@@ -57,56 +57,23 @@ int	search_exec(char **path, char *name)
 	return (NOT_FOUND);
 }
 
-static int	child_task(char **path, char **args, t_xe *xe)
+static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 {
-	char	*cmd;
-	int		dir_index;
-
-	xe->child = 1;
-	if (ft_strchr(args[0], '/') != NULL)
-		if (execve(args[0], args, xe->env) == ERROR)
-			perror("External function error:");
-	dir_index = search_exec(path, args[0]);
-	if (dir_index == NOT_FOUND)
-		return (NO_SUCH_FILE); // other error code
-	cmd = ft_strjoin(path[dir_index], "/");
-	cmd = ft_strjoin(cmd, args[0]);
-	if (execve(cmd, args, xe->env) == ERROR)
-		perror("External function error:");
-	free(cmd); // does not free if execve succeeds
-	return (CHILD_EXIT);
-}
-
-static int	launch_ext(char **args, t_xe *xe)
-{
-	int		ret;
 	pid_t	pid;
-	char	*tmp;
-	char	**path;
 
-	ret = get_var_pos(xe->env, "PATH", 4); // and with PATH unset?
-	if (ret == -1)
-		return (NO_SUCH_FILE);
-	ret = SUCCESS;
-	tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
-	if (tmp == NULL)
-		return (M_ERROR);
-	path = ft_split(tmp, ':');
-	free(tmp);
-	if (path == NULL)
-		return (M_ERROR);
 	pid = fork();
 	if (pid == 0)
 	{
-		ret = child_task(path, args, xe);
-		free_str_array(path);
+		xe->child = 1;
+		if (execve(cmd, args, xe->env) == ERROR)
+			perror("External function error:");
+		return (CHILD_EXIT);
 	}
 	else
 	{
 		signal(SIGINT, SIG_IGN); // error if SIG_ERR? (check errno)
 		signal(SIGQUIT, SIG_IGN); // error if SIG_ERR? (check errno)
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
-		free_str_array(path);
 		if (WIFSIGNALED(xe->stat_loc)) // check this return value
 		{
 			xe->stat_loc = 128 + WTERMSIG(xe->stat_loc);
@@ -114,7 +81,76 @@ static int	launch_ext(char **args, t_xe *xe)
 		else if (xe->stat_loc > 256)
 			xe->stat_loc = xe->stat_loc / 256;
 		signal_handler(); // err
+		return (SUCCESS);
 	}
+}
+
+static int	create_cmd(char **tmp, char **path, char **args)
+{
+	char	*cmd;
+	int		dir_index;
+
+	dir_index = search_exec(path, args[0]);
+	if (dir_index == NOT_FOUND)
+		return (NO_SUCH_FILE); // other error code
+	cmd = ft_strjoin(path[dir_index], "/");
+	cmd = ft_strjoin(cmd, args[0]);
+	*tmp = cmd;
+	return (SUCCESS);
+}
+
+static int	add_path_to_localdir(char ***path)
+{
+	char	*tmp;
+
+	tmp = malloc(sizeof(char) + 2);
+	if (tmp == NULL)
+		return (M_ERROR);
+	tmp[0] = '.';
+	tmp[1] = '/';
+	tmp[2] = '\0';
+	*path = push_str_to_array(*path, tmp);
+	return (SUCCESS);
+}
+
+static int	launch_ext(char **args, t_xe *xe)
+{
+	int		ret;
+	char	*tmp;
+	char	**path;
+
+	ret = SUCCESS;
+	if (ft_strchr(args[0], '/') != NULL)
+	{
+		tmp = ft_strdup(args[0]);
+		if (tmp == NULL)
+			return (M_ERROR);
+	}
+	else
+	{
+		ret = get_var_pos(xe->env, "PATH", 4); // and with PATH unset?
+		if (ret == -1)
+		{
+			path = malloc(sizeof(char*));
+			*path = NULL;
+		}
+		else
+		{
+			tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
+			if (tmp == NULL)
+				return (M_ERROR);
+			path = ft_split(tmp, ':');
+			if (path == NULL)
+				return (M_ERROR);
+		}
+		add_path_to_localdir(&path);
+		ret = create_cmd(&tmp, path, args);
+		free_str_array(path);
+		if (ret != SUCCESS)
+			return (ret);
+	}
+	ret = exec_cmd(tmp, args, xe);
+	free(tmp);
 	return (ret);
 }
 
