@@ -82,3 +82,24 @@ basile: https://docs.google.com/spreadsheets/d/1pD3UEKayYV_LiHoYz8N6aOimqS9gxfg3
 + tests d'adeline!
 
 header file sections https://www.doc.ic.ac.uk/lab/cplus/cstyle.html#N100D8
+
+refs peerclass mboivin:
+https://sgeos.github.io/unix/c/signals/2016/02/24/passing-values-to-c-signal-handlers.html
+https://en.wikipedia.org/wiki/Recursive_descent_parser
+https://en.wikipedia.org/wiki/Tree_traversal
+https://ruslanspivak.com/lsbasi-part1/
+http://www.gaudry.be/langages-analyse-syntaxique-ast.html
+https://www.aosabook.org/en/bash.html
+
+Flowcharts :
+https://www.programiz.com/article/flowchart-programming
+Nommer les variables et fonctions :
+https://github.com/kettanaito/naming-cheatsheet
+Un concept important :
+https://fr.wikipedia.org/wiki/Programmation_modulaire
+Guide ANSSI programmation en C :
+https://www.ssi.gouv.fr/guide/regles-de-programmation-pour-le-developpement-securise-de-logiciels-en-langage-c/
+Lire "Introduction" et "Backgrounds" suffit (pour connaître des termes comme : modulaire, monolithe, microservice, etc. Un autre terme à connaître est refactoring) :
+https://www.codeproject.com/Articles/1210984/How-to-Organize-Clean-Architecture-to-Modular-Patt
+Un livre bien même si c'est du Java :
+https://www.goodreads.com/work/quotes/3779106-clean-code-a-handbook-of-agile-software-craftsmanship-robert-c-martin
