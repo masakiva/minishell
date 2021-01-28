@@ -3,6 +3,7 @@ NAME		= minishell
 SRC_DIR		+= src/
 SRC_DIR		+= src/parsing/
 SRC_DIR		+= src/execution/
+SRC_DIR		+= src/builtins/
 
 SRC	+= main.c
 SRC	+= signal_handling.c
@@ -15,16 +16,16 @@ SRC += parsing_vars_redirs.c
 SRC	+= parsing_utils.c
 
 SRC	+= exec_handler.c
-
 SRC	+= launch_command.c
-SRC	+= options.c
+
 SRC	+= ft_echo.c
 SRC	+= ft_pwd.c
 SRC	+= ft_cd.c
-SRC	+= var_utils.c
 SRC	+= ft_export.c
 SRC	+= ft_unset.c
 SRC	+= ft_env.c
+SRC	+= options.c
+SRC	+= var_utils.c
 
 SRC	+= ft_error.c
 
@@ -35,7 +36,6 @@ INC_DIR		= inc/
 HDR	+= minishell.h
 HDR	+= signals.h
 HDR	+= parsing.h
-HDR	+= pre_execution.h
 HDR	+= execution.h
 
 vpath %.h $(INC_DIR)

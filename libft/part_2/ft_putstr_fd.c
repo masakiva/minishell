@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/07 18:06:07 by mvidal-a          #+#    #+#             */
-/*   Updated: 2020/06/25 13:38:25 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/28 17:14:12 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,21 @@
 #include <unistd.h>
 
 /*
-** return value (inherited from write):
-** 		nonnegative on success (nb of chars written)
-** 		-1 + errno set on error
+** return value:
+** 		-2 on success (the total nb of bytes requested have been written)
+**		nonnegative if the nb of bytes written is smaller than requested
+** 		-1 on error
 */
 
-ssize_t	ft_putstr_fd(const char *s, int fd)
+ssize_t		ft_putstr_fd(const char *s, int fd)
 {
-	return (write(fd, s, ft_strlen(s)));
+	size_t	len;
+	ssize_t	ret;
+	
+	len = ft_strlen(s);
+	ret = write(fd, s, len);
+	if (ret == (ssize_t)len)
+		return (WRITE_SUCCESS);
+	else
+		return (ret);
 }

@@ -200,7 +200,7 @@ static int	ft_export_checks(char **args, t_xe *xe)
 			}
 		}
 		else
-			putstr_stderr("export: Variable identifier (name) invalid\n"); // leaks si le write marche pas
+			printf("export: Variable identifier (name) invalid\n"); // ERROR CODE
 		args++;
 	}
 	return (SUCCESS);

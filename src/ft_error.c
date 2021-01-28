@@ -3,15 +3,6 @@
 #include "parsing.h"
 #include <stdio.h> // perror
 
-void		putstr_stderr(const char *str)
-{
-	if (ft_putstr_fd(str, STDERR_FILENO) == ERROR)
-	{
-		perror("Cannot write the error message on STDERR");
-		exit(EXIT_FAILURE);
-	}
-}
-
 int		parsing_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
@@ -24,8 +15,7 @@ int		parsing_error(int err_code, t_xe *xe)
 
 	(void)err_msg;
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - _PARSING_ERROR_ - 1], STDERR_FILENO);
-	ft_putchar_fd('\n', STDERR_FILENO);
+	ft_putendl_fd(err_msg[err_code - _PARSING_ERROR_ - 1], STDERR_FILENO);
 	xe->stat_loc = 2;
 	return (SUCCESS);
 }
@@ -40,8 +30,7 @@ int		exec_error(int err_code, t_xe *xe)
 
 	(void)err_msg;
 	ft_putstr_fd("minishell: command error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
-	ft_putchar_fd('\n', STDERR_FILENO);
+	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
 	// have to set stat_loc as well !!!
 	if (err_code == HOME_NOT_SET)
 		xe->stat_loc = 1;
@@ -65,7 +54,7 @@ static const char	*err_msg(int err_code)
 
 static int			err_output(int err_code)
 {
-	putstr_stderr("Error: ");
+	ft_putstr_fd("Error: ", STDERR_FILENO);
 	perror(err_msg(err_code - _ERRNO_MSG_));
 	return (SUCCESS);
 }
@@ -76,7 +65,7 @@ int				clean_and_exit(int ret, t_xe *xe)
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
 	if (ret == ARG_ERR)
-		putstr_stderr("Minishell takes no argument");
+		ft_putstr_fd("Minishell takes no argument", STDERR_FILENO);
 	if (ret != CHILD_EXIT)
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 		write(1, "exit\n", 5);
@@ -94,7 +83,7 @@ int					ft_error(int ret, t_xe *xe)
 	else if (ret > _EXIT_CODE_)
 		return (clean_and_exit(ret, xe));
 	else if (ret != SUCCESS) // temp
-		putstr_stderr("ERROR CODE ERROR (printed for debug)");// temp
+		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp
 	return (SUCCESS);
 }
 

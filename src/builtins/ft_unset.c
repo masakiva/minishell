@@ -39,7 +39,7 @@ int		ft_unset(char **args, t_xe *xe)
 		}
 		else
 		{
-			putstr_stderr("unset: Variable identifier (name) invalid\n"); // leaks si le write marche pas
+			printf("unset: Variable identifier (name) invalid\n"); // ERROR CODE
 			xe->stat_loc = 1;
 			return (SUCCESS);
 		}

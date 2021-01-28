@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/27 11:54:32 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/28 17:14:54 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 # define TRUE	1
 # define FALSE	0
+
+# define WRITE_SUCCESS -2
 
 typedef struct	s_list
 {

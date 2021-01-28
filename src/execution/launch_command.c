@@ -204,7 +204,7 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 			flags |= O_APPEND;
 	}
 	redir_fd = open(cur_arg, flags, mode);
-	if (redir_fd >= 0) // else error?
+	if (redir_fd >= 0) // else error
 	{
 		dup2(redir_fd, src_fd); // error
 	}

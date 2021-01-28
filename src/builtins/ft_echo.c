@@ -1,8 +1,5 @@
 #include "execution.h"
 
-// >>> echo
-// error management: stop quand un write fail, ou alors on fait un seul write pour tout
-// no nl: "This may also be achieved by appending `\c' to the end of the string" (man echo sur mac mais pas linux)
 int		ft_echo(char **args, t_xe *xe)
 {
 	t_byte	options;
@@ -10,7 +7,10 @@ int		ft_echo(char **args, t_xe *xe)
 	(void)xe;
 	options = shift_options(&args, ECHO_OPTIONS);
 	if (*args != NULL)
-		ft_putstr_fd(*args++, STDOUT_FILENO);
+	{
+		if (ft_putstr_fd(*args++, STDOUT_FILENO) != WRITE_SUCCESS)
+			return (WRITE_ERR);
+	}
 	while (*args != NULL)
 	{
 		ft_putchar_fd(' ', STDOUT_FILENO);
