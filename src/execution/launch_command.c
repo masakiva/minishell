@@ -88,13 +88,15 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 static int	create_cmd(char **tmp, char **path, char **args)
 {
 	char	*cmd;
+	char	*dir;
 	int		dir_index;
 
 	dir_index = search_exec(path, args[0]);
 	if (dir_index == NOT_FOUND)
 		return (NO_SUCH_FILE); // other error code
-	cmd = ft_strjoin(path[dir_index], "/");
-	cmd = ft_strjoin(cmd, args[0]);
+	dir = ft_strjoin(path[dir_index], "/");
+	cmd = ft_strjoin(dir, args[0]);
+	free(dir);
 	*tmp = cmd;
 	return (SUCCESS);
 }
@@ -140,6 +142,7 @@ static int	launch_ext(char **args, t_xe *xe)
 			if (tmp == NULL)
 				return (M_ERROR);
 			path = ft_split(tmp, ':');
+			free(tmp);
 			if (path == NULL)
 				return (M_ERROR);
 		}
@@ -147,7 +150,10 @@ static int	launch_ext(char **args, t_xe *xe)
 		ret = create_cmd(&tmp, path, args);
 		free_str_array(path);
 		if (ret != SUCCESS)
+		{
+			free(tmp);
 			return (ret);
+		}
 	}
 	ret = exec_cmd(tmp, args, xe);
 	free(tmp);

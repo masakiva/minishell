@@ -29,17 +29,6 @@ enum	e_state
 	NB_STATES
 };
 
-enum	e_parsing_error
-{
-	SQUOTE_MISSING = 11,
-	DQUOTE_MISSING,
-	ESCAPE_NL,
-	REDIR_PATH_INVALID,
-	REDIR_PATH_MISSING,
-	EMPTY_CMD,
-	NB_PARSING_ERRORS
-};
-
 typedef struct	s_state_machine
 {
 	char			buf[BUF_SIZE];

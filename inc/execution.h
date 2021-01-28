@@ -10,12 +10,6 @@
 # define ENTIRE_STR	-1
 # define NOT_FOUND	-1
 
-enum		e_exec_errcode
-{
-	HOME_NOT_SET = 9,
-	NO_SUCH_FILE
-};
-
 enum		e_cmd_code
 {
 	ECHO,
