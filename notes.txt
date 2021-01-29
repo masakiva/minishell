@@ -16,7 +16,6 @@ echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
 
 create file when redirecting output without doing anything ("> a")
 
-=======
 error when redir_in file does not exist ("< unknown_file")
 
 commande "."
@@ -45,6 +44,9 @@ builtins: set stat_loc?
 mkdir ok; cd ok; rmdir ../ok; pwd
 
 cd: leaks in getcwd
+
+"exit 42" doit exit en renvoyant 42
+tester sur bash "exit 42 1431" ou "exit fds"
 
 
 
