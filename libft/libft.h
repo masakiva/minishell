@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:29:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/28 17:14:54 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/01/31 19:00:44 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,13 @@
 # include <stdint.h>
 # include <sys/types.h>
 
-# define ERROR	-1
+# define ERROR		-1
 
 # define TRUE	1
 # define FALSE	0
+
+# define SUCCESS	1
+# define FAILURE	0
 
 # define WRITE_SUCCESS -2
 
@@ -112,7 +115,7 @@ size_t			ft_varnamelen(char *str);
 char			*get_var_value(char **vars, char *name, size_t name_len);
 ssize_t			get_var_pos(char **vars, char *name, size_t name_len);
 
-void			ft_printarray_fd(char **array, int fd);
+int				ft_printarray_fd(char **array, int fd);
 size_t			ft_arraylen(char **array);
 void			free_str_array(char **array);
 char			**dup_str_array(char **array);

@@ -35,6 +35,10 @@ echo '"'
 
 masaki:
 
+a la fin avec rgrep:
+erreurs de write et de ft_put* a terminer
+gestion d'erreurs des fonctions autorisees une a une
+
 
 
 
@@ -47,6 +51,8 @@ cd: leaks in getcwd
 
 "exit 42" doit exit en renvoyant 42
 tester sur bash "exit 42 1431" ou "exit fds"
+
+strerror au lieu de perror qui est pas autorise
 
 
 

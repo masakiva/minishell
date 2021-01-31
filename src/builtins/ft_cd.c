@@ -22,7 +22,7 @@ int		ft_cd(char **args, t_xe *xe)
 	oldpwd = getcwd(NULL, 0); // error
 	if (chdir(path) == ERROR)
 	{
-		perror("cd");
+		perror("cd"); // -> strerror
 		free(path);
 		free(oldpwd);
 		xe->stat_loc = 1;

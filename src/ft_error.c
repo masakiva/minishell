@@ -1,7 +1,8 @@
 #include "minishell.h"
 #include "execution.h"
 #include "parsing.h"
-#include <stdio.h> // perror
+
+#include <string.h> // strerror
 
 int		parsing_error(int err_code, t_xe *xe)
 {
@@ -13,7 +14,6 @@ int		parsing_error(int err_code, t_xe *xe)
 		"No redirection path specified",
 		"Empty command before ; or |"};
 
-	(void)err_msg;
 	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _PARSING_ERROR_ - 1], STDERR_FILENO);
 	xe->stat_loc = 2;
@@ -28,7 +28,6 @@ int		exec_error(int err_code, t_xe *xe)
 		"HOME not set",
 		"No such file or directory"};
 
-	(void)err_msg;
 	ft_putstr_fd("minishell: command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
 	// have to set stat_loc as well !!!
@@ -42,20 +41,17 @@ int		exec_error(int err_code, t_xe *xe)
 		return (SUCCESS);
 }
 
-static const char	*err_msg(int err_code)
+static int			err_output(int err_code)
 {
-	const char	*msg[] = {
+	const char	*err_msg[] = {
 		"Memory allocation failure",
 		"Cannot write on standard output",
 		"Cannot read standard input (GNL error)"};
 
-	return (msg[err_code]);
-}
-
-static int			err_output(int err_code)
-{
 	ft_putstr_fd("Error: ", STDERR_FILENO);
-	perror(err_msg(err_code - _ERRNO_MSG_));
+	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_], STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
+	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 	return (SUCCESS);
 }
 
@@ -68,7 +64,8 @@ int				clean_and_exit(int ret, t_xe *xe)
 		ft_putstr_fd("Minishell takes no argument", STDERR_FILENO);
 	if (ret != CHILD_EXIT)
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
-		write(1, "exit\n", 5);
+		if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+			return (WRITE_ERR); // possible?
 	exit(EXIT_SUCCESS);
 }
 

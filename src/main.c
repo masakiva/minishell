@@ -26,7 +26,7 @@ static int			get_input(char **line)
 
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 	{
-		if (ft_putstr_fd(FT_PS1, STDOUT_FILENO) == ERROR)
+		if (ft_putstr_fd(FT_PS1, STDOUT_FILENO) != WRITE_SUCCESS)
 			return (WRITE_ERR);
 	}
 	ret = get_next_line(STDIN_FILENO, line);

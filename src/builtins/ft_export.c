@@ -18,15 +18,31 @@ char	**sort_variables(char **env, char **exported)
 	return (sorted_array);
 }
 
-void	print_export_var_value(char *value)
+int		print_export_var_value(char *value)
 {
 	while (*value != '\0')
 	{
 		if (ft_isset(*value, "$\"\\`") == TRUE)
-			ft_putchar_fd('\\', STDOUT_FILENO);// change fd
-		ft_putchar_fd(*value, STDOUT_FILENO);// change fd
+			if (ft_putchar_fd('\\', STDOUT_FILENO) != SUCCESS)
+				return (WRITE_ERR);
+		if (ft_putchar_fd(*value, STDOUT_FILENO) != SUCCESS)
+				return (WRITE_ERR);
 		value++;
 	}
+	return (SUCCESS);
+}
+
+int		print_export_one_var(char *variable, ssize_t equalsign_pos)
+{
+	if (write(STDOUT_FILENO, variable, equalsign_pos + 1) != equalsign_pos + 1)
+		return (WRITE_ERR);
+	if (ft_putchar_fd('"', STDOUT_FILENO) != SUCCESS)
+		return (WRITE_ERR);
+	if (print_export_var_value(variable + equalsign_pos + 1) != SUCCESS)
+		return (WRITE_ERR);
+	if (ft_putchar_fd('"', STDOUT_FILENO) != SUCCESS)
+		return (WRITE_ERR);
+	return (SUCCESS);
 }
 
 int		print_export(char **env, char **exported)
@@ -34,6 +50,7 @@ int		print_export(char **env, char **exported)
 	char	**variables;
 	size_t	i;
 	ssize_t	equalsign_pos;
+	int		ret;
 
 	variables = sort_variables(env, exported);
 	if (variables == NULL)
@@ -41,22 +58,20 @@ int		print_export(char **env, char **exported)
 	i = 0;
 	while (variables[i] != NULL)
 	{
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);// change fd
+		ret = ft_putstr_fd("declare -x ", STDOUT_FILENO);
 		equalsign_pos = ft_index(variables[i], '=');
-		if (equalsign_pos != NOT_FOUND)
-		{
-			write(STDOUT_FILENO, variables[i], equalsign_pos + 1);// idem
-			ft_putchar_fd('"', STDOUT_FILENO); // idem
-			print_export_var_value(variables[i] + equalsign_pos + 1);
-			ft_putchar_fd('"', STDOUT_FILENO); // id
-		}
-		else
-			ft_putstr_fd(variables[i], STDOUT_FILENO); //id
-		ft_putchar_fd('\n', STDOUT_FILENO); // id
+		if (equalsign_pos != NOT_FOUND && ret == WRITE_SUCCESS)
+			ret = print_export_one_var(variables[i], equalsign_pos);
+		if (ret == SUCCESS || ret == WRITE_SUCCESS)
+			ret = ft_putstr_fd(variables[i], STDOUT_FILENO);
+		if (ret == WRITE_SUCCESS)
+			ret = ft_putchar_fd('\n', STDOUT_FILENO);
+		if (ret != SUCCESS)
+			break ;
 		i++;
 	}
 	free(variables);
-	return (SUCCESS);
+	return (ret);
 }
 
 static int	ft_env_append_from_exp(char *var, t_xe *xe, ssize_t equalsign_pos)
@@ -208,16 +223,12 @@ static int	ft_export_checks(char **args, t_xe *xe)
 
 int		ft_export(char **args, t_xe *xe)
 {
+	int		ret;
+
 	if (ft_arraylen(args) == 1)
-	{
-		if (print_export(xe->env, xe->exported) != SUCCESS)
-			return (MALLOC_ERR);
-	}
+		ret = print_export(xe->env, xe->exported);
 	else
-	{
-		if (ft_export_checks(args + 1, xe) != SUCCESS)
-			return (MALLOC_ERR);
-	}
+		ret = ft_export_checks(args + 1, xe);
 	xe->stat_loc = 0;
-	return (SUCCESS);
+	return (ret);
 }

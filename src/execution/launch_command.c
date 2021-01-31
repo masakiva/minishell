@@ -239,7 +239,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
 	ret = command[cmd_code](args, xe);
-	if (ret >= HOME_NOT_SET)
-		return (ret);
+	if (ret >= HOME_NOT_SET)// ?
+		return (ret);// ?
 	return (ret);
 }
