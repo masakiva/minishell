@@ -90,6 +90,8 @@ static int	create_cmd(char **tmp, char **path, char **args)
 		return (NO_SUCH_FILE); // other error code
 	dir = ft_strjoin(path[dir_index], "/");
 	cmd = ft_strjoin(dir, args[0]);
+	if (cmd == NULL)
+		return (MALLOC_ERR);
 	free(dir);
 	*tmp = cmd;
 	return (SUCCESS);
@@ -113,13 +115,14 @@ static int	launch_ext(char **args, t_xe *xe)
 {
 	int		ret;
 	char	*tmp;
+	char	*cmd;
 	char	**path;
 
 	ret = SUCCESS;
 	if (ft_strchr(args[0], '/') != NULL)
 	{
-		tmp = ft_strdup(args[0]);
-		if (tmp == NULL)
+		cmd = ft_strdup(args[0]);
+		if (cmd == NULL)
 			return (M_ERROR);
 	}
 	else
@@ -141,16 +144,13 @@ static int	launch_ext(char **args, t_xe *xe)
 				return (M_ERROR);
 		}
 		add_path_to_localdir(&path);
-		ret = create_cmd(&tmp, path, args);
+		ret = create_cmd(&cmd, path, args);
 		free_str_array(path);
 		if (ret != SUCCESS)
-		{
-			free(tmp);
 			return (ret);
-		}
 	}
-	ret = exec_cmd(tmp, args, xe);
-	free(tmp);
+	ret = exec_cmd(cmd, args, xe);
+	free(cmd);
 	return (ret);
 }
 

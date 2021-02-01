@@ -14,7 +14,7 @@ int		parsing_error(int err_code, t_xe *xe)
 		"No redirection path specified",
 		"Empty command before ; or |"};
 
-	ft_putstr_fd("minishell: syntax error: ", STDERR_FILENO);
+	ft_putstr_fd("syntax error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _PARSING_ERROR_ - 1], STDERR_FILENO);
 	xe->stat_loc = 2;
 	return (SUCCESS);
@@ -28,7 +28,7 @@ int		exec_error(int err_code, t_xe *xe)
 		"HOME not set",
 		"No such file or directory"};
 
-	ft_putstr_fd("minishell: command error: ", STDERR_FILENO);
+	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
 	// have to set stat_loc as well !!!
 	if (err_code == HOME_NOT_SET)
@@ -48,7 +48,7 @@ static int			err_output(int err_code)
 		"Cannot write on standard output",
 		"Cannot read standard input (GNL error)"};
 
-	ft_putstr_fd("Error: ", STDERR_FILENO);
+	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_], STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
 	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
@@ -71,6 +71,7 @@ int				clean_and_exit(int ret, t_xe *xe)
 
 int					ft_error(int ret, t_xe *xe)
 {
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)// temp
 		return (parsing_error(ret, xe));
 	else if (ret > _EXEC_ERROR_)
