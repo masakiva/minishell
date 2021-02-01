@@ -105,7 +105,11 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	if (cur_command->redir_types != NULL && cur_command->redir_types[0] == AMBIG)
 	{
 		free_command(cur_command);
-		return (AMBIG_REDIR);
+		if (ft_error(AMBIG_REDIR, xe) != SUCCESS)
+			return (FAILURE);
+		dup2(xe->backup_stdout, STDOUT_FILENO);
+		dup2(xe->backup_stdin, STDIN_FILENO);
+		return (handle_execution(xe, fd_in, proc));
 	}
 	if (cur_command->args != NULL)
 	{
