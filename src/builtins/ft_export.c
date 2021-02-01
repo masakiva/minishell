@@ -215,7 +215,10 @@ static int	ft_export_checks(char **args, t_xe *xe)
 			}
 		}
 		else
-			printf("export: Variable identifier (name) invalid\n"); // ERROR CODE
+		{
+			xe->stat_loc = 1;
+			return (INVALID_EXP_ID);
+		}
 		args++;
 	}
 	return (SUCCESS);

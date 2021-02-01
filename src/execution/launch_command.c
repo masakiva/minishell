@@ -68,12 +68,8 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 		signal(SIGINT, SIG_IGN); // error if SIG_ERR? (check errno)
 		signal(SIGQUIT, SIG_IGN); // error if SIG_ERR? (check errno)
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
-		if (WIFSIGNALED(xe->stat_loc)) // check this return value
-		{
-			xe->stat_loc = 128 + WTERMSIG(xe->stat_loc);
-		}
-		else if (xe->stat_loc > 256)
-			xe->stat_loc = xe->stat_loc / 256;
+		if(WIFEXITED(xe->stat_loc))
+			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
 		signal_handler(); // err
 		return (SUCCESS);
 	}

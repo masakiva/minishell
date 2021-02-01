@@ -26,7 +26,10 @@ int		exec_error(int err_code, t_xe *xe)
 	const char		*err_msg[] = {
 		"Ambiguous redirection",
 		"HOME not set",
-		"No such file or directory"};
+		"No such file or directory",
+		"export: Variable identifier (name) invalid",
+		"unset: Variable identifier (name) invalid",
+		"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type"};
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
@@ -57,21 +60,28 @@ static int			err_output(int err_code)
 
 int				clean_and_exit(int ret, t_xe *xe)
 {
+	if (ret == ARG_ERR)
+	{
+		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS)
+			ft_error(WRITE_ERR, xe); // possible?
+	}
+	if (ret == CHILD_EXIT)
+		ret = (xe->stat_loc);
+	else
+		ret = EXIT_SUCCESS;
 	free_str_array(xe->exported); // besoin de free?
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
-	if (ret == ARG_ERR)
-		ft_putstr_fd("Minishell takes no argument", STDERR_FILENO);
-	if (ret != CHILD_EXIT)
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 		if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
 			return (WRITE_ERR); // possible?
-	exit(EXIT_SUCCESS);
+	exit(ret);
 }
 
 int					ft_error(int ret, t_xe *xe)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	if (ret > CHILD_EXIT)
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)// temp
 		return (parsing_error(ret, xe));
 	else if (ret > _EXEC_ERROR_)

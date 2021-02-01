@@ -59,10 +59,10 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	while (i < proc)
 	{
 		wait(&xe->stat_loc);
-		if (WIFSIGNALED(xe->stat_loc)) // check this return value!
-		{
-			xe->stat_loc += 128;
-		}
+		if(WIFEXITED(xe->stat_loc))
+			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
+//		if (WIFSIGNALED(xe->stat_loc)) // check this return value!
+//			xe->stat_loc += 128;
 		i++;
 	}
 	if (ret != SUCCESS)

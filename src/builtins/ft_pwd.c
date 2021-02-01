@@ -9,9 +9,8 @@ int		ft_pwd(char **args, t_xe *xe)
 	buf = getcwd(NULL, 0);
 	if (buf == NULL)
 	{
-		printf("pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type\n"); // ERROR CODE
 		xe->stat_loc = 1;
-		return (SUCCESS); // other code!
+		return (INVALID_PWD_PATH); // other code!
 	}
 	if (ft_putendl_fd(buf, STDOUT_FILENO) != WRITE_SUCCESS)
 	{

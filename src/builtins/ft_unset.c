@@ -39,9 +39,8 @@ int		ft_unset(char **args, t_xe *xe)
 		}
 		else
 		{
-			printf("unset: Variable identifier (name) invalid\n"); // ERROR CODE
 			xe->stat_loc = 1;
-			return (SUCCESS);
+			return (INVALID_UNS_ID);
 		}
 		args++;
 	}

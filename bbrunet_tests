@@ -1,0 +1,181 @@
+cd ../../../../../..
+pwd
+cd /home/user42/
+pwd
+cd $HOME/Bureau
+pwd
+unset HOME; cd
+pwd
+export HOME= ; cd
+pwd
+cd too many arguments
+pwd
+cd ./path_not_found
+pwd
+cd -
+pwd
+mkdir a; mkdir a/b; cd a/b; rm -r ../../a; cd ..
+pwd
+cd home/.. avec CDPATH set à /
+pwd
+cd home/dir avec CDPATH set à /
+pwd
+cd . avec CDPATH set
+pwd
+cd .. avec CDPATH set
+pwd
+
+echo -n -n -nnnn -nnnnm ; echo a
+echo -n -nnn hello -n ; echo a
+
+env ; export ; env
+
+cd random_cmd
+echo $?
+
+cd random_cmd ; cd $?
+echo $?
+
+./file_that_is_not_an_executable ;
+echo $?
+
+cat bla
+echo $?
+
+grid.txt
+echo $?
+
+not_cmd
+echo $?
+
+export test=a ; echo $test
+
+ls bonjour
+echo $?
+
+export var=a ; export $var=test ; echo $var $a
+
+unset var
+export $var=test
+export var = plop
+export var = test
+echo $var
+
+export "" test=a
+echo $?
+env
+
+echo ~
+
+export var=te"st
+echo $var
+
+export var=te"st ; echo $var
+.
+
+echo $SHLVL
+
+env -i ./minishell 
+echo $SHLVL
+
+""
+echo $?
+
+echo "\s" ; echo "\\s"
+echo "12\""
+echo "bip | bip ; coyotte > < \" "
+echo \>
+echo $USER$var\$USER$USER\$USERtest$USER
+echo bonjour \; ls
+
+$
+$LESS$VAR
+
+..
+echo $?
+
+echo '"abc"'
+echo "'abc'"
+echo "" bonjour
+echo	a
+echo\ a
+
+export ""
+unset ""
+
+export "test=ici"=coucou ; echo $test
+export var="cat Makefile | grep >" ; echo $var
+
+cat | cat | cat | ls
+\n
+\n
+\n
+
+cat Makefile | grep pr | head -n 5 | cd file_not_exit
+echo $?
+
+cat Makefile | grep pr | head -n 5 | hello
+echo $?
+
+ls | exit
+sleep 5 | exit
+<a cat <b <c
+<a cat <b <c      avec b n'existe pas (ou pas les droits)
+> test | echo blabla; rm test
+>a cat <b >>c 
+>a ls >b >>c >d
+>a ls <machin >>c >d     avec machin n'exite pas
+>file
+cat -e > test1 < test2
+cat < test
+echo 2 > out1 >> out2
+echo 2 >> out1 > out2
+echo bonjour > test\ 1
+echo test > file test1
+not_cmd bonjour > salut
+ctrl-\
+ctrl-C
+export var="  truc"; echo $var
+export var="truc  "; echo $var | cat -e
+echo "$tests""Makefile"
+echo "$tests"Makefile
+echo "$tests" "Makefile"
+$bla (non-export)
+echo $var bonjour ($var non export)
+export $var (var non export)
+export test=123\" ; echo $test
+export test=123\\ ; echo $test
+export test=123\' ; echo $test ; echo $test
+export test="  foo    bar  " ; echo $test
+export test="  foo    bar  " ; echo ab$test
+export test="  foo    bar  " ; echo "ab"$test
+export test=" foo   bar " ; echo ab"$test" | cat -e
+export test=" foo   bar " ; echo "$test"
+export test=" foo   bar " ; echo ""$test""
+export test=" foo   bar " ; echo """$test"""
+export var=s\ -la ; l$var
+export var=at ; c$var Makefile
+export loop='bonjour$loop' ; echo $loop
+export test="file1 file2" ; >$test
+export test="file1 file2" ; >"$test"
+export test="file1 file2" ; >$test >hey
+export test="file1 file2" ; >hey >$test
+|
+echo bonjour ; |
+echo bonjour > > out
+echo bonjour > $test
+echo bonjour > $test w/ test="o1 o2"
+echo bonjour >>> test
+echo bonjour | |
+echo bonjour |;
+unset PATH ; echo $PATH
+unset PATH ; ls
+unset "" test
+unset =
+unset PWD
+unset var
+/bin/echo bonjour
+
+untestable
+env -i ./minishell
+env
