@@ -1,4 +1,4 @@
-#include "execution.h"
+#include "builtins.h"
 
 #include <stdio.h> // perror
 
@@ -11,14 +11,19 @@ int		ft_cd(char **args, t_xe *xe)
 	if (args[1] == NULL)
 	{
 		ret = get_var_pos(xe->env, "HOME", 4);
-		if (ret == -1)
+		if (ret == NOT_FOUND)
 			return (HOME_NOT_SET);
 		path = get_var_value(xe->env, "HOME", 4);
+	}
+	else if (args[2] != NULL)
+	{
+		printf("trop d'arguments\n"); // temp
+		return (FAILURE); // temp
 	}
 	else
 		path = ft_strdup(args[1]);
 	if (path == NULL)
-		return (SUCCESS); // err
+		return (MALLOC_ERR); // err
 	oldpwd = getcwd(NULL, 0); // error
 	if (chdir(path) == ERROR)
 	{

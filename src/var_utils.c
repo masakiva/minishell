@@ -1,6 +1,7 @@
-#include "execution.h"
+#include "minishell.h"
+#include "builtins.h"
 
-char	*create_export_string(char *var_name, char *value)
+static char	*create_export_string(char *var_name, char *value)
 {
 	char		*new;
 	int			i;
@@ -27,7 +28,7 @@ char	*create_export_string(char *var_name, char *value)
 	return (new);
 }
 
-int		env_replace_var(char *var_name, char *value, t_xe *xe)
+int			env_replace_var(char *var_name, char *value, t_xe *xe)
 {
 	char	**new;
 

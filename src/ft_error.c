@@ -83,9 +83,3 @@ int					ft_error(int ret, t_xe *xe)
 		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp
 	return (SUCCESS);
 }
-
-int					ft_exit(enum e_retcode ret, t_xe *xe)
-{
-	ft_error(ret, xe);
-	return (clean_and_exit(ret, xe));
-}

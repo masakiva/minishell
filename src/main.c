@@ -1,11 +1,7 @@
 #include "minishell.h"
-#include "signals.h"
 #include "parsing.h"
 #include "execution.h"
-
-#include <sys/types.h> // waitpid
-#include <sys/wait.h> // waitpid
-#include <fcntl.h> // open
+#include "builtins.h"
 
 static int			handle_eof(char **line, int ret)
 {

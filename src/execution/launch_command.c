@@ -1,13 +1,7 @@
 #include "execution.h"
+#include "builtins.h"
 
-#include <sys/types.h> // waitpid, opendir
-#include <sys/wait.h> // waitpid
 #include <stdio.h> // perror
-#include <dirent.h> // readdir, opendir
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
 
 static int	launch_exit(char **args, t_xe *xe)
 {
@@ -66,7 +60,7 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	{
 		xe->child = 1;
 		if (execve(cmd, args, xe->env) == ERROR)
-			perror("External function error:");
+			perror("External function error:"); // -> strerror
 		return (CHILD_EXIT);
 	}
 	else

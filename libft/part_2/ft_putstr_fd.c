@@ -6,7 +6,7 @@
 /*   By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/07 18:06:07 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/28 17:14:12 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/01 11:35:13 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ ssize_t		ft_putstr_fd(const char *s, int fd)
 {
 	size_t	len;
 	ssize_t	ret;
-	
+
 	len = ft_strlen(s);
 	ret = write(fd, s, len);
 	if (ret == (ssize_t)len)

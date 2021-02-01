@@ -1,4 +1,4 @@
-#include "signals.h"
+#include "minishell.h"
 
 void	sig_int(int signum)
 {

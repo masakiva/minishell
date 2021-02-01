@@ -1,10 +1,6 @@
 #include "minishell.h"
-#include "signals.h"
 #include "parsing.h"
 #include "execution.h"
-
-#include <sys/types.h> // waitpid
-#include <sys/wait.h> // waitpid
 
 void		child_setup(const int *fd, int fd_in)
 {

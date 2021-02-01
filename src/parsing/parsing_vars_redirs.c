@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 12:14:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/01/27 16:53:11 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/01 11:24:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char		*parse_quoted_variable(t_state_machine *machine, char *line)
 	return (line);
 }
 
-char	*new_redir_info(t_state_machine *machine, char *line)
+char		*new_redir_info(t_state_machine *machine, char *line)
 {
 	enum e_redir_op	redir_type;
 

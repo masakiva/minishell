@@ -24,6 +24,7 @@ SRC	+= ft_cd.c
 SRC	+= ft_export.c
 SRC	+= ft_unset.c
 SRC	+= ft_env.c
+SRC	+= ft_exit.c
 SRC	+= options.c
 SRC	+= var_utils.c
 
@@ -34,7 +35,6 @@ vpath %.c $(SRC_DIR)
 INC_DIR		= inc/
 
 HDR	+= minishell.h
-HDR	+= signals.h
 HDR	+= parsing.h
 HDR	+= execution.h
 

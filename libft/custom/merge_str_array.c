@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:56:12 by abenoit           #+#    #+#             */
-/*   Updated: 2021/01/08 11:04:58 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/01 11:34:42 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ char	**merge_str_array(char **ar1, char **ar2)
 	new_array[i + j] = NULL;
 	free(ar1);
 	free(ar2);
-	return(new_array);
+	return (new_array);
 }

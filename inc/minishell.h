@@ -12,6 +12,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <errno.h>
+# include <signal.h>
 
 # include "libft.h"
 
@@ -107,10 +108,11 @@ typedef struct		s_xe
 **	**********************************
 */
 
-/*
-**	free utils
-*/
+void		signal_handler(void);
+
 int			handle_execution(t_xe *xe, int fd_in, int proc);
+
+int			env_replace_var(char *var_name, char *value, t_xe *xe);
 
 /*
 **	free utils
@@ -125,8 +127,8 @@ void	free_commands(t_list **commands);
 **	ft_exit.c
 */
 
+int			clean_and_exit(int ret, t_xe *xe);
 void		putstr_stderr(const char *str);
 int			ft_error(int ret, t_xe *xe);
-int			ft_exit(enum e_retcode retcode, t_xe *xe);
 
 #endif
