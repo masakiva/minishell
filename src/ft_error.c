@@ -3,6 +3,7 @@
 #include "parsing.h"
 
 #include <string.h> // strerror
+// -> header error.h?
 
 int		parsing_error(int err_code, t_xe *xe)
 {
