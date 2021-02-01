@@ -70,7 +70,7 @@ enum		e_retcode
 	EMPTY_CMD
 };
 
-enum e_redir_op
+enum	e_redir_op
 {
 	NO_REDIR,
 	FILEIN,

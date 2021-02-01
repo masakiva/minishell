@@ -9,7 +9,6 @@ commande "."
 -->Le leaks releve a la sortie d'execve ne serait pas a prendre en compte car l'os reprend la main sur les adresses de la pile du process qu'execve remplace:
 https://linuxfr.org/forums/programmation-c--2/posts/free-apres-un-exec
 
-
 print newline after "^C" for CTRL-C signal ("cat")
 same for CTRL-\, after "^\Quit"
 
@@ -53,8 +52,6 @@ gestion d'erreurs des fonctions autorisees une a une
 builtins: set stat_loc?
 
 mkdir ok; cd ok; rmdir ../ok; pwd
-
-cd: leaks in getcwd
 
 strerror au lieu de perror qui est pas autorise
 
