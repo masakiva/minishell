@@ -1,7 +1,5 @@
 #include "builtins.h"
 
-#include <stdio.h> // perror
-
 int		ft_cd(char **args, t_xe *xe)
 {
 	int		ret;
@@ -27,11 +25,10 @@ int		ft_cd(char **args, t_xe *xe)
 	oldpwd = getcwd(NULL, 0); // error
 	if (chdir(path) == ERROR)
 	{
-		perror("cd"); // -> strerror
 		free(path);
 		free(oldpwd);
 		xe->stat_loc = 1;
-		return (SUCCESS); //notify failure anyway ?
+		return (INVALID_CD_PATH); //notify failure anyway ?
 	}
 	free(path);
 	env_replace_var("OLDPWD", oldpwd, xe);

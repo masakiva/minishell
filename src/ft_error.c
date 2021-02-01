@@ -50,10 +50,11 @@ static int			err_output(int err_code)
 	const char	*err_msg[] = {
 		"Memory allocation failure",
 		"Cannot write on standard output",
-		"Cannot read standard input (GNL error)"};
+		"Cannot read standard input (GNL error)",
+		"cd"};
 
 	ft_putstr_fd("error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_], STDERR_FILENO);
+	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
 	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 	return (SUCCESS);
@@ -66,10 +67,17 @@ int				clean_and_exit(int ret, t_xe *xe)
 		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS)
 			ft_error(WRITE_ERR, xe); // possible?
 	}
-	if (ret == CHILD_EXIT)
-		ret = (xe->stat_loc);
-	else
+	if (ret < CHILD_EXIT)
 		ret = EXIT_SUCCESS;
+	else
+	{
+		if (ret == CHILD_ERROR)
+		{
+			ft_putstr_fd("External function error:", STDERR_FILENO); // -> strerror
+			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
+		}
+		ret = (xe->stat_loc);
+	}
 	free_str_array(xe->exported); // besoin de free?
 	free_str_array(xe->env); // besoin de free?
 	free(xe);

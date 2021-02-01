@@ -1,8 +1,6 @@
 #include "execution.h"
 #include "builtins.h"
 
-#include <stdio.h> // perror
-
 static int	launch_exit(char **args, t_xe *xe)
 {
 	(void)args;
@@ -60,8 +58,9 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	{
 		xe->child = 1;
 		if (execve(cmd, args, xe->env) == ERROR)
-			perror("External function error:"); // -> strerror
-		return (CHILD_EXIT);
+			return (CHILD_ERROR);
+		else
+			return (CHILD_EXIT);
 	}
 	else
 	{

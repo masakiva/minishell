@@ -45,9 +45,6 @@ a la fin avec rgrep:
 erreurs de write et de ft_put* a terminer
 gestion d'erreurs des fonctions autorisees une a une
 
-prompt printing "minishell"
-
-
 
 builtins: set stat_loc?
 
