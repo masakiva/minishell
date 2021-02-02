@@ -6,12 +6,16 @@
 static int			handle_eof(char **line, int ret)
 {
 	char	*tmp;
+	char	*ptr;
 
 	while (ret != SUCCESS)
 	{
 		ft_putstr_fd("  \b\b", STDIN_FILENO);
 		ret = get_next_line(STDIN_FILENO, &tmp);
-		*line = ft_strjoin(*line, tmp);
+		ptr = *line;
+		*line = ft_strjoin(ptr, tmp);
+		free(ptr);
+		free(tmp);
 	}
 	return (ret);
 }
