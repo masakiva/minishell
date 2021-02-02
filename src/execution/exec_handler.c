@@ -114,14 +114,23 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 	cur_command = parse_one_command(xe);
 	if (cur_command == NULL)
 		return (MALLOC_ERR);
-	if (cur_command->redir_types != NULL && cur_command->redir_types[0] == AMBIG)
+	if (cur_command->redir_types != NULL)
 	{
-		free_command(cur_command);
-		if (ft_error(AMBIG_REDIR, xe) != SUCCESS)
-			return (FAILURE);
-		dup2(xe->backup_stdout, STDOUT_FILENO);
-		dup2(xe->backup_stdin, STDIN_FILENO);
-		return (handle_execution(xe, fd_in, proc));
+		if (cur_command->redir_types[0] == AMBIG)
+		{
+			free_command(cur_command);
+			if (ft_error(AMBIG_REDIR, xe) != SUCCESS)
+				return (FAILURE);
+			dup2(xe->backup_stdout, STDOUT_FILENO);
+			dup2(xe->backup_stdin, STDIN_FILENO);
+			return (handle_execution(xe, fd_in, proc));
+		}
+		if (cur_command->args == NULL)
+		{
+			apply_redirs(cur_command->redir_paths, cur_command->redir_types);
+			free_command(cur_command);
+			return (handle_execution(xe, fd_in, proc));
+		}
 	}
 	if (cur_command->args != NULL)
 	{
