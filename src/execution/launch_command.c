@@ -3,9 +3,13 @@
 
 static int	launch_exit(char **args, t_xe *xe)
 {
-	(void)args;
-	(void)xe;
-	return (CLEAN_EXIT);
+	if (args != NULL)
+	{
+		if (ft_arraylen(args) != 2)
+			return (EXIT_ARG_ERR);
+		xe->stat_loc = ft_atoi(args[1]) % 256;
+	}
+	return (FT_EXIT);
 }
 
 static int	search_path(DIR *dirp, char *name)

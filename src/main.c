@@ -126,7 +126,7 @@ int		main(int argc, char **argv, char **env_source)
 		ret = exec_env_init(xe, env_source);
 		if (ret != SUCCESS) // needed?
 			return (ft_exit(ret, xe)); // needed?
-		while (ret != CLEAN_EXIT && ret != FAILURE && ret != CHILD_EXIT) // why not while (ret == SUCCESS) ?
+		while (ret != CLEAN_EXIT && ret != FAILURE && ret != CHILD_EXIT && ret != FT_EXIT) // why not while (ret == SUCCESS) ?
 			ret = main_loop(xe);
 	}
 	return (ft_exit(ret, xe));

@@ -30,7 +30,9 @@ int		exec_error(int err_code, t_xe *xe)
 		"No such file or directory",
 		"export: Variable identifier (name) invalid",
 		"unset: Variable identifier (name) invalid",
-		"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type"};
+		"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",
+		"exit: too many arguments"};
+
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
@@ -69,7 +71,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS)
 			ft_error(WRITE_ERR, xe); // possible?
 	}
-	if (err_code < CHILD_EXIT)
+	if (err_code < FT_EXIT)
 		ret = EXIT_SUCCESS;
 	else
 	{
@@ -85,7 +87,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	free(xe);
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
 	{
-		if (err_code == CLEAN_EXIT)
+		if (err_code == CLEAN_EXIT || err_code == FT_EXIT)
 		{
 			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
 				return (WRITE_ERR); // possible?
