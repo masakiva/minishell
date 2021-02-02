@@ -14,27 +14,31 @@ int		ft_cd(char **args, t_xe *xe)
 		path = get_var_value(xe->env, "HOME", 4);
 	}
 	else if (args[2] != NULL)
-	{
-		printf("trop d'arguments\n"); // temp
-		return (FAILURE); // temp
-	}
+		return (CD_ARG_ERR);
 	else
 		path = ft_strdup(args[1]);
 	if (path == NULL)
-		return (MALLOC_ERR); // err
-	oldpwd = getcwd(NULL, 0); // error
+		return (MALLOC_ERR);
+	oldpwd = get_var_value(xe->env, "PWD", 3);
+	if (oldpwd == NULL)
+	{
+		free(path);
+		return (MALLOC_ERR);
+	}
 	if (chdir(path) == ERROR)
 	{
 		free(path);
 		free(oldpwd);
 		xe->stat_loc = 1;
-		return (INVALID_CD_PATH); //notify failure anyway ?
+		return (INVALID_CD_PATH);
 	}
 	free(path);
-	env_replace_var("OLDPWD", oldpwd, xe);
+	env_replace_var("OLDPWD", oldpwd, xe);// erreur
 	free(oldpwd);
 	path = getcwd(NULL, 0);
-	env_replace_var("PWD", path, xe);
+	if (path == NULL)
+		return (INVALID_CD_NEW_PATH);
+	env_replace_var("PWD", path, xe);// erreur
 	free(path);
 	xe->stat_loc = 0;
 	return (SUCCESS);

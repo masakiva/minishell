@@ -76,7 +76,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	shlvl = ft_itoa(tmp);
 	if (shlvl == NULL)
 		return (MALLOC_ERR);
-	env_replace_var(SHLVL_STR, shlvl, xe);
+	env_replace_var(SHLVL_STR, shlvl, xe); // err
 	free(shlvl);
 	xe->backup_stdin = dup(STDIN_FILENO);
 	xe->backup_stdout = dup(STDOUT_FILENO);
