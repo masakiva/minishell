@@ -44,9 +44,10 @@ typedef struct	s_state_machine
 	enum e_state	state;
 	int				stat_loc;
 	t_byte			pipe_flag;
+	t_byte			var_flag;
 	t_byte			var_state;
 	t_byte			quote_state;
-	uint8_t			pad[5];
+	uint8_t			pad[4];
 }				t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);

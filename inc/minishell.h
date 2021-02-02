@@ -60,13 +60,13 @@ enum		e_retcode
 	WRITE_ERR,
 	GNL_ERR,
 	INVALID_CD_PATH,
+	INVALID_PWD_PATH,
 	_EXEC_ERROR_,
 	AMBIG_REDIR,
 	HOME_NOT_SET,
 	NO_SUCH_FILE,
 	INVALID_EXP_ID,
 	INVALID_UNS_ID,
-	INVALID_PWD_PATH,
 	EXIT_ARG_ERR,
 	_PARSING_ERROR_,
 	SQUOTE_MISSING,
@@ -92,7 +92,8 @@ typedef struct		s_command
 	char				**redir_paths;
 	enum e_redir_op		*redir_types;
 	t_byte				pipe_flag;
-	uint8_t				pad[7];
+	t_byte				var_flag;
+	uint8_t				pad[6];
 }					t_command;
 
 typedef struct		s_xe

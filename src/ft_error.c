@@ -30,7 +30,7 @@ int		exec_error(int err_code, t_xe *xe)
 		"No such file or directory",
 		"export: Variable identifier (name) invalid",
 		"unset: Variable identifier (name) invalid",
-		"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",
+		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",
 		"exit: too many arguments"};
 
 
@@ -53,7 +53,8 @@ static int			err_output(int err_code)
 		"Memory allocation failure",
 		"Cannot write on standard output",
 		"Cannot read standard input (GNL error)",
-		"cd"};
+		"cd",
+		"pwd"};
 
 	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);

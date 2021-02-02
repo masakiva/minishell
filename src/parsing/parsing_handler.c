@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:25:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/02 13:26:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/02 14:21:54 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int			parse_input(char **line, char **env, int stat_loc,
 	}
 	free(machine.cur_arg);
 	command->pipe_flag = machine.pipe_flag;
+	command->var_flag = machine.var_flag;
 	command->redir_paths = machine.redir_paths;
 	command->redir_types = machine.redir_types;
 	command->args = machine.args;
