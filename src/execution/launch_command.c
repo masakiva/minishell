@@ -5,9 +5,12 @@ static int	launch_exit(char **args, t_xe *xe)
 {
 	if (args != NULL)
 	{
-		if (ft_arraylen(args) != 2)
+		if (ft_arraylen(args) > 2)
 			return (EXIT_ARG_ERR);
-		xe->stat_loc = ft_atoi(args[1]) % 256;
+		if (args[1] != NULL)
+			xe->stat_loc = ft_atoi(args[1]) % 256;
+		else
+			xe->stat_loc = 0;
 	}
 	return (FT_EXIT);
 }
