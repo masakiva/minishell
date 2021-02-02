@@ -57,6 +57,7 @@ static int			err_output(int err_code)
 		"cd: cannot change directory",
 		"cd: cannot set variable PWD",
 		"pwd: cannot get current directory path",
+		"Error reading a directory in PATH",
 		"fd"};
 
 	ft_putstr_fd("error: ", STDERR_FILENO);

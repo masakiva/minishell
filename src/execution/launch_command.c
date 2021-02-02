@@ -1,15 +1,29 @@
 #include "execution.h"
 #include "builtins.h"
-#include <string.h>
+
+#include <string.h>// dans un header
 
 static int	launch_exit(char **args, t_xe *xe)
 {
-	if (args != NULL)
+	if (args != NULL) // necessaire?
 	{
-		if (ft_arraylen(args) > 2)
-			return (EXIT_ARG_ERR);
 		if (args[1] != NULL)
-			xe->stat_loc = ft_atoi(args[1]) % 256;
+		{
+			if (ft_isnumber(args[1]) == TRUE)
+			{
+				if (args[2] != NULL)
+				{
+					xe->stat_loc = 1;
+					return (EXIT_ARG_ERR);
+				}
+				xe->stat_loc = ft_atoi(args[1]) % 256;
+			}
+			else //  "exit NaN"
+			{
+				xe->stat_loc = 2;
+				return (FT_EXIT);//another error, to print like bash
+			}
+		}
 		else
 			xe->stat_loc = 0;
 	}
@@ -20,7 +34,6 @@ static int	search_path(DIR *dirp, char *name)
 {
 	struct dirent	*buf;
 
-	errno = 0; // to distinguish the NULL ret value: end of stream, or error
 	buf = readdir(dirp);
 	while (buf != NULL)
 	{
@@ -28,8 +41,6 @@ static int	search_path(DIR *dirp, char *name)
 			return (SUCCESS);
 		buf = readdir(dirp);
 	}
-	if (errno != 0)
-		;//error
 	return (FAILURE);
 }
 
@@ -46,11 +57,11 @@ int	search_exec(char **path, char *name)
 			if (search_path(dirp, name) == SUCCESS)
 			{
 				if (closedir(dirp) == ERROR)
-					;//error
+					return (INVALID_PATH_DIR);
 				return (i);
 			}
 			if (closedir(dirp) == ERROR)
-				;//error
+				return (INVALID_PATH_DIR);
 		}
 		i++;
 	}

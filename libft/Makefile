@@ -6,7 +6,7 @@
 #    By: mvidal-a <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/23 13:17:34 by mvidal-a          #+#    #+#              #
-#    Updated: 2021/01/27 11:54:52 by mvidal-a         ###   ########.fr        #
+#    Updated: 2021/02/02 15:56:28 by mvidal-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,6 +75,7 @@ SRCS_CUSTOM	+= strjoin_free.c
 SRCS_CUSTOM	+= ft_varnamelen.c
 SRCS_CUSTOM	+= blank_str.c
 SRCS_CUSTOM	+= push_int_to_array.c
+SRCS_CUSTOM	+= ft_isnumber.c
 
 VPATH		= part_1:part_2:bonus:custom
 
