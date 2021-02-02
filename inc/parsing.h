@@ -5,14 +5,15 @@
 
 # define BUF_SIZE		4096
 
-# define S_EMPTY	0x01
-# define S_BACKSL	0x02
-# define S_QUOTE	0x04
-# define S_DQUOTE	0x08
-# define S_R_REDIR	0x10
-# define S_L_REDIR	0x20
-# define S_APPEND	0x40
-# define S_CMDSEP	0x80
+# define S_EMPTY	0x001
+# define S_BACKSL	0x002
+# define S_QUOTE	0x004
+# define S_DQUOTE	0x008
+# define S_R_REDIR	0x010
+# define S_L_REDIR	0x020
+# define S_APPEND	0x040
+# define S_SEMICOL	0x080
+# define S_PIPE		0x100
 
 enum	e_state
 {

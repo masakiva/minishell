@@ -6,13 +6,13 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:25:20 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/01 11:25:22 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/02 14:34:28 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	check_others(t_byte *flags, char c)
+void	check_others(unsigned int *flags, char c)
 {
 	if (!(ft_isspace(c)))
 	{
@@ -24,12 +24,14 @@ void	check_others(t_byte *flags, char c)
 			*flags -= S_APPEND;
 		if (*flags & S_EMPTY)
 			*flags -= S_EMPTY;
-		if (*flags & S_CMDSEP)
-			*flags -= S_CMDSEP;
+		if (*flags & S_PIPE)
+			*flags -= S_PIPE;
+		if (*flags & S_SEMICOL)
+			*flags -= S_SEMICOL;
 	}
 }
 
-int		check_redirs_and_cmdsep(t_byte *flags, char c)
+int		check_redirs_and_cmdsep(unsigned int *flags, char c)
 {
 	if (c == '>')
 	{
@@ -50,10 +52,23 @@ int		check_redirs_and_cmdsep(t_byte *flags, char c)
 		else
 			return (REDIR_PATH_MISSING);
 	}
-	else if (c == ';' || c == '|')
+	else if (c == ';')
 	{
-		if (!(*flags & S_CMDSEP))
-			*flags += S_CMDSEP;
+		if (!(*flags & S_SEMICOL) && !(*flags & S_PIPE))
+			*flags += S_SEMICOL;
+		else
+			return (EMPTY_CMD);
+		if (*flags & S_R_REDIR || *flags & S_L_REDIR)
+			return (REDIR_PATH_MISSING);
+		if (*flags & S_EMPTY)
+			return (EMPTY_CMD);
+		else
+			*flags += S_EMPTY;
+	}
+	else if (c == '|')
+	{
+		if (!(*flags & S_SEMICOL) && !(*flags & S_PIPE))
+			*flags += S_PIPE;
 		else
 			return (EMPTY_CMD);
 		if (*flags & S_R_REDIR || *flags & S_L_REDIR)
@@ -68,7 +83,7 @@ int		check_redirs_and_cmdsep(t_byte *flags, char c)
 	return (SUCCESS);
 }
 
-int		check_bsl_and_quotes(t_byte *flags, char c)
+int		check_bsl_and_quotes(unsigned int *flags, char c)
 {
 	if (c == '\\')
 	{
@@ -108,14 +123,16 @@ int		final_checks(int flags)
 		return (SQUOTE_MISSING);
 	if (flags & S_DQUOTE)
 		return (DQUOTE_MISSING);
+	if (flags & S_PIPE)
+		return (ESCAPE_NL);
 	return (SUCCESS);
 }
 
 int		check_syntax(char *line)
 {
-	int		i;
-	int		ret;
-	t_byte	flags;
+	int				i;
+	int				ret;
+	unsigned int	flags;
 
 	i = 0;
 	flags = S_EMPTY;
