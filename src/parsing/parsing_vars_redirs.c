@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 12:14:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/01 11:24:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/02 14:21:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char		*parse_variable(t_state_machine *machine, char *line)
 	free(var_value);
 	line += var_name_len;
 	machine->var_state = TRUE;
+	machine->var_flag = TRUE;
 	return (line);
 }
 

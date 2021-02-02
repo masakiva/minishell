@@ -132,7 +132,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 			return (handle_execution(xe, fd_in, proc));
 		}
 	}
-	if (cur_command->args != NULL)
+	if (cur_command->args != NULL || cur_command->var_flag == TRUE)
 	{
 		return (handle_command(cur_command, xe, fd_in, proc));
 	}

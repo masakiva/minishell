@@ -92,7 +92,8 @@ typedef struct		s_command
 	char				**redir_paths;
 	enum e_redir_op		*redir_types;
 	t_byte				pipe_flag;
-	uint8_t				pad[7];
+	t_byte				var_flag;
+	uint8_t				pad[6];
 }					t_command;
 
 typedef struct		s_xe
