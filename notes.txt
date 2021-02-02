@@ -12,8 +12,6 @@ CTRL-D apres avoir ecrit un debut de cmd
 
 "cat | exit"======>ne devrait pas exit
 
-"> a" boucle inf
-
 
 
 masaki:

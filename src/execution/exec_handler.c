@@ -127,7 +127,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 		}
 		if (cur_command->args == NULL)
 		{
-			if (apply_redirs(cur_command->redir_paths, cur_command->redir_types, xe))
+			if (apply_redirs(cur_command->redir_paths, cur_command->redir_types, xe) != SUCCESS)
 			{
 				free_command(cur_command);
 				return (FD_ERROR);
@@ -137,9 +137,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 		}
 	}
 	if (cur_command->args != NULL || cur_command->var_flag == TRUE)
-	{
 		return (handle_command(cur_command, xe, fd_in, proc));
-	}
 	else
 	{
 		free_command(cur_command);
