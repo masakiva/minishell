@@ -1,6 +1,9 @@
-============= Resolu ?
+============= Resolu ? yessss
 "exit 42" doit exit en renvoyant 42
-et tester sur bash "exit 42 1431" ou "exit fds"
+
+
+"exit fds" -> exit 2 after 'bad exit return code' error
+"exit 42 1431" -> print "exit" before error
 
 
 
@@ -14,6 +17,8 @@ CTRL-D apres avoir ecrit un debut de cmd
 
 "cat | exit"======>ne devrait pas exit
 
+"> a"
+
 
 masaki:
 
@@ -26,10 +31,6 @@ gestion d'erreurs des fonctions autorisees une a une
 
 
 builtins: set stat_loc?
-
-mkdir ok; cd ok; rmdir ../ok; pwd
-mkdir ok ; cd ok ; rmdir ../ok ; cd ..
-====> segfault a corriger
 
 
 
