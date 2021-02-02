@@ -194,7 +194,7 @@ enum e_cmd_code	get_cmd_code(char *arg)
 	return (ELSE);
 }
 
-void	apply_redir(char *cur_arg, enum e_redir_op redir)
+int		apply_redir(char *cur_arg, enum e_redir_op redir, t_xe *xe)
 {
 	int			src_fd;
 	int			redir_fd;
@@ -222,22 +222,26 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	}
 	else
 	{
-		ft_putstr_fd(cur_arg, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
+		xe->stat_loc = 1;
+		return (FD_ERROR);
 	}
+	return (SUCCESS);
 }
 
-void	apply_redirs(char **redir_paths, enum e_redir_op *redir_types)
+int		apply_redirs(char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
 {
 	int		i;
+	int		ret;
 
 	i = 0;
 	while (redir_paths[i] != NULL)
 	{
-		apply_redir(redir_paths[i], redir_types[i]);
+		ret = apply_redir(redir_paths[i], redir_types[i], xe);
+		if (ret != SUCCESS)
+			return (ret);
 		i++;
 	}
+	return (SUCCESS);
 }
 
 int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
@@ -251,7 +255,11 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 
 	i = 0;
 	if (redir_paths != NULL)
-		apply_redirs(redir_paths, redir_types);
+	{
+		ret = apply_redirs(redir_paths, redir_types, xe);
+		if (ret != SUCCESS)
+			return (ret);
+	}
 //	printf("arg0 = %s\n", args[0]);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)

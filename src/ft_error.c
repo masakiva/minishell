@@ -54,7 +54,8 @@ static int			err_output(int err_code)
 		"Cannot write on standard output",
 		"Cannot read standard input (GNL error)",
 		"cd",
-		"pwd"};
+		"pwd",
+		"fd"};
 
 	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);

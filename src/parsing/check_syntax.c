@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:25:20 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/02 14:34:28 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/02 15:06:21 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,19 +87,25 @@ int		check_bsl_and_quotes(unsigned int *flags, char c)
 {
 	if (c == '\\')
 	{
+		if (*flags & S_QUOTE)
+			return (SUCCESS);
 		if (!(*flags & S_BACKSL))
 			*flags += S_BACKSL;
 	}
 	else if (c == '\'')
 	{
-		if (!(*flags & S_QUOTE))
+		if (*flags & S_DQUOTE)
+			return (SUCCESS);
+		else if (!(*flags & S_QUOTE))
 			*flags += S_QUOTE;
 		else
 			*flags -= S_QUOTE;
 	}
 	else if (c == '\"')
 	{
-		if (!(*flags & S_DQUOTE))
+		if (*flags & S_QUOTE)
+			return (SUCCESS);
+		else if (!(*flags & S_DQUOTE))
 			*flags += S_DQUOTE;
 		else
 			*flags -= S_DQUOTE;
