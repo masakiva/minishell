@@ -63,8 +63,6 @@ int		print_export(char **env, char **exported)
 		if (equalsign_pos != NOT_FOUND && ret == WRITE_SUCCESS)
 			ret = print_export_one_var(variables[i], equalsign_pos);
 		if (ret == SUCCESS || ret == WRITE_SUCCESS)
-			ret = ft_putstr_fd(variables[i], STDOUT_FILENO);
-		if (ret == WRITE_SUCCESS)
 			ret = ft_putchar_fd('\n', STDOUT_FILENO);
 		if (ret != SUCCESS)
 			break ;

@@ -1,16 +1,19 @@
 "exit fds" -> exit 2 after 'bad exit return code' error
 "exit 42 1431" -> print "exit" before error
 
+builtins: set stat_loc for all returns
+
 
 
 arthur:
 
-===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D, et y'a des leaks
+===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D
 CTRL-D apres avoir ecrit un debut de cmd
 
 "cat | exit"======>ne devrait pas exit
 
 "> a" boucle inf
+
 
 
 masaki:
@@ -22,8 +25,6 @@ gestion d'erreurs des fonctions autorisees une a une
 
 
 
-
-builtins: set stat_loc?
 
 
 
