@@ -5,34 +5,31 @@ et tester sur bash "exit 42 1431" ou "exit fds"
 
 arthur:
 
-===========================Resolu
-commande "."
--->Le leaks releve a la sortie d'execve ne serait pas a prendre en compte car l'os reprend la main sur les adresses de la pile du process qu'execve remplace:
-https://linuxfr.org/forums/programmation-c--2/posts/free-apres-un-exec
+print "^C" au signal CTRL-C sans commande en boucle inf (comme "cat" ou "yes")
+et CTRL-\ ne fait rien sans commande en boucle inf
 
-============================Resolu
-print newline after "^C" for CTRL-C signal ("cat")
-same for CTRL-\, after "^\Quit"
-
-===========================???
+===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D, et y'a des leaks
 CTRL-D apres avoir ecrit un debut de cmd
 
 ==========================A regler dans le parsing ?
 $unknown_var ; ls ; ls (premiere commande vide mais il fait quand meme ls)
 
-========================Resolu
-echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
-
-=======================Resolu
+=======================Resolu: ah?
 create file when redirecting output without doing anything ("> a")
 
 ====================Strerror added
 error when redir_in file does not exist ("< unknown_file")
+-> tests:
+< e
+echo < e
+echo fds < e
+ls < e
 
 ====================Strerror added
 error when redir_out file does not have write permission
+memes tests que pour redir_in ci-dessus, en remplacant < par >
 
-compare with bash: "cat | exit"======>ne devrait pas exit
+"cat | exit"======>ne devrait pas exit
 
 check_syntax:
 echo "'"
@@ -58,8 +55,6 @@ mkdir ok; cd ok; rmdir ../ok; pwd
 cd: leaks in getcwd
 	mkdir ok ; cd ok ; rmdir ../ok ; cd ..
 ====> segfault a corriger
-
-strerror au lieu de perror qui est pas autorise
 
 
 

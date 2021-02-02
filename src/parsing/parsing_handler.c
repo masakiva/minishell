@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:25:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/01 19:20:42 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/02 13:26:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int			parse_input(char **line, char **env, int stat_loc,
 		return (FAILURE);
 	return (SUCCESS);
 }
-#include "libft.h"
 
 t_command	*parse_one_command(t_xe *xe)
 {
