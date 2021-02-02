@@ -1,5 +1,6 @@
 #include "execution.h"
 #include "builtins.h"
+#include <string.h>
 
 static int	launch_exit(char **args, t_xe *xe)
 {
@@ -218,6 +219,12 @@ void	apply_redir(char *cur_arg, enum e_redir_op redir)
 	if (redir_fd >= 0) // else error
 	{
 		dup2(redir_fd, src_fd); // error
+	}
+	else
+	{
+		ft_putstr_fd(cur_arg, STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+		ft_putstr_fd(strerror(errno), STDERR_FILENO);
 	}
 }
 

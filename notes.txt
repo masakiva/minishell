@@ -26,20 +26,19 @@ echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
 =======================Resolu
 create file when redirecting output without doing anything ("> a")
 
-====================
+====================Strerror added
 error when redir_in file does not exist ("< unknown_file")
 
+====================Strerror added
 error when redir_out file does not have write permission
 
-compare with bash: "cat | exit"
-
-"cat |"
-then "ls"
+compare with bash: "cat | exit"======>ne devrait pas exit
 
 check_syntax:
 echo "'"
 echo '\'
 echo '"'
+"cat |"======>multiline error
 
 
 
