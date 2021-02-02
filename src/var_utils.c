@@ -52,7 +52,7 @@ int			env_replace_var(char *var_name, char *value, t_xe *xe)
 //	printf("shlvl = %d\n", tmp);
 	ft_export(new, xe);
 	free_str_array(new);
-	return (0);
+	return (SUCCESS);
 }
 
 int		check_var_name(char *var, ssize_t name_len)
