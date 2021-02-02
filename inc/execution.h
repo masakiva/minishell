@@ -31,4 +31,6 @@ typedef int			(*t_exec)(char **args, t_xe *xe);
 
 int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, t_xe *xe);
 
+void	apply_redirs(char **redir_paths, enum e_redir_op *redir_types);
+
 #endif
