@@ -9,15 +9,10 @@
 
 arthur:
 
-print "^C" au signal CTRL-C sans commande en boucle inf (comme "cat" ou "yes")
-et CTRL-\ ne fait rien sans commande en boucle inf
-
 ===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D, et y'a des leaks
 CTRL-D apres avoir ecrit un debut de cmd
 
 "cat | exit"======>ne devrait pas exit
-
-"> a"
 
 
 masaki:
