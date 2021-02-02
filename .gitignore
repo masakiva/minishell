@@ -21,7 +21,3 @@ tags
 
 # debug
 .gdb_history
-
-#tester_output
-output___bash
-output___minishell
