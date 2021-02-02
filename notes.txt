@@ -1,5 +1,6 @@
 "exit fds" -> exit 2 after 'bad exit return code' error
 "exit 42 1431" -> print "exit" before error
+========> si appele sans argument, renvoie la valeur de retour de la commande précédente
 
 builtins: set stat_loc for all returns
 
@@ -11,6 +12,9 @@ arthur:
 CTRL-D apres avoir ecrit un debut de cmd
 
 "cat | exit"======>ne devrait pas exit
+=======================> if (pipe)
+							{ if (cmd == exit)
+								{ no exit }	}
 
 
 
