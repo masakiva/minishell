@@ -60,20 +60,22 @@ static int			err_output(int err_code)
 	return (SUCCESS);
 }
 
-int				clean_and_exit(int ret, t_xe *xe)
+int				clean_and_exit(int err_code, t_xe *xe)
 {
-	if (ret == ARG_ERR)
+	int	ret;
+
+	if (err_code == ARG_ERR)
 	{
 		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS)
 			ft_error(WRITE_ERR, xe); // possible?
 	}
-	if (ret < CHILD_EXIT)
+	if (err_code < CHILD_EXIT)
 		ret = EXIT_SUCCESS;
 	else
 	{
-		if (ret == CHILD_ERROR)
+		if (err_code == CHILD_ERROR)
 		{
-			ft_putstr_fd("External function error:", STDERR_FILENO); // -> strerror
+			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
 			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 		}
 		ret = (xe->stat_loc);
@@ -82,8 +84,13 @@ int				clean_and_exit(int ret, t_xe *xe)
 	free_str_array(xe->env); // besoin de free?
 	free(xe);
 	if (isatty(STDIN_FILENO)) // temp pour le testeur
-		if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
-			return (WRITE_ERR); // possible?
+	{
+		if (err_code == CLEAN_EXIT)
+		{
+			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+				return (WRITE_ERR); // possible?
+		}
+	}
 	exit(ret);
 }
 
