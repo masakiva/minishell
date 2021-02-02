@@ -59,10 +59,22 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	while (i < proc)
 	{
 		wait(&xe->stat_loc);
-		if(WIFEXITED(xe->stat_loc))
+		if (WIFSIGNALED(xe->stat_loc))
+		{
+			if (WTERMSIG(xe->stat_loc) == SIGQUIT)
+			{
+				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR);
+			}
+			else
+			{
+				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR);
+			}
+				xe->stat_loc = (xe->stat_loc % 256) + 128;
+		}
+		else if(WIFEXITED(xe->stat_loc))
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
-//		if (WIFSIGNALED(xe->stat_loc)) // check this return value!
-//			xe->stat_loc += 128;
 		i++;
 	}
 	if (ret != SUCCESS)

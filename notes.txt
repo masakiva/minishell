@@ -5,26 +5,32 @@ et tester sur bash "exit 42 1431" ou "exit fds"
 
 arthur:
 
+===========================Resolu
 commande "."
 -->Le leaks releve a la sortie d'execve ne serait pas a prendre en compte car l'os reprend la main sur les adresses de la pile du process qu'execve remplace:
 https://linuxfr.org/forums/programmation-c--2/posts/free-apres-un-exec
 
+============================Resolu
 print newline after "^C" for CTRL-C signal ("cat")
 same for CTRL-\, after "^\Quit"
 
+===========================???
 CTRL-D apres avoir ecrit un debut de cmd
 
+==========================A regler dans le parsing ?
 $unknown_var ; ls ; ls (premiere commande vide mais il fait quand meme ls)
 
+========================Resolu
 echo > $unknown_var ; ls ; ls (redir ambigue mais il fait quand meme ls)
 
+=======================Resolu
 create file when redirecting output without doing anything ("> a")
 
+====================
 error when redir_in file does not exist ("< unknown_file")
 
 error when redir_out file does not have write permission
 
-commande "."
 compare with bash: "cat | exit"
 
 "cat |"

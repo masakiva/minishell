@@ -74,7 +74,22 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 		signal(SIGINT, SIG_IGN); // error if SIG_ERR? (check errno)
 		signal(SIGQUIT, SIG_IGN); // error if SIG_ERR? (check errno)
 		waitpid(pid, &xe->stat_loc, 0); // return value? error?
-		if(WIFEXITED(xe->stat_loc))
+		if (WIFSIGNALED(xe->stat_loc))
+		{
+			xe->stat_loc = WTERMSIG(xe->stat_loc);
+			if (xe->stat_loc == SIGQUIT)
+			{
+				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR);
+			}
+			else
+			{
+				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR);
+			}
+			xe->stat_loc += 128;
+		}
+		else if(WIFEXITED(xe->stat_loc))
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
 		signal_handler(); // err
 		return (SUCCESS);
