@@ -11,12 +11,6 @@ et CTRL-\ ne fait rien sans commande en boucle inf
 ===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D, et y'a des leaks
 CTRL-D apres avoir ecrit un debut de cmd
 
-==========================A regler dans le parsing ?
-$unknown_var ; ls ; ls (premiere commande vide mais il fait quand meme ls)
-
-=======================Resolu: ah?
-create file when redirecting output without doing anything ("> a")
-
 ====================Strerror added
 error when redir_in file does not exist ("< unknown_file")
 -> tests:
@@ -27,7 +21,7 @@ ls < e
 
 ====================Strerror added
 error when redir_out file does not have write permission
-memes tests que pour redir_in ci-dessus, en remplacant < par >
+-> memes tests que pour redir_in ci-dessus, en remplacant < par >
 
 "cat | exit"======>ne devrait pas exit
 
