@@ -48,13 +48,15 @@ erreurs de write et de ft_put* a terminer
 gestion d'erreurs des fonctions autorisees une a une
 
 
+
+
+
 builtins: set stat_loc?
 
 mkdir ok; cd ok; rmdir ../ok; pwd
-
-cd: leaks in getcwd
-	mkdir ok ; cd ok ; rmdir ../ok ; cd ..
+mkdir ok ; cd ok ; rmdir ../ok ; cd ..
 ====> segfault a corriger
+
 
 
 
