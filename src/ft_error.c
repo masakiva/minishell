@@ -28,7 +28,8 @@ int		exec_error(int err_code, t_xe *xe)
 		"HOME not set",
 		"cd: too many arguments",
 		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",// -> moved to err_output
-		"exit: too many arguments"};
+		"exit: too many arguments",
+		"exit: bad argument"};
 
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);

@@ -20,8 +20,7 @@ int	ft_exit(char **args, t_xe *xe)
 			else //  "exit NaN"
 			{
 				xe->stat_loc = 2;
-				printf("exit: bad argument\n");
-				return (FT_EXIT);//another error, to print like bash
+				return (EXIT_NAN);//another error, to print like bash
 			}
 		}
 	}
