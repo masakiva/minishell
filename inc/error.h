@@ -11,7 +11,6 @@ enum		e_retcode
 	CLEAN_EXIT,
 	ARG_ERR,
 	FT_EXIT,
-	PIPE_EXIT,
 	CHILD_EXIT,
 	CHILD_ERROR,
 	_ERRNO_MSG_,
@@ -37,7 +36,8 @@ enum		e_retcode
 	ESCAPE_NL,
 	REDIR_PATH_INVALID,
 	REDIR_PATH_MISSING,
-	EMPTY_CMD
+	EMPTY_CMD,
+	PIPE_EXIT
 };
 
 int			clean_and_exit(int ret, t_xe *xe);

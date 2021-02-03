@@ -242,14 +242,11 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 		if (ret != SUCCESS)
 			return (ret);
 	}
-//	printf("arg0 = %s\n", args[0]);
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
 	else if (cmd_code == EXIT && xe->pipe & CMD_PIPE)
 		return (PIPE_EXIT);
 	ret = command[cmd_code](args, xe);
-	if (ret >= HOME_NOT_SET)// ?
-		return (ret);// ?
 	return (ret);
 }

@@ -3,8 +3,7 @@
 void	sig_int(int signum)
 {
 	(void)signum;
-//	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	ft_putstr_fd("\n", STDIN_FILENO);
 	if (ft_putstr_fd(FT_PS1, STDOUT_FILENO) == ERROR)
 		return ;
 }
@@ -12,11 +11,7 @@ void	sig_int(int signum)
 void	sig_kill(int signum)
 {
 	(void)signum;
-	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
-//	ft_putstr_fd("\b\b  \b\b", STDOUT_FILENO);
-//	ft_putstr_fd("\n", STDOUT_FILENO);
-//	if (ft_putstr_fd(FT_PS1, STDOUT_FILENO) == ERROR)
-//		return ;
+	ft_putstr_fd("\b\b  \b\b", STDIN_FILENO);
 }
 
 void				signal_handler(void)

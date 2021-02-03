@@ -4,23 +4,6 @@
 #include "execution.h"
 #include "builtins.h"
 
-static int			handle_eof(char **line, int ret)
-{
-	char	*tmp;
-	char	*ptr;
-
-	while (ret != SUCCESS)
-	{
-		ft_putstr_fd("  \b\b", STDIN_FILENO);
-		ret = get_next_line(STDIN_FILENO, &tmp);
-		ptr = *line;
-		*line = ft_strjoin(ptr, tmp);
-		free(ptr);
-		free(tmp);
-	}
-	return (ret);
-}
-
 static int			get_input(char **line)
 {
 	int		ret;
@@ -35,13 +18,8 @@ static int			get_input(char **line)
 		return (GNL_ERR);
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
-		if (ft_strcmp(*line, "") == 0)
-		{
 			free(*line);
 			return (CLEAN_EXIT);
-		}
-		else
-			return (handle_eof(line, ret));
 	}
 	return (SUCCESS);
 }

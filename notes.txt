@@ -7,22 +7,7 @@ builtins: set stat_loc for all returns
 
 
 arthur:
-
-===========================??? oui on peut pas delete l'input en cours, et ensuite si on fait CTRL-C on peut plus refaire tout de suite CTRL-D
-CTRL-D apres avoir ecrit un debut de cmd
-
-"cat | exit"======>ne devrait pas exit
-=======================> if (pipe)
-							{ if (cmd == exit)
-								{ no exit }	}
-					=================> info non accessibles dans le process parent, mettre un flag dans xe pour passer l'info à la commande suivante
-
-
-continue commands after HOME_NOT_SET and CD_ARG_ERR
-
-"echo | echo pouet"
-ou "ls | echo pouet"
-
+comportement simplifié ^D
 
 masaki:
 

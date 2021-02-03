@@ -81,12 +81,13 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
 		i++;
 	}
-	if (ret != SUCCESS)
+	if (ret != SUCCESS && ret < _ERRNO_MSG_)
 		return (ret);
 	else
 	{
 		xe->pipe = 0;
 		xe->stat_loc = tmp;
+		ft_error(ret, xe);
 		return (handle_execution(xe, STDIN_FILENO, 0));
 	}
 }
