@@ -11,6 +11,7 @@ enum		e_retcode
 	CLEAN_EXIT,
 	ARG_ERR,
 	FT_EXIT,
+	PIPE_EXIT,
 	CHILD_EXIT,
 	CHILD_ERROR,
 	_ERRNO_MSG_,

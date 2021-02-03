@@ -38,7 +38,7 @@ int		exec_error(int err_code, t_xe *xe)
 		xe->stat_loc = 1;
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
-	if (xe->child == 1)
+	if (xe->pipe & EXEC_PIPE)
 		return (CHILD_EXIT);
 	else
 		return (SUCCESS);
@@ -99,6 +99,11 @@ int				clean_and_exit(int err_code, t_xe *xe)
 
 int					ft_error(int ret, t_xe *xe)
 {
+	if (ret == PIPE_EXIT)
+	{
+		xe->pipe = 0;
+		return (SUCCESS);
+	}
 	if (ret > CHILD_EXIT)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)// temp

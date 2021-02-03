@@ -40,6 +40,8 @@
 # define TO_SPLIT		1
 # define NOT_TO_SPLIT	0
 
+# define EXEC_PIPE		0x01
+# define CMD_PIPE		0x02
 
 /*
 **	**********************************
@@ -69,14 +71,14 @@ typedef struct		s_command
 typedef struct		s_xe
 {
 	pid_t	gpid;
-	int		child;
 	int		backup_stdin;
 	int		backup_stdout;
 	int		stat_loc;
-	uint8_t	pad[4];
 	char	*line;
 	char	**env;
 	char	**exported;
+	char	pipe;
+	uint8_t	pad[7];
 }					t_xe;
 
 

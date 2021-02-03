@@ -46,7 +46,7 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	pid = fork();
 	if (pid == 0)
 	{
-		xe->child = 1;
+		xe->pipe += EXEC_PIPE;
 		if (execve(cmd, args, xe->env) == ERROR)
 			return (CHILD_ERROR);
 		else
@@ -65,7 +65,7 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
 					return (WRITE_ERR);
 			}
-			else
+			else if (xe->stat_loc == SIGINT)
 			{
 				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
 					return (WRITE_ERR);
@@ -246,6 +246,8 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	cmd_code = get_cmd_code(args[0]);
 	if (cmd_code == M_ERROR)
 		return (MALLOC_ERR);
+	else if (cmd_code == EXIT && xe->pipe & CMD_PIPE)
+		return (PIPE_EXIT);
 	ret = command[cmd_code](args, xe);
 	if (ret >= HOME_NOT_SET)// ?
 		return (ret);// ?

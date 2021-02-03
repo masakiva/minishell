@@ -32,6 +32,8 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	}
 	else
 	{
+		if (!(xe->pipe & CMD_PIPE))
+			xe->pipe += CMD_PIPE;
 		close(fd[1]);// error
 		close(fd_in);
 		free_command(cur_command);
@@ -43,6 +45,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 {
 	int			i;
 	int			ret;
+	int			tmp;
 
 	ret = SUCCESS;
 	if (fd_in != STDIN_FILENO)
@@ -51,6 +54,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 			close(fd_in);
 	}
 	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
+	tmp = xe->stat_loc;
 	free_command(cur_command);
 	dup2(xe->backup_stdout, STDOUT_FILENO);
 	dup2(xe->backup_stdin, STDIN_FILENO);
@@ -60,17 +64,18 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		wait(&xe->stat_loc);
 		if (WIFSIGNALED(xe->stat_loc))
 		{
-			if (WTERMSIG(xe->stat_loc) == SIGQUIT)
+			xe->stat_loc = WTERMSIG(xe->stat_loc);
+			if (xe->stat_loc == SIGQUIT)
 			{
 				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
 					return (WRITE_ERR);
 			}
-			else
+			else if (xe->stat_loc == SIGINT)
 			{
 				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
 					return (WRITE_ERR);
 			}
-				xe->stat_loc = (xe->stat_loc % 256) + 128;
+			xe->stat_loc = (xe->stat_loc % 256) + 128;
 		}
 		else if(WIFEXITED(xe->stat_loc))
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
@@ -79,7 +84,11 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	if (ret != SUCCESS)
 		return (ret);
 	else
+	{
+		xe->pipe = 0;
+		xe->stat_loc = tmp;
 		return (handle_execution(xe, STDIN_FILENO, 0));
+	}
 }
 
 int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
@@ -93,6 +102,7 @@ int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
+		xe->pipe = 0;
 		return (handle_execution(xe, STDIN_FILENO, 0));
 	}
 	else if (cur_command->pipe_flag == TRUE)
@@ -122,6 +132,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				return (FAILURE);
 			dup2(xe->backup_stdout, STDOUT_FILENO);
 			dup2(xe->backup_stdin, STDIN_FILENO);
+			xe->pipe = 0;
 			return (handle_execution(xe, fd_in, proc));
 		}
 		if (cur_command->args == NULL)
@@ -132,6 +143,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				return (FD_ERROR);
 			}
 			free_command(cur_command);
+			xe->pipe = 0;
 			return (handle_execution(xe, fd_in, proc));
 		}
 	}
