@@ -22,10 +22,10 @@ int		exec_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
 		"Ambiguous redirection",
-		"HOME not set",
-		"No such file or directory",
+		"No such file or directory", // more specific msg
 		"export: Variable identifier (name) invalid",
 		"unset: Variable identifier (name) invalid",
+		"HOME not set",
 		"cd: too many arguments",
 		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",// -> moved to err_output
 		"exit: too many arguments"};
@@ -54,7 +54,7 @@ static int			err_output(int err_code)
 		"cd: cannot set variable PWD",
 		"pwd: cannot get current directory path",
 		"Error reading a directory in PATH",
-		"fd"};
+		"fd"}; // fd?
 
 	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);
@@ -69,7 +69,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 
 	if (err_code == ARG_ERR)
 	{
-		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS)
+		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS) // takes no argument?
 			ft_error(WRITE_ERR, xe); // possible?
 	}
 	if (err_code < FT_EXIT)

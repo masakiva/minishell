@@ -62,6 +62,8 @@ int		print_export(char **env, char **exported)
 		equalsign_pos = ft_index(variables[i], '=');
 		if (equalsign_pos != NOT_FOUND && ret == WRITE_SUCCESS)
 			ret = print_export_one_var(variables[i], equalsign_pos);
+		else if (ret == WRITE_SUCCESS)
+			ret = ft_putstr_fd(variables[i], STDOUT_FILENO);
 		if (ret == SUCCESS || ret == WRITE_SUCCESS)
 			ret = ft_putchar_fd('\n', STDOUT_FILENO);
 		if (ret != SUCCESS)
@@ -215,7 +217,7 @@ static int	ft_export_checks(char **args, t_xe *xe)
 		else
 		{
 			xe->stat_loc = 1;
-			return (INVALID_EXP_ID);
+			ft_error(INVALID_EXP_ID, xe);
 		}
 		args++;
 	}

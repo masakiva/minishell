@@ -40,7 +40,7 @@ int		ft_unset(char **args, t_xe *xe)
 		else
 		{
 			xe->stat_loc = 1;
-			return (INVALID_UNS_ID);
+			ft_error(INVALID_UNS_ID, xe);
 		}
 		args++;
 	}

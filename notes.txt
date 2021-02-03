@@ -18,11 +18,19 @@ CTRL-D apres avoir ecrit un debut de cmd
 					=================> info non accessibles dans le process parent, mettre un flag dans xe pour passer l'info à la commande suivante
 
 
+continue commands after HOME_NOT_SET and CD_ARG_ERR
+
+"echo | echo pouet"
+ou "ls | echo pouet"
+
+
 masaki:
 
 a la fin avec rgrep:
 erreurs de write et de ft_put* a terminer
 gestion d'erreurs des fonctions autorisees une a une
+
+alientest: exit pipe
 
 
 
