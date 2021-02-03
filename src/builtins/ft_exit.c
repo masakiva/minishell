@@ -11,6 +11,8 @@ int	ft_exit(char **args, t_xe *xe)
 				if (args[2] != NULL)
 				{
 					xe->stat_loc = 1;
+					if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+						return (WRITE_ERR);
 					return (EXIT_ARG_ERR);
 				}
 				xe->stat_loc = ft_atoi(args[1]) % 256;
@@ -18,6 +20,7 @@ int	ft_exit(char **args, t_xe *xe)
 			else //  "exit NaN"
 			{
 				xe->stat_loc = 2;
+				printf("exit: bad argument\n");
 				return (FT_EXIT);//another error, to print like bash
 			}
 		}

@@ -27,7 +27,7 @@ int		exec_error(int err_code, t_xe *xe)
 		"export: Variable identifier (name) invalid",
 		"unset: Variable identifier (name) invalid",
 		"cd: too many arguments",
-		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",
+		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",// -> moved to err_output
 		"exit: too many arguments"};
 
 
