@@ -15,7 +15,7 @@ CTRL-D apres avoir ecrit un debut de cmd
 =======================> if (pipe)
 							{ if (cmd == exit)
 								{ no exit }	}
-
+					=================> info non accessibles dans le process parent, mettre un flag dans xe pour passer l'info à la commande suivante
 
 
 masaki:
