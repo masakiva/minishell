@@ -7,6 +7,7 @@
 #include <dirent.h> // readdir, opendir
 
 # include "minishell.h"
+# include "error.h"
 
 # define NOT_FOUND	-1
 

@@ -1,35 +1,6 @@
 #include "execution.h"
 #include "builtins.h"
 
-#include <string.h>// dans un header
-
-static int	launch_exit(char **args, t_xe *xe)
-{
-	if (args != NULL) // necessaire?
-	{
-		if (args[1] != NULL)
-		{
-			if (ft_isnumber(args[1]) == TRUE)
-			{
-				if (args[2] != NULL)
-				{
-					xe->stat_loc = 1;
-					return (EXIT_ARG_ERR);
-				}
-				xe->stat_loc = ft_atoi(args[1]) % 256;
-			}
-			else //  "exit NaN"
-			{
-				xe->stat_loc = 2;
-				return (FT_EXIT);//another error, to print like bash
-			}
-		}
-		else
-			xe->stat_loc = 0;
-	}
-	return (FT_EXIT);
-}
-
 static int	search_path(DIR *dirp, char *name)
 {
 	struct dirent	*buf;

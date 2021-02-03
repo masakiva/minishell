@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "error.h"
 #include "parsing.h"
 #include "execution.h"
 #include "builtins.h"

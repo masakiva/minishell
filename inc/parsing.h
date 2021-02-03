@@ -2,6 +2,7 @@
 # define PARSING_H
 
 # include "minishell.h"
+# include "error.h"
 
 # define BUF_SIZE		4096
 

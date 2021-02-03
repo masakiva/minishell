@@ -2,6 +2,7 @@
 # define BUILTINS_H
 
 # include "execution.h"
+# include "error.h"
 
 # define ECHO_OPTIONS	"n"
 # define ECHO_N_OPTION	0b00000001
@@ -18,7 +19,7 @@ int		ft_cd(char **args, t_xe *xe);
 int		ft_export(char **args, t_xe *xe);
 int		ft_unset(char **args, t_xe *xe);
 int		ft_env(char **args, t_xe *xe);
-int		ft_exit(enum e_retcode ret, t_xe *xe);
+int		launch_exit(char **args, t_xe *xe);
 
 /*
 **	utils

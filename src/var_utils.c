@@ -1,4 +1,3 @@
-#include "minishell.h"
 #include "builtins.h"
 
 static char	*create_export_string(char *var_name, char *value)

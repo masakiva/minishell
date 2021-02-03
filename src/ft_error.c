@@ -1,9 +1,5 @@
-#include "minishell.h"
 #include "execution.h"
 #include "parsing.h"
-
-#include <string.h> // strerror
-// -> header error.h?
 
 int		parsing_error(int err_code, t_xe *xe)
 {
@@ -116,4 +112,10 @@ int					ft_error(int ret, t_xe *xe)
 	else if (ret != SUCCESS) // temp
 		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp
 	return (SUCCESS);
+}
+
+int		ft_exit(enum e_retcode ret, t_xe *xe)
+{
+	ft_error(ret, xe);
+	return (clean_and_exit(ret, xe));
 }
