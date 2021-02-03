@@ -40,8 +40,7 @@ enum		e_retcode
 };
 
 int			clean_and_exit(int ret, t_xe *xe);
-void		putstr_stderr(const char *str);
 int			ft_error(int ret, t_xe *xe);
-int		ft_exit(enum e_retcode ret, t_xe *xe);
+int			error_and_exit(enum e_retcode ret, t_xe *xe);
 
 #endif

@@ -19,7 +19,7 @@ int		ft_cd(char **args, t_xe *xe);
 int		ft_export(char **args, t_xe *xe);
 int		ft_unset(char **args, t_xe *xe);
 int		ft_env(char **args, t_xe *xe);
-int		launch_exit(char **args, t_xe *xe);
+int		ft_exit(char **args, t_xe *xe);
 
 /*
 **	utils

@@ -114,7 +114,7 @@ int					ft_error(int ret, t_xe *xe)
 	return (SUCCESS);
 }
 
-int		ft_exit(enum e_retcode ret, t_xe *xe)
+int		error_and_exit(enum e_retcode ret, t_xe *xe)
 {
 	ft_error(ret, xe);
 	return (clean_and_exit(ret, xe));

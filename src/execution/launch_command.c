@@ -233,7 +233,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	enum e_cmd_code	cmd_code;
 	const t_exec	command[8] = {ft_echo, ft_cd, ft_pwd,
 		ft_export, ft_unset, ft_env,
-		launch_exit, launch_ext};
+		ft_exit, launch_ext};
 
 	i = 0;
 	if (redir_paths != NULL)

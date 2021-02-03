@@ -1,6 +1,6 @@
 #include "builtins.h"
 
-int	launch_exit(char **args, t_xe *xe)
+int	ft_exit(char **args, t_xe *xe)
 {
 	if (args != NULL) // necessaire?
 	{

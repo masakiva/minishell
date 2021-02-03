@@ -111,7 +111,7 @@ int		main(int argc, char **argv, char **env_source)
 	ret = SUCCESS;
 	xe = (t_xe *)malloc(sizeof(t_xe));
 	if (xe == NULL)
-		return (ft_exit(MALLOC_ERR, xe));
+		return (error_and_exit(MALLOC_ERR, xe));
 	ft_bzero(xe, sizeof(t_xe));
 	if (argc > 2)
 		ret = ARG_ERR;
@@ -121,7 +121,7 @@ int		main(int argc, char **argv, char **env_source)
 		ret = exec_env_init(xe, env_source);
 		ret = read_from_file(xe, argv[1]);
 		if (ret != SUCCESS) // needed?
-			return (ft_exit(ret, xe)); // needed?
+			return (error_and_exit(ret, xe)); // needed?
 		while (ret == SUCCESS)
 			ret = main_loop(xe);
 	}
@@ -130,9 +130,9 @@ int		main(int argc, char **argv, char **env_source)
 		signal_handler(); // err?
 		ret = exec_env_init(xe, env_source);
 		if (ret != SUCCESS) // needed?
-			return (ft_exit(ret, xe)); // needed?
+			return (error_and_exit(ret, xe)); // needed?
 		while (ret != CLEAN_EXIT && ret != FAILURE && ret != CHILD_EXIT && ret != FT_EXIT) // why not while (ret == SUCCESS) ?
 			ret = main_loop(xe);
 	}
-	return (ft_exit(ret, xe));
+	return (error_and_exit(ret, xe));
 }
