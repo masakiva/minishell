@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 12:14:56 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/02 14:21:26 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/03 22:26:12 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 
 static int	add_var_args(t_state_machine *machine, char *var_value)
 {
-	if (ft_isspace(*var_value) && machine->cur_arg[0] != '\0')
+	if (ft_isspace(*var_value)
+			&& (machine->cur_arg[0] != '\0' || machine->quote_state == TRUE))
 	{
 		if (add_arg(machine) == FAILURE)
 			return (FAILURE);
 		machine->var_token_count++;
 		var_value++;
 	}
-	while (ft_isspace(*var_value))
-		var_value++;
+	var_value = skip_spaces(var_value);
 	while (*var_value != '\0')
 	{
 		if (ft_isspace(*var_value))
@@ -33,8 +33,7 @@ static int	add_var_args(t_state_machine *machine, char *var_value)
 			machine->var_token_count++;
 			if (blank_str(var_value) == TRUE)
 				break ;
-			while (ft_isspace(*var_value))
-				var_value++;
+			var_value = skip_spaces(var_value);
 		}
 		if (add_to_buf(machine, *var_value++) == FAILURE)
 			return (FAILURE);

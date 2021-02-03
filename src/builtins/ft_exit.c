@@ -17,10 +17,10 @@ int	ft_exit(char **args, t_xe *xe)
 				}
 				xe->stat_loc = ft_atoi(args[1]) % 256;
 			}
-			else //  "exit NaN"
+			else
 			{
 				xe->stat_loc = 2;
-				return (EXIT_NAN);//another error, to print like bash
+				return (EXIT_NAN);
 			}
 		}
 	}

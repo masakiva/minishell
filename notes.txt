@@ -1,13 +1,11 @@
-"exit fds" -> exit 2 after 'bad exit return code' error
-"exit 42 1431" -> print "exit" before error
-========> si appele sans argument, renvoie la valeur de retour de la commande précédente
-
 builtins: set stat_loc for all returns
-
 
 
 arthur:
 comportement simplifié ^D
+
+EXIT_NAN -> exit anyway
+
 
 masaki:
 
