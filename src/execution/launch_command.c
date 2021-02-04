@@ -193,7 +193,7 @@ int		apply_redir(char *cur_arg, enum e_redir_op redir, t_xe *xe)
 	{
 		src_fd = STDOUT_FILENO;
 		flags = O_WRONLY | O_CREAT;
-		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 		if (redir == APPEND)
 			flags |= O_APPEND;
 	}
