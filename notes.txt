@@ -4,9 +4,6 @@ builtins: set stat_loc for all returns
 arthur:
 comportement simplifié ^D
 
-EXIT_NAN -> exit anyway
-
-
 masaki:
 
 a la fin avec rgrep:

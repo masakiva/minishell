@@ -28,8 +28,7 @@ int		exec_error(int err_code, t_xe *xe)
 		"HOME not set",
 		"cd: too many arguments",
 		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",// -> moved to err_output
-		"exit: too many arguments",
-		"exit: bad argument"};
+		"exit: too many arguments"};
 
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);
@@ -82,6 +81,8 @@ int				clean_and_exit(int err_code, t_xe *xe)
 			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
 			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 		}
+		else if (err_code == EXIT_NAN)
+			ft_putstr_fd("exit: bad argument\n", STDERR_FILENO); // -> strerror
 		ret = (xe->stat_loc);
 	}
 	free_str_array(xe->exported); // besoin de free?
