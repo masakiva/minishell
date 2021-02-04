@@ -1,6 +1,6 @@
 #include "builtins.h"
 
-char	**sort_variables(char **env, char **exported)
+static char	**sort_variables(char **env, char **exported)
 {
 	char		**sorted_array;
 	size_t		env_len;
@@ -18,7 +18,7 @@ char	**sort_variables(char **env, char **exported)
 	return (sorted_array);
 }
 
-int		print_export_var_value(char *value)
+static int		print_export_var_value(char *value)
 {
 	while (*value != '\0')
 	{
@@ -32,7 +32,7 @@ int		print_export_var_value(char *value)
 	return (SUCCESS);
 }
 
-int		print_export_one_var(char *variable, ssize_t equalsign_pos)
+static int		print_export_one_var(char *variable, ssize_t equalsign_pos)
 {
 	if (write(STDOUT_FILENO, variable, equalsign_pos + 1) != equalsign_pos + 1)
 		return (WRITE_ERR);
@@ -45,7 +45,7 @@ int		print_export_one_var(char *variable, ssize_t equalsign_pos)
 	return (SUCCESS);
 }
 
-int		print_export(char **env, char **exported)
+static int		print_export(char **env, char **exported)
 {
 	char	**variables;
 	size_t	i;
@@ -213,7 +213,6 @@ static int	ft_export_checks(char **args, t_xe *xe)
 				if (ft_exported_export(*args, xe) != SUCCESS)
 					return (MALLOC_ERR);
 			}
-			xe->stat_loc = 0;
 		}
 		else
 		{
@@ -232,10 +231,8 @@ int		ft_export(char **args, t_xe *xe)
 	if (ft_arraylen(args) == 1)
 	{
 		ret = print_export(xe->env, xe->exported);
-		if (ret == SUCCESS)
-			xe->stat_loc = 0;
-		else
-			xe->stat_loc = 1;
+		if (ret != MALLOC_ERR)
+			ret = WRITE_ERR;
 	}
 	else
 		ret = ft_export_checks(args + 1, xe);

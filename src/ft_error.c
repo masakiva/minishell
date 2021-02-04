@@ -34,8 +34,6 @@ int		exec_error(int err_code, t_xe *xe)
 	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
 	// have to set stat_loc as well !!!
-	if (err_code == HOME_NOT_SET)
-		xe->stat_loc = 1;
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
 	if (xe->pipe & EXEC_PIPE)
@@ -68,10 +66,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	int	ret;
 
 	if (err_code == ARG_ERR)
-	{
-		if (ft_putstr_fd("Minishell takes no argument\n", STDERR_FILENO) != WRITE_SUCCESS) // takes no argument?
-			ft_error(WRITE_ERR, xe); // possible?
-	}
+		ft_putstr_fd("minishell takes no argument\n", STDERR_FILENO);
 	if (err_code < FT_EXIT)
 		ret = EXIT_SUCCESS;
 	else

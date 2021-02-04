@@ -34,6 +34,5 @@ int		ft_echo(char **args, t_xe *xe)
 	if (!(options & ECHO_N_OPTION))
 		if (ft_putchar_fd('\n', STDOUT_FILENO) != SUCCESS)
 			return (WRITE_ERR);
-	xe->stat_loc = 0;
 	return (SUCCESS);
 }

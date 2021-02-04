@@ -7,12 +7,19 @@ comportement simplifié ^D
 
 masaki:
 
+stat_loc pour
+export fd = fd
+unset fd = fd
+
+(void)var; to keep?
+
+M_ERROR on peut s'en passer?
+
 a la fin avec rgrep:
 erreurs de write et de ft_put* a terminer
 gestion d'erreurs des fonctions autorisees une a une
 
-alientest: exit pipe
-
+static functions
 
 
 
