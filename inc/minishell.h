@@ -33,8 +33,6 @@
 
 # define FT_PS1			"$ "
 
-# define BUILTINS		"echo/cd/pwd/env/export/unset/exit"
-
 # define SHLVL_STR		"SHLVL"
 
 # define TO_SPLIT		1

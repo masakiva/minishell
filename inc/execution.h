@@ -20,8 +20,7 @@ enum		e_cmd_code
 	UNSET,
 	ENV,
 	EXIT,
-	ELSE,
-	M_ERROR // another way?
+	ELSE
 };
 
 typedef int			(*t_exec)(char **args, t_xe *xe);

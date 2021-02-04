@@ -103,7 +103,7 @@ static int	add_path_to_localdir(char ***path)
 
 	tmp = malloc(sizeof(char) + 2);
 	if (tmp == NULL)
-		return (M_ERROR);
+		return (MALLOC_ERR);
 	tmp[0] = '.';
 	tmp[1] = '/';
 	tmp[2] = '\0';
@@ -123,7 +123,7 @@ static int	launch_ext(char **args, t_xe *xe)
 	{
 		cmd = ft_strdup(args[0]);
 		if (cmd == NULL)
-			return (M_ERROR);
+			return (MALLOC_ERR);
 	}
 	else
 	{
@@ -137,11 +137,11 @@ static int	launch_ext(char **args, t_xe *xe)
 		{
 			tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
 			if (tmp == NULL)
-				return (M_ERROR);
+				return (MALLOC_ERR);
 			path = ft_split(tmp, ':');
 			free(tmp);
 			if (path == NULL)
-				return (M_ERROR);
+				return (MALLOC_ERR);
 		}
 		add_path_to_localdir(&path);
 		ret = create_cmd(&cmd, path, args);
@@ -156,23 +156,23 @@ static int	launch_ext(char **args, t_xe *xe)
 
 enum e_cmd_code	get_cmd_code(char *arg)
 {
-	char	**cmd_list;
+	static char	*cmd_list[] = {
+		"echo",
+		"cd",
+		"pwd",
+		"env",
+		"export",
+		"unset",
+		"exit"};
 	int		i;
 
 	i = 0;
-	cmd_list = ft_split(BUILTINS, '/');
-	if (cmd_list == NULL)
-		return (M_ERROR);
-	while (cmd_list[i] != NULL)
+	while (i < 7)
 	{
 		if (ft_strcmp(arg, cmd_list[i]) == 0)
-		{
-			free_str_array(cmd_list);
 			return (i);
-		}
 		i++;
 	}
-	free_str_array(cmd_list);
 	return (ELSE);
 }
 
@@ -242,9 +242,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 			return (ret);
 	}
 	cmd_code = get_cmd_code(args[0]);
-	if (cmd_code == M_ERROR)
-		return (MALLOC_ERR);
-	else if (cmd_code == EXIT && xe->pipe & CMD_PIPE)
+	if (cmd_code == EXIT && xe->pipe & CMD_PIPE)// move dans ft_exit?
 		return (PIPE_EXIT);
 	ret = command[cmd_code](args, xe);
 	if (cmd_code < 4)
