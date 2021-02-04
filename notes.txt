@@ -1,4 +1,5 @@
 builtins: set stat_loc for all returns
+========> MALLOC_ERR and WRITE_ERR status return ?
 
 
 arthur:

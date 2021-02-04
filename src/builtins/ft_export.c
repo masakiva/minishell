@@ -213,6 +213,7 @@ static int	ft_export_checks(char **args, t_xe *xe)
 				if (ft_exported_export(*args, xe) != SUCCESS)
 					return (MALLOC_ERR);
 			}
+			xe->stat_loc = 0;
 		}
 		else
 		{
@@ -229,9 +230,14 @@ int		ft_export(char **args, t_xe *xe)
 	int		ret;
 
 	if (ft_arraylen(args) == 1)
+	{
 		ret = print_export(xe->env, xe->exported);
+		if (ret == SUCCESS)
+			xe->stat_loc = 0;
+		else
+			xe->stat_loc = 1;
+	}
 	else
 		ret = ft_export_checks(args + 1, xe);
-	xe->stat_loc = 0;
 	return (ret);
 }

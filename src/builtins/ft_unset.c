@@ -24,6 +24,7 @@ static int	unset_one_var(char *var, t_xe *xe)
 			xe->exported = new_array;
 		}
 	}
+	xe->stat_loc = 0;
 	return (SUCCESS);
 }
 
@@ -44,6 +45,5 @@ int		ft_unset(char **args, t_xe *xe)
 		}
 		args++;
 	}
-	xe->stat_loc = 0;
 	return (SUCCESS);
 }
