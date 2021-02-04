@@ -15,7 +15,7 @@ int	ft_exit(char **args, t_xe *xe)
 						return (WRITE_ERR);
 					return (EXIT_ARG_ERR);
 				}
-				xe->stat_loc = ft_atoi(args[1]) % 256;
+				xe->stat_loc = (unsigned int)ft_atoi(args[1]) % 256;
 			}
 			else
 			{
