@@ -235,6 +235,11 @@ int		ft_export(char **args, t_xe *xe)
 			ret = WRITE_ERR;
 	}
 	else
+	{
+		xe->stat_loc = 0;
 		ret = ft_export_checks(args + 1, xe);
+		if (ret != SUCCESS)
+			xe->stat_loc = 1;
+	}
 	return (ret);
 }

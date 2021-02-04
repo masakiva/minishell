@@ -30,6 +30,7 @@ static int	unset_one_var(char *var, t_xe *xe)
 int		ft_unset(char **args, t_xe *xe)
 {
 	args++;
+	xe->stat_loc = 0;
 	while (*args != NULL)
 	{
 		if (check_var_name(*args, ENTIRE_STR) == SUCCESS)

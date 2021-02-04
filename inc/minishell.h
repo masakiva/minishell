@@ -33,7 +33,7 @@
 
 # define FT_PS1			"$ "
 
-# define BUILTINS		"echo/cd/pwd/export/unset/env/exit"
+# define BUILTINS		"echo/cd/pwd/env/export/unset/exit"
 
 # define SHLVL_STR		"SHLVL"
 

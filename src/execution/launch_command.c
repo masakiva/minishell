@@ -231,8 +231,8 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	int				i;
 	int				ret;
 	enum e_cmd_code	cmd_code;
-	const t_exec	command[8] = {ft_echo, ft_cd, ft_pwd, ft_export, ft_unset,
-		ft_env, ft_exit, launch_ext};
+	const t_exec	command[8] = {ft_echo, ft_cd, ft_pwd, ft_env, ft_export,
+		ft_unset, ft_exit, launch_ext};
 
 	i = 0;
 	if (redir_paths != NULL)
@@ -247,7 +247,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 	else if (cmd_code == EXIT && xe->pipe & CMD_PIPE)
 		return (PIPE_EXIT);
 	ret = command[cmd_code](args, xe);
-	if (cmd_code < 6)
+	if (cmd_code < 4)
 	{
 		if (ret == SUCCESS)
 			xe->stat_loc = 0;
