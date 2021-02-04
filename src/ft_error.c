@@ -36,7 +36,7 @@ int		exec_error(int err_code, t_xe *xe)
 	// have to set stat_loc as well !!!
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
-	if (xe->pipe & EXEC_PIPE)
+	if (xe->flags & EXEC_PIPE)
 		return (CHILD_EXIT);
 	else
 		return (SUCCESS);
@@ -71,7 +71,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		ret = EXIT_SUCCESS;
 	else
 	{
-		if (err_code == CHILD_ERROR)
+		if (xe->flags & CHILD_ERROR)
 		{
 			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
 			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
@@ -98,10 +98,10 @@ int					ft_error(int ret, t_xe *xe)
 {
 	if (ret == PIPE_EXIT)
 	{
-		xe->pipe = 0;
+		xe->flags = 0;
 		return (SUCCESS);
 	}
-	if (ret > CHILD_EXIT)
+	if (ret > _ERRNO_MSG_ || xe->flags & CHILD_ERROR)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)// temp
 		return (parsing_error(ret, xe));

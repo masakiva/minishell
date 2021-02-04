@@ -40,6 +40,8 @@
 
 # define EXEC_PIPE		0x01
 # define CMD_PIPE		0x02
+# define CHILD_EXIT		0x04
+# define CHILD_ERROR	0x08
 
 /*
 **	**********************************
@@ -75,7 +77,7 @@ typedef struct		s_xe
 	char	*line;
 	char	**env;
 	char	**exported;
-	char	pipe;
+	char	flags;
 	uint8_t	pad[7];
 }					t_xe;
 

@@ -46,11 +46,17 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	pid = fork();
 	if (pid == 0)
 	{
-		xe->pipe += EXEC_PIPE;
+		xe->flags += EXEC_PIPE;
 		if (execve(cmd, args, xe->env) == ERROR)
-			return (CHILD_ERROR);
+		{
+			xe->flags += CHILD_ERROR;
+			return (CLEAN_EXIT);
+		}
 		else
-			return (CHILD_EXIT);
+		{
+			xe->flags += CHILD_EXIT;
+			return (CLEAN_EXIT);
+		}
 	}
 	else
 	{
@@ -242,7 +248,7 @@ int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, 
 			return (ret);
 	}
 	cmd_code = get_cmd_code(args[0]);
-	if (cmd_code == EXIT && xe->pipe & CMD_PIPE)// move dans ft_exit?
+	if (cmd_code == EXIT && xe->flags & CMD_PIPE)// move dans ft_exit?
 		return (PIPE_EXIT);
 	ret = command[cmd_code](args, xe);
 	if (cmd_code < 4)

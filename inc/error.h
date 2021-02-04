@@ -12,8 +12,6 @@ enum		e_retcode
 	ARG_ERR,
 	FT_EXIT,
 	EXIT_NAN,
-	CHILD_EXIT,
-	CHILD_ERROR,
 	_ERRNO_MSG_,
 	MALLOC_ERR,
 	WRITE_ERR,
