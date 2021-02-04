@@ -19,6 +19,8 @@ int	ft_exit(char **args, t_xe *xe)
 			}
 			else
 			{
+				if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR);
 				xe->stat_loc = 2;
 				return (EXIT_NAN);
 			}

@@ -66,20 +66,6 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	return (SUCCESS);
 }
 
-int		read_from_file(t_xe *xe, char *file)
-{
-	int	fd;
-	int	flags;
-
-	flags = O_RDONLY;
-	fd = open(file, flags);
-	if (fd == ERROR)
-		return (-1); // another error code
-	dup2(fd, STDIN_FILENO);
-	xe->backup_stdin = dup(STDIN_FILENO);
-	return (SUCCESS);
-}
-
 int		main(int argc, char **argv, char **env_source)
 {
 	int		ret;
@@ -91,18 +77,8 @@ int		main(int argc, char **argv, char **env_source)
 	if (xe == NULL)
 		return (error_and_exit(MALLOC_ERR, xe));
 	ft_bzero(xe, sizeof(t_xe));
-	if (argc > 2)
+	if (argc > 1)
 		ret = ARG_ERR;
-	else if (argc == 2)
-	{
-		//signal_handler(); ?
-		ret = exec_env_init(xe, env_source);
-		ret = read_from_file(xe, argv[1]);
-		if (ret != SUCCESS) // needed?
-			return (error_and_exit(ret, xe)); // needed?
-		while (ret == SUCCESS)
-			ret = main_loop(xe);
-	}
 	else // merge with else if (argc == 2) ?
 	{
 		signal_handler(); // err?

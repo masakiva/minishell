@@ -69,7 +69,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 
 	if (err_code == ARG_ERR)
 	{
-		if (ft_putstr_fd("Minishell takes no argument", STDERR_FILENO) != WRITE_SUCCESS) // takes no argument?
+		if (ft_putstr_fd("Minishell takes no argument\n", STDERR_FILENO) != WRITE_SUCCESS) // takes no argument?
 			ft_error(WRITE_ERR, xe); // possible?
 	}
 	if (err_code < FT_EXIT)
