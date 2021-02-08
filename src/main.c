@@ -37,8 +37,8 @@ static int			main_loop(t_xe *xe)
 		if (ret == SUCCESS)
 			ret = handle_execution(xe, STDIN_FILENO, 0);
 		free(line);
-		ret = ft_error(ret, xe);
 	}
+	ret = ft_error(ret, xe);
 	return (ret);
 }
 
@@ -48,6 +48,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	int		tmp;
 
 	xe->env = dup_str_array(env_source);
+	xe->flags = RUN;
 	if (xe->env == NULL)
 		return (MALLOC_ERR);
 	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));
@@ -85,8 +86,9 @@ int		main(int argc, char **argv, char **env_source)
 		ret = exec_env_init(xe, env_source);
 		if (ret != SUCCESS) // needed?
 			return (error_and_exit(ret, xe)); // needed?
-		while (ret != CLEAN_EXIT && ret != FAILURE && ret != FT_EXIT && !(xe->flags & CHILD_EXIT || xe->flags & CHILD_ERROR)) // why not while (ret == SUCCESS) ?
+		while (xe->flags & RUN) // why not while (ret == SUCCESS) ?
 			ret = main_loop(xe);
 	}
-	return (error_and_exit(ret, xe));
+	write(1, "OK\n", 3);
+	return (clean_and_exit(ret, xe));
 }

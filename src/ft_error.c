@@ -66,11 +66,22 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	int	ret;
 
 	if (err_code == ARG_ERR)
+	{
+		ret = 1;
 		ft_putstr_fd("minishell takes no argument\n", STDERR_FILENO);
-	if (err_code < FT_EXIT)
+	}
+	else if (err_code == CLEAN_EXIT)
 		ret = EXIT_SUCCESS;
 	else
 	{
+		if (isatty(STDIN_FILENO) && (xe->flags & EXIT_FLAG)) // temp pour le testeur
+		{
+			if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD_EXIT || xe->flags & CHILD_ERROR))
+			{
+				if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+					return (WRITE_ERR); // possible?
+			}
+		}
 		if (xe->flags & CHILD_ERROR)
 		{
 			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
@@ -80,25 +91,22 @@ int				clean_and_exit(int err_code, t_xe *xe)
 			ft_putstr_fd("exit: bad argument\n", STDERR_FILENO); // -> strerror
 		ret = (xe->stat_loc);
 	}
-	free_str_array(xe->exported); // besoin de free?
-	free_str_array(xe->env); // besoin de free?
-	free(xe);
-	if (isatty(STDIN_FILENO)) // temp pour le testeur
+	if (!(xe->flags & EXIT_ABORT))
 	{
-		if (err_code == CLEAN_EXIT || err_code == FT_EXIT)
-		{
-			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
-				return (WRITE_ERR); // possible?
-		}
+		free_str_array(xe->exported); // besoin de free?
+		free_str_array(xe->env); // besoin de free?
+		free(xe);
+		exit(ret);
 	}
-	exit(ret);
+	else
+		return (SUCCESS);
 }
 
 int					ft_error(int ret, t_xe *xe)
 {
 	if (ret == PIPE_EXIT)
 	{
-		xe->flags = 0;
+		xe->flags = RUN;
 		return (SUCCESS);
 	}
 	if (ret > _ERRNO_MSG_ || xe->flags & CHILD_ERROR)

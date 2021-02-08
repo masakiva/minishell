@@ -38,10 +38,13 @@
 # define TO_SPLIT		1
 # define NOT_TO_SPLIT	0
 
-# define EXEC_PIPE		0x01
-# define CMD_PIPE		0x02
-# define CHILD_EXIT		0x04
-# define CHILD_ERROR	0x08
+# define RUN			0x01
+# define EXEC_PIPE		0x02
+# define CMD_PIPE		0x04
+# define CHILD_EXIT		0x08
+# define CHILD_ERROR	0x10
+# define EXIT_ABORT		0x20
+# define EXIT_FLAG		0x40
 
 /*
 **	**********************************
