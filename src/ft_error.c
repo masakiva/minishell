@@ -37,12 +37,11 @@ int		exec_error(int err_code, t_xe *xe)
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
 	if (xe->flags & EXEC_PIPE)
-		return (CHILD_EXIT);
-	else
-		return (SUCCESS);
+		xe->flags += CHILD_EXIT;
+	return (SUCCESS);
 }
 
-static int			err_output(int err_code)
+static int			err_output(int err_code, t_xe *xe)
 {
 	const char	*err_msg[] = {
 		"Memory allocation failure",
@@ -52,12 +51,16 @@ static int			err_output(int err_code)
 		"cd: cannot set variable PWD",
 		"pwd: cannot get current directory path",
 		"Error reading a directory in PATH",
-		"fd"}; // fd?
+		"fd",
+		"external command error"}; // fd?
 
+	(void)xe;
 	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
 	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
+	if (err_code == EXT_CMD_ERROR)
+		exit (2);
 	return (SUCCESS);
 }
 
@@ -116,7 +119,7 @@ int					ft_error(int ret, t_xe *xe)
 	else if (ret > _EXEC_ERROR_)
 		return (exec_error(ret, xe));
 	else if (ret > _ERRNO_MSG_)
-		err_output(ret);
+		err_output(ret, xe);
 	else if (ret > _EXIT_CODE_)
 		return (clean_and_exit(ret, xe));
 	else if (ret != SUCCESS) // temp

@@ -51,7 +51,7 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 		{
 			xe->flags += CHILD_ERROR;
 			xe->flags -= RUN;
-			return (CLEAN_EXIT);
+			return (EXT_CMD_ERROR);
 		}
 		else
 		{
