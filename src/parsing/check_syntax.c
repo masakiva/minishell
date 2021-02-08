@@ -147,6 +147,28 @@ int		check_syntax(char *line)
 		if (flags & S_BACKSL)
 		{
 			flags -= S_BACKSL;
+			if (flags & S_EMPTY)
+				flags -= S_EMPTY;
+			if (flags & S_APPEND)
+				flags -= S_APPEND;
+			if (flags & S_R_REDIR)
+				flags -= S_R_REDIR;
+			if (flags & S_L_REDIR)
+				flags -= S_L_REDIR;
+			i++;
+		}
+		else if (flags & S_QUOTE)
+		{
+			if (line[i] == '\'')
+				flags -= S_QUOTE;
+			i++;
+		}
+		else if (flags & S_DQUOTE)
+		{
+			if (line[i] == '\"')
+				flags -= S_DQUOTE;
+			if (line[i] == '\\')
+				flags += S_BACKSL;
 			i++;
 		}
 		else
