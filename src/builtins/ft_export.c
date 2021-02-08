@@ -231,7 +231,7 @@ int		ft_export(char **args, t_xe *xe)
 	if (ft_arraylen(args) == 1)
 	{
 		ret = print_export(xe->env, xe->exported);
-		if (ret != MALLOC_ERR)
+		if (ret != SUCCESS && ret != MALLOC_ERR)
 			ret = WRITE_ERR;
 	}
 	else
