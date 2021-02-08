@@ -5,6 +5,17 @@ builtins: set stat_loc for all returns
 arthur:
 comportement simplifié ^D
 
+echo ";;" ou ';;' (idem pour |)
+echo "|;" (et autres combinaisons)
+echo ';' ; ou ";" ; (same)
+echo "|"
+echo '|'
+echo '|"'
+echo > \;
+\';
+'; (pas le bon msg)
+
+
 masaki:
 
 M_ERROR on peut s'en passer?
