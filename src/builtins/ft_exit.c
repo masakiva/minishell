@@ -20,6 +20,10 @@ int	ft_exit(char **args, t_xe *xe)
 				if (args[2] != NULL)
 				{
 					xe->stat_loc = 1;
+					if (!(xe->flags & RUN))
+						xe->flags += RUN;
+					if (xe->flags & EXIT_FLAG)
+						xe->flags -= EXIT_FLAG;
 					return (EXIT_ARG_ERR);
 				}
 				xe->stat_loc = (unsigned int)ft_atoi(args[1]) % 256;
