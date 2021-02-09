@@ -2,10 +2,15 @@
 
 int	ft_exit(char **args, t_xe *xe)
 {
-	if (xe->flags & CMD_PIPE)// move dans ft_exit?
+	if (xe->flags & CMD_PIPE || xe->flags & CHILD)
+	{
 		xe->flags += EXIT_ABORT;
+	}
 	else
-		xe->flags += EXIT_FLAG;
+	{
+		xe->flags -= RUN;
+		xe->flags = EXIT_FLAG;
+	}
 	if (args != NULL) // necessaire?
 	{
 		if (args[1] != NULL)
@@ -26,5 +31,5 @@ int	ft_exit(char **args, t_xe *xe)
 			}
 		}
 	}
-	return (FT_EXIT);
+	return (SUCCESS);
 }

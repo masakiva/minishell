@@ -1,8 +1,9 @@
 #include "parsing.h"
 #include "execution.h"
 
-void		child_setup(const int *fd, int fd_in)
+void		child_setup(const int *fd, int fd_in, t_xe *xe)
 {
+	xe->flags += CHILD;
 	signal(SIGINT, SIG_DFL); // error if SIG_ERR? (check errno)
 	signal(SIGQUIT, SIG_DFL); // error if SIG_ERR? (check errno)
 	close(fd[0]);// error
@@ -25,11 +26,10 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	xe->gpid = fork();// error?
 	if (xe->gpid == 0)
 	{
-		child_setup(fd, fd_in);
+		child_setup(fd, fd_in, xe);
 		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
 		free_command(cur_command);
 		xe->flags -= RUN;
-		xe->flags += CHILD_EXIT;
 		return (ret);
 	}
 	else
@@ -59,6 +59,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
 	tmp = xe->stat_loc;
 	free_command(cur_command);
+	dup2(xe->backup_stdout, STDOUT_FILENO);
 	dup2(xe->backup_stdin, STDIN_FILENO);
 	i = 0;
 	while (i < proc)
@@ -83,7 +84,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
 		i++;
 	}
-	if (ret != SUCCESS && ret < _ERRNO_MSG_)
+	if (xe->flags & EXIT_FLAG || (ret != SUCCESS && ret < _ERRNO_MSG_))
 		return (ret);
 	else
 	{

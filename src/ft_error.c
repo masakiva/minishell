@@ -37,7 +37,7 @@ int		exec_error(int err_code, t_xe *xe)
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
 	if (xe->flags & EXEC_PIPE)
-		xe->flags += CHILD_EXIT;
+		xe->flags -= RUN;
 	return (SUCCESS);
 }
 
@@ -73,19 +73,19 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		ret = 1;
 		ft_putstr_fd("minishell takes no argument\n", STDERR_FILENO);
 	}
-	else if (err_code == CLEAN_EXIT)
+	else if (err_code == SUCCESS)
 		ret = EXIT_SUCCESS;
 	else
 	{
 		if (isatty(STDIN_FILENO) && (xe->flags & EXIT_FLAG)) // temp pour le testeur
 		{
-			if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD_EXIT || xe->flags & CHILD_ERROR))
+			if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD))
 			{
 				if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
 					return (WRITE_ERR); // possible?
 			}
 		}
-		if (xe->flags & CHILD_ERROR)
+		if (err_code == EXT_CMD_ERROR)
 		{
 			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
 			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
@@ -102,7 +102,10 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		exit(ret);
 	}
 	else
+	{
+		xe->flags = RUN;
 		return (SUCCESS);
+	}
 }
 
 int					ft_error(int ret, t_xe *xe)
@@ -112,7 +115,7 @@ int					ft_error(int ret, t_xe *xe)
 		xe->flags = RUN;
 		return (SUCCESS);
 	}
-	if (ret > _ERRNO_MSG_ || xe->flags & CHILD_ERROR)
+	if (ret > _ERRNO_MSG_)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)// temp
 		return (parsing_error(ret, xe));
@@ -120,7 +123,7 @@ int					ft_error(int ret, t_xe *xe)
 		return (exec_error(ret, xe));
 	else if (ret > _ERRNO_MSG_)
 		err_output(ret, xe);
-	else if (ret > _EXIT_CODE_)
+	else if (ret > _EXIT_CODE_ || (xe->flags & EXIT_FLAG))
 		return (clean_and_exit(ret, xe));
 	else if (ret != SUCCESS) // temp
 		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp

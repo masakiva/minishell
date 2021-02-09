@@ -4,7 +4,7 @@
 #include "execution.h"
 #include "builtins.h"
 
-static int			get_input(char **line)
+static int			get_input(char **line, t_xe *xe)
 {
 	int		ret;
 
@@ -19,7 +19,7 @@ static int			get_input(char **line)
 	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
 	{
 			free(*line);
-			return (CLEAN_EXIT);
+			xe->flags -= RUN;
 	}
 	return (SUCCESS);
 }
@@ -29,8 +29,8 @@ static int			main_loop(t_xe *xe)
 	int			ret;
 	char		*line;
 
-	ret = get_input(&line);
-	if (ret == SUCCESS)
+	ret = get_input(&line, xe);
+	if (ret == SUCCESS && xe->flags == RUN)
 	{
 		xe->line = line;
 		ret = check_syntax(line);
@@ -89,6 +89,5 @@ int		main(int argc, char **argv, char **env_source)
 		while (xe->flags & RUN) // why not while (ret == SUCCESS) ?
 			ret = main_loop(xe);
 	}
-	write(1, "OK\n", 3);
 	return (clean_and_exit(ret, xe));
 }

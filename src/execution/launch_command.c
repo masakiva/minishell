@@ -49,15 +49,13 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 		xe->flags += EXEC_PIPE;
 		if (execve(cmd, args, xe->env) == ERROR)
 		{
-			xe->flags += CHILD_ERROR;
 			xe->flags -= RUN;
 			return (EXT_CMD_ERROR);
 		}
 		else
 		{
-			xe->flags += CHILD_EXIT;
 			xe->flags -= RUN;
-			return (CLEAN_EXIT);
+			return (SUCCESS);
 		}
 	}
 	else

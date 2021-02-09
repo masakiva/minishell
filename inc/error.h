@@ -8,9 +8,7 @@
 enum		e_retcode
 {
 	_EXIT_CODE_ = 2,
-	CLEAN_EXIT,
 	ARG_ERR,
-	FT_EXIT,
 	EXIT_NAN,
 	_ERRNO_MSG_,
 	MALLOC_ERR,
