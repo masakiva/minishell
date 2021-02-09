@@ -68,6 +68,14 @@ int				clean_and_exit(int err_code, t_xe *xe)
 {
 	int	ret;
 
+	if (isatty(STDIN_FILENO) && (xe->flags & EXIT_FLAG)) // temp pour le testeur
+	{
+		if (!(xe->flags & CHILD))
+		{
+			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+				return (WRITE_ERR); // possible?
+		}
+	}
 	if (err_code == ARG_ERR)
 	{
 		ret = 1;
@@ -77,14 +85,6 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		ret = EXIT_SUCCESS;
 	else
 	{
-		if (isatty(STDIN_FILENO) && (xe->flags & EXIT_FLAG)) // temp pour le testeur
-		{
-			if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD))
-			{
-				if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
-					return (WRITE_ERR); // possible?
-			}
-		}
 		if (err_code == EXT_CMD_ERROR)
 		{
 			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
@@ -123,7 +123,7 @@ int					ft_error(int ret, t_xe *xe)
 		return (exec_error(ret, xe));
 	else if (ret > _ERRNO_MSG_)
 		err_output(ret, xe);
-	else if (ret > _EXIT_CODE_ || (xe->flags & EXIT_FLAG))
+	else if (ret > _EXIT_CODE_ || !(xe->flags & RUN)  || (xe->flags & EXIT_FLAG))
 		return (clean_and_exit(ret, xe));
 	else if (ret != SUCCESS) // temp
 		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp

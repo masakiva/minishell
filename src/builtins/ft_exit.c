@@ -9,7 +9,7 @@ int	ft_exit(char **args, t_xe *xe)
 	else
 	{
 		xe->flags -= RUN;
-		xe->flags = EXIT_FLAG;
+		xe->flags += EXIT_FLAG;
 	}
 	if (args != NULL) // necessaire?
 	{
