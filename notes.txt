@@ -1,24 +1,18 @@
 builtins: set stat_loc for all returns
 ========> MALLOC_ERR and WRITE_ERR status return ?
 
+./filethatdoesexistbutnotexecutable
+echo $?
+./filethatdoesntexist
+echo $?
+..
+echo $?
 
 arthur:
 comportement simplifié ^D
 
-echo ";;" ou ';;' (idem pour |)
-echo "|;" (et autres combinaisons)
-echo ';' ; ou ";" ; (same)
-echo "|"
-echo '|'
-echo '|"'
-echo > \;
-\';
-'; (pas le bon msg)
-
 
 masaki:
-
-M_ERROR on peut s'en passer?
 
 a la fin avec rgrep:
 erreurs de write et de ft_put* a terminer
