@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 14:40:06 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/10 14:40:12 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 static int	unset_one_var(char *var, t_xe *xe)
@@ -27,7 +39,7 @@ static int	unset_one_var(char *var, t_xe *xe)
 	return (SUCCESS);
 }
 
-int		ft_unset(char **args, t_xe *xe)
+int			ft_unset(char **args, t_xe *xe)
 {
 	args++;
 	xe->stat_loc = 0;

@@ -20,14 +20,16 @@ SRC	+= exec_handler.c
 SRC	+= launch_command.c
 
 SRC	+= ft_echo.c
+SRC	+= options.c
 SRC	+= ft_pwd.c
 SRC	+= ft_cd.c
 SRC	+= ft_export.c
+SRC	+= export_print.c
+SRC	+= export_in_env.c
 SRC	+= ft_unset.c
+SRC	+= var_utils.c
 SRC	+= ft_env.c
 SRC	+= ft_exit.c
-SRC	+= options.c
-SRC	+= var_utils.c
 
 SRC	+= ft_error.c
 

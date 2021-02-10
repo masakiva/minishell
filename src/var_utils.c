@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   var_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 14:58:01 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/10 14:58:15 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 static char	*create_export_string(char *var_name, char *value)
@@ -48,13 +60,12 @@ int			env_replace_var(char *var_name, char *value, t_xe *xe)
 		return (MALLOC_ERR);
 	}
 	new[2] = NULL;
-//	printf("shlvl = %d\n", tmp);
 	ft_export(new, xe);
 	free_str_array(new);
 	return (SUCCESS);
 }
 
-int		check_var_name(char *var, ssize_t name_len)
+int			check_var_name(char *var, ssize_t name_len)
 {
 	size_t	i;
 

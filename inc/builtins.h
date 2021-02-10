@@ -26,6 +26,8 @@ int		ft_exit(char **args, t_xe *xe);
 */
 
 t_byte		shift_options(char ***args, char *op_chars);
+int			print_export(char **env, char **exported);
+int			ft_env_export(char *var, t_xe *xe, ssize_t equalsign_pos);
 int			check_var_name(char *var, ssize_t name_len);
 
 #endif
