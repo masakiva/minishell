@@ -1,19 +1,21 @@
 #include "parsing.h"
 #include "execution.h"
 
-void		child_setup(const int *fd, int fd_in, t_xe *xe)
+static int		child_setup(const int *fd, int fd_in, t_xe *xe)
 {
 	xe->flags += CHILD;
-	signal(SIGINT, SIG_DFL); // error if SIG_ERR? (check errno)
-	signal(SIGQUIT, SIG_DFL); // error if SIG_ERR? (check errno)
-	close(fd[0]);// error
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (close(fd[0]) == ERROR)
+		return (FAILURE);
 	if (fd_in != STDIN_FILENO)
 	{
-		if (dup2(fd_in, STDIN_FILENO) != -1)
-			close(fd_in);
+		if (dup2(fd_in, STDIN_FILENO) == ERROR || close(fd_in) == ERROR)
+			return (FAILURE);
 	}
-	if (dup2(fd[1], STDOUT_FILENO) != -1)// error
-		close(fd[1]);
+	if (dup2(fd[1], STDOUT_FILENO) == ERROR || close(fd[1]) == ERROR)
+		return (FAILURE);
+	return (SUCCESS);
 }
 
 int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
@@ -22,12 +24,16 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	int			ret;
 
 	ret = SUCCESS;
-	pipe(fd);// error?
-	xe->gpid = fork();// error?
-	if (xe->gpid == 0)
+	if (pipe(fd) == ERROR)
+		return (FD_ERROR);
+	xe->gpid = fork();
+	if (xe->gpid == ERROR)
+		return (FORK_ERROR);
+	else if (xe->gpid == 0)
 	{
-		child_setup(fd, fd_in, xe);
-		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
+		if (child_setup(fd, fd_in, xe) != SUCCESS)
+			return (FD_ERROR);
+		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);
 		free_command(cur_command);
 		xe->flags -= RUN;
 		return (ret);
@@ -36,8 +42,8 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	{
 		if (!(xe->flags & CMD_PIPE))
 			xe->flags += CMD_PIPE;
-		close(fd[1]);// error
-		close(fd_in);
+		if (close(fd[1]) == ERROR || close(fd_in) == ERROR)
+			return (FD_ERROR);
 		free_command(cur_command);
 		return (handle_execution(xe, fd[0], proc + 1));
 	}
@@ -52,15 +58,18 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	ret = SUCCESS;
 	if (fd_in != STDIN_FILENO)
 	{
-		if (dup2(fd_in, STDIN_FILENO) != -1)
-			close(fd_in);
+		if (dup2(fd_in, STDIN_FILENO) == ERROR || close(fd_in) == ERROR)
+			return (FD_ERROR);
 	}
-	dup2(xe->backup_stdout, STDOUT_FILENO);
-	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);// error
+	if (dup2(xe->backup_stdout, STDOUT_FILENO) == ERROR)
+		return (FD_ERROR);
+	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);
 	tmp = xe->stat_loc;
 	free_command(cur_command);
-	dup2(xe->backup_stdout, STDOUT_FILENO);
-	dup2(xe->backup_stdin, STDIN_FILENO);
+	if (dup2(xe->backup_stdout, STDOUT_FILENO) == ERROR)
+		return (FD_ERROR);
+	if (dup2(xe->backup_stdin, STDIN_FILENO) == ERROR)
+		return (FD_ERROR);
 	i = 0;
 	while (i < proc)
 	{
@@ -101,9 +110,8 @@ int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	int			ret;
 
 	ret = SUCCESS;
-	if ((cur_command->args) == NULL)
+	if (cur_command->args == NULL)
 	{
-		//ne peut être que le dernier argument car le parsing aurait renvoyé une erreur dans les autres cas
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);

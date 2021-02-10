@@ -21,7 +21,7 @@ int				exec_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
 		"Ambiguous redirection",
-		"No such file or directory", // more specific msg
+		"Commmand not found",
 		"export: Variable identifier (name) invalid",
 		"unset: Variable identifier (name) invalid",
 		"HOME not set",
@@ -30,7 +30,7 @@ int				exec_error(int err_code, t_xe *xe)
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
-	if (err_code == NO_SUCH_FILE)
+	if (err_code == CMD_NOT_FOUND)
 		xe->stat_loc = 127;
 	if (xe->flags & EXEC_PIPE || xe->flags & CHILD)
 		xe->flags = 0;
@@ -49,14 +49,15 @@ static int		err_output(int err_code, t_xe *xe)
 		"cd: cannot set variable PWD",
 		"pwd: cannot get current directory path",
 		"Error reading a directory in PATH",
-		"fd",
-		"external command error"}; // fd?
+		"fd issue",
+		"external command error",
+		"fork failure"};
 
 	(void)xe;
 	ft_putstr_fd("error: ", STDERR_FILENO);
 	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ - 1], STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
-	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(strerror(errno), STDERR_FILENO);
 	if (err_code == EXT_CMD_ERROR)
 	{
 		if (errno == ENOENT)
@@ -72,8 +73,8 @@ int				exit_trigger(int ret, t_xe *xe)
 {
 	if (!(xe->flags & EXIT_ABORT))
 	{
-		free_str_array(xe->exported); // besoin de free?
-		free_str_array(xe->env); // besoin de free?
+		free_str_array(xe->exported);
+		free_str_array(xe->env);
 		free(xe);
 		exit(ret);
 	}

@@ -16,6 +16,6 @@ void	sig_kill(int signum)
 
 void				signal_handler(void)
 {
-	signal(SIGINT, sig_int); // error if SIG_ERR? (check errno)
-	signal(SIGQUIT, sig_kill); // error if SIG_ERR? (check errno)
+	signal(SIGINT, sig_int);
+	signal(SIGQUIT, sig_kill);
 }

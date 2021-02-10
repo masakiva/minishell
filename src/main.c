@@ -16,10 +16,10 @@ static int			get_input(char **line, t_xe *xe)
 	ret = get_next_line(STDIN_FILENO, line);
 	if (ret == ERROR)
 		return (GNL_ERR);
-	else if (ret == 0) // EOF in files and heredocs (noeol files not yet supported)
+	else if (ret == 0)
 	{
-			free(*line);
-			xe->flags -= RUN;
+		free(*line);
+		xe->flags -= RUN;
 	}
 	return (SUCCESS);
 }
@@ -46,9 +46,9 @@ int		exec_env_init(t_xe *xe, char **env_source)
 {
 	char	*shlvl;
 	int		tmp;
+	int		ret;
 
 	xe->env = dup_str_array(env_source);
-	xe->flags = RUN;
 	if (xe->env == NULL)
 		return (MALLOC_ERR);
 	shlvl = get_var_value(xe->env, SHLVL_STR, ft_strlen(SHLVL_STR));
@@ -60,10 +60,13 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	shlvl = ft_itoa(tmp);
 	if (shlvl == NULL)
 		return (MALLOC_ERR);
-	env_replace_var(SHLVL_STR, shlvl, xe); // err
+	ret = env_replace_var(SHLVL_STR, shlvl, xe);
 	free(shlvl);
+	if (ret != SUCCESS)
+		return (MALLOC_ERR);
 	xe->backup_stdin = dup(STDIN_FILENO);
 	xe->backup_stdout = dup(STDOUT_FILENO);
+	xe->flags = RUN;
 	return (SUCCESS);
 }
 
@@ -80,13 +83,13 @@ int		main(int argc, char **argv, char **env_source)
 	ft_bzero(xe, sizeof(t_xe));
 	if (argc > 1)
 		ret = ARG_ERR;
-	else // merge with else if (argc == 2) ?
+	else
 	{
-		signal_handler(); // err?
+		signal_handler();
 		ret = exec_env_init(xe, env_source);
-		if (ret != SUCCESS) // needed?
-			return (error_and_exit(ret, xe)); // needed?
-		while (xe->flags & RUN) // why not while (ret == SUCCESS) ?
+		if (ret != SUCCESS)
+			return (error_and_exit(ret, xe));
+		while (xe->flags & RUN)
 		{
 			xe->flags = RUN;
 			ret = main_loop(xe);

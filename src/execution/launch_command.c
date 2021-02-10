@@ -44,7 +44,9 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	pid_t	pid;
 
 	pid = fork();
-	if (pid == 0)
+	if (pid == ERROR)
+		return (FORK_ERROR);
+	else if (pid == 0)
 	{
 		xe->flags += EXEC_PIPE;
 		if (execve(cmd, args, xe->env) == ERROR)
@@ -60,9 +62,9 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN); // error if SIG_ERR? (check errno)
-		signal(SIGQUIT, SIG_IGN); // error if SIG_ERR? (check errno)
-		waitpid(pid, &xe->stat_loc, 0); // return value? error?
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		waitpid(pid, &xe->stat_loc, 0);
 		if (WIFSIGNALED(xe->stat_loc))
 		{
 			xe->stat_loc = WTERMSIG(xe->stat_loc);
@@ -80,7 +82,7 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 		}
 		else if(WIFEXITED(xe->stat_loc))
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
-		signal_handler(); // err
+		signal_handler();
 		return (SUCCESS);
 	}
 }
@@ -93,7 +95,7 @@ static int	create_cmd(char **tmp, char **path, char **args)
 
 	dir_index = search_exec(path, args[0]);
 	if (dir_index == NOT_FOUND)
-		return (NO_SUCH_FILE); // other error code
+		return (CMD_NOT_FOUND);
 	dir = ft_strjoin(path[dir_index], "/");
 	cmd = ft_strjoin(dir, args[0]);
 	if (cmd == NULL)
@@ -103,18 +105,17 @@ static int	create_cmd(char **tmp, char **path, char **args)
 	return (SUCCESS);
 }
 
-static int	add_path_to_localdir(char ***path)
+static char	*add_path_to_localdir(void)
 {
 	char	*tmp;
 
 	tmp = malloc(sizeof(char) + 2);
 	if (tmp == NULL)
-		return (MALLOC_ERR);
+		return (NULL);
 	tmp[0] = '.';
 	tmp[1] = '/';
 	tmp[2] = '\0';
-	*path = push_str_to_array(*path, tmp);
-	return (SUCCESS);
+	return (tmp);
 }
 
 static int	launch_ext(char **args, t_xe *xe)
@@ -133,15 +134,18 @@ static int	launch_ext(char **args, t_xe *xe)
 	}
 	else
 	{
-		ret = get_var_pos(xe->env, "PATH", 4); // and with PATH unset?
-		if (ret == -1)
+		ret = get_var_pos(xe->env, "PATH", 4);
+		if (ret == NOT_FOUND)
 		{
-			path = malloc(sizeof(char*));
-			*path = NULL;
+			path = malloc((sizeof(char*) * 2));
+			path[0] = add_path_to_localdir();
+			if (path[0] == NULL)
+				return (MALLOC_ERR);
+			path[1] = NULL;
 		}
 		else
 		{
-			tmp = get_var_value(xe->env, "PATH", 4); // and with PATH unset?
+			tmp = get_var_value(xe->env, "PATH", 4);
 			if (tmp == NULL)
 				return (MALLOC_ERR);
 			path = ft_split(tmp, ':');
@@ -149,7 +153,6 @@ static int	launch_ext(char **args, t_xe *xe)
 			if (path == NULL)
 				return (MALLOC_ERR);
 		}
-		add_path_to_localdir(&path);
 		ret = create_cmd(&cmd, path, args);
 		free_str_array(path);
 		if (ret != SUCCESS)
@@ -204,9 +207,10 @@ int		apply_redir(char *cur_arg, enum e_redir_op redir, t_xe *xe)
 			flags |= O_APPEND;
 	}
 	redir_fd = open(cur_arg, flags, mode);
-	if (redir_fd >= 0) // else error
+	if (redir_fd >= 0)
 	{
-		dup2(redir_fd, src_fd); // error
+		if (dup2(redir_fd, src_fd) == ERROR)
+			return (FD_ERROR);
 	}
 	else
 	{
