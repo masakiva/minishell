@@ -36,6 +36,8 @@ int		exec_error(int err_code, t_xe *xe)
 	// have to set stat_loc as well !!!
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
+	if (err_code == EXIT_ARG_ERR)
+		xe->flags = RUN;
 	if (xe->flags & EXEC_PIPE)
 		xe->flags -= RUN;
 	return (SUCCESS);
@@ -110,11 +112,11 @@ int					ft_error(int ret, t_xe *xe)
 {
 	if (xe->flags & EXIT_FLAG) // temp pour le testeur
 	{
-		//if (!(xe->flags & CHILD))
-	//	{
+		if (!(xe->flags & CHILD))
+		{
 			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
 				return (WRITE_ERR); // possible?
-	//	}
+		}
 	}
 	if (ret == PIPE_EXIT)
 	{
