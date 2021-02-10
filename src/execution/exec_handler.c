@@ -91,6 +91,8 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		xe->flags = RUN;
 		xe->stat_loc = tmp;
 		ft_error(ret, xe);
+		if (ret == EXIT_ARG_ERR)
+			return (SUCCESS);
 		return (handle_execution(xe, STDIN_FILENO, 0));
 	}
 }

@@ -74,14 +74,6 @@ int				clean_and_exit(int err_code, t_xe *xe)
 {
 	int	ret;
 
-	if (isatty(STDIN_FILENO) && (xe->flags & EXIT_FLAG)) // temp pour le testeur
-	{
-		if (!(xe->flags & CHILD))
-		{
-			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
-				return (WRITE_ERR); // possible?
-		}
-	}
 	if (err_code == ARG_ERR)
 	{
 		ret = 1;
@@ -116,6 +108,14 @@ int				clean_and_exit(int err_code, t_xe *xe)
 
 int					ft_error(int ret, t_xe *xe)
 {
+	if (xe->flags & EXIT_FLAG) // temp pour le testeur
+	{
+		//if (!(xe->flags & CHILD))
+	//	{
+			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
+				return (WRITE_ERR); // possible?
+	//	}
+	}
 	if (ret == PIPE_EXIT)
 	{
 		xe->flags = RUN;
