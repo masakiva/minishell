@@ -138,6 +138,7 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				return (FAILURE);
 			dup2(xe->backup_stdout, STDOUT_FILENO);
 			dup2(xe->backup_stdin, STDIN_FILENO);
+			xe->stat_loc = 1;
 			xe->flags = RUN;
 			return (handle_execution(xe, fd_in, proc));
 		}
