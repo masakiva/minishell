@@ -17,7 +17,6 @@ int		parsing_error(int err_code, t_xe *xe)
 	return (SUCCESS);
 }
 
-
 int		exec_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
@@ -27,19 +26,16 @@ int		exec_error(int err_code, t_xe *xe)
 		"unset: Variable identifier (name) invalid",
 		"HOME not set",
 		"cd: too many arguments",
-		//"pwd : erreur de détermination du répertoire actuel : getcwd : ne peut accéder aux répertoires parents : Aucun fichier ou dossier de ce type",// -> moved to err_output
 		"exit: too many arguments"};
-
 
 	ft_putstr_fd("command error: ", STDERR_FILENO);
 	ft_putendl_fd(err_msg[err_code - _EXEC_ERROR_ - 1], STDERR_FILENO);
-	// have to set stat_loc as well !!!
 	if (err_code == NO_SUCH_FILE)
 		xe->stat_loc = 127;
-	if (err_code == EXIT_ARG_ERR)
+	if (xe->flags & EXEC_PIPE || xe->flags & CHILD)
+		xe->flags = 0;
+	else if (err_code == EXIT_ARG_ERR)
 		xe->flags = RUN;
-	if (xe->flags & EXEC_PIPE)
-		xe->flags -= RUN;
 	return (SUCCESS);
 }
 
@@ -58,7 +54,7 @@ static int			err_output(int err_code, t_xe *xe)
 
 	(void)xe;
 	ft_putstr_fd("error: ", STDERR_FILENO);
-	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ -1], STDERR_FILENO);
+	ft_putstr_fd(err_msg[err_code - _ERRNO_MSG_ - 1], STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
 	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 	if (err_code == EXT_CMD_ERROR)
@@ -67,7 +63,7 @@ static int			err_output(int err_code, t_xe *xe)
 			xe->stat_loc = 127;
 		else if (errno == EACCES || errno == ENOEXEC)
 			xe->stat_loc = 126;
-		exit (xe->stat_loc);
+		exit(xe->stat_loc);
 	}
 	return (SUCCESS);
 }
@@ -87,11 +83,11 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	{
 		if (err_code == EXT_CMD_ERROR)
 		{
-			ft_putstr_fd("External function error: ", STDERR_FILENO); // -> strerror
-			ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
+			ft_putstr_fd("External function error: ", STDERR_FILENO);
+			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		}
 		else if (err_code == EXIT_NAN)
-			ft_putstr_fd("exit: bad argument\n", STDERR_FILENO); // -> strerror
+			ft_putstr_fd("exit: bad argument\n", STDERR_FILENO);
 		ret = (xe->stat_loc);
 	}
 	if (!(xe->flags & EXIT_ABORT))
@@ -110,31 +106,20 @@ int				clean_and_exit(int err_code, t_xe *xe)
 
 int					ft_error(int ret, t_xe *xe)
 {
-	if (xe->flags & EXIT_FLAG) // temp pour le testeur
-	{
-		if (!(xe->flags & CHILD))
-		{
-			if (ft_putstr_fd("exit\n", STDOUT_FILENO) != WRITE_SUCCESS)
-				return (WRITE_ERR); // possible?
-		}
-	}
-	if (ret == PIPE_EXIT)
-	{
-		xe->flags = RUN;
-		return (SUCCESS);
-	}
+	if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD))
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (ret > _ERRNO_MSG_)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (ret > _PARSING_ERROR_)// temp
+	if (ret > _PARSING_ERROR_)
 		return (parsing_error(ret, xe));
 	else if (ret > _EXEC_ERROR_)
 		return (exec_error(ret, xe));
 	else if (ret > _ERRNO_MSG_)
 		err_output(ret, xe);
-	else if (ret > _EXIT_CODE_ || !(xe->flags & RUN)  || (xe->flags & EXIT_FLAG))
+	else if (ret > _EXIT_CODE_ || !(xe->flags & RUN) || (xe->flags & EXIT_FLAG))
 		return (clean_and_exit(ret, xe));
-	else if (ret != SUCCESS) // temp
-		ft_putstr_fd("ERROR CODE ERROR (printed for debug)", STDERR_FILENO);// temp
+	else if (ret != SUCCESS)
+		ft_putstr_fd("Fatal error", STDERR_FILENO);
 	return (SUCCESS);
 }
 

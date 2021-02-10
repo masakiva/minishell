@@ -35,7 +35,6 @@ enum		e_retcode
 	REDIR_PATH_INVALID,
 	REDIR_PATH_MISSING,
 	EMPTY_CMD,
-	PIPE_EXIT
 };
 
 int			clean_and_exit(int ret, t_xe *xe);
