@@ -37,8 +37,8 @@ static int			main_loop(t_xe *xe)
 		if (ret == SUCCESS)
 			ret = handle_execution(xe, STDIN_FILENO, 0);
 		free(line);
+		ret = ft_error(ret, xe);
 	}
-	ret = ft_error(ret, xe);
 	return (ret);
 }
 
@@ -87,7 +87,10 @@ int		main(int argc, char **argv, char **env_source)
 		if (ret != SUCCESS) // needed?
 			return (error_and_exit(ret, xe)); // needed?
 		while (xe->flags & RUN) // why not while (ret == SUCCESS) ?
+		{
+			xe->flags = RUN;
 			ret = main_loop(xe);
+		}
 	}
 	return (clean_and_exit(ret, xe));
 }

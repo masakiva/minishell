@@ -68,6 +68,22 @@ static int		err_output(int err_code, t_xe *xe)
 	return (SUCCESS);
 }
 
+int				exit_trigger(int ret, t_xe *xe)
+{
+	if (!(xe->flags & EXIT_ABORT))
+	{
+		free_str_array(xe->exported); // besoin de free?
+		free_str_array(xe->env); // besoin de free?
+		free(xe);
+		exit(ret);
+	}
+	else
+	{
+		xe->flags = RUN;
+		return (SUCCESS);
+	}
+}
+
 int				clean_and_exit(int err_code, t_xe *xe)
 {
 	int	ret;
@@ -83,6 +99,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	{
 		if (err_code == EXT_CMD_ERROR)
 		{
+			xe->flags += EXIT_ABORT;
 			ft_putstr_fd("External function error: ", STDERR_FILENO);
 			ft_putendl_fd(strerror(errno), STDERR_FILENO);
 		}
@@ -90,18 +107,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 			ft_putstr_fd("exit: bad argument\n", STDERR_FILENO);
 		ret = (xe->stat_loc);
 	}
-	if (!(xe->flags & EXIT_ABORT))
-	{
-		free_str_array(xe->exported); // besoin de free?
-		free_str_array(xe->env); // besoin de free?
-		free(xe);
-		exit(ret);
-	}
-	else
-	{
-		xe->flags = RUN;
-		return (SUCCESS);
-	}
+	return (exit_trigger(ret, xe));
 }
 
 int				ft_error(int ret, t_xe *xe)
@@ -115,9 +121,9 @@ int				ft_error(int ret, t_xe *xe)
 	else if (ret > _EXEC_ERROR_)
 		return (exec_error(ret, xe));
 	else if (ret > _ERRNO_MSG_)
-		err_output(ret, xe);
-	else if (ret > _EXIT_CODE_ || !(xe->flags & RUN) || (xe->flags & EXIT_FLAG))
-		return (clean_and_exit(ret, xe));
+		return (err_output(ret, xe));
+	else if (ret > _EXIT_CODE_ || !(xe->flags & RUN))
+		ret = clean_and_exit(ret, xe);
 	else if (ret != SUCCESS)
 		ft_putstr_fd("Fatal error", STDERR_FILENO);
 	return (SUCCESS);
@@ -125,6 +131,6 @@ int				ft_error(int ret, t_xe *xe)
 
 int				error_and_exit(enum e_retcode ret, t_xe *xe)
 {
-	ft_error(ret, xe);
-	return (clean_and_exit(ret, xe));
+	ret = ft_error(ret, xe);
+	return (exit_trigger(ret, xe));
 }

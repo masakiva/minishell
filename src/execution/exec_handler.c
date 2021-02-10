@@ -88,7 +88,6 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		return (ret);
 	else
 	{
-		xe->flags = RUN;
 		xe->stat_loc = tmp;
 		ft_error(ret, xe);
 		if (ret == EXIT_ARG_ERR)
@@ -108,7 +107,6 @@ int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
-		xe->flags = RUN;
 		return (handle_execution(xe, STDIN_FILENO, 0));
 	}
 	else if (cur_command->pipe_flag == TRUE)
@@ -139,7 +137,6 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 			dup2(xe->backup_stdout, STDOUT_FILENO);
 			dup2(xe->backup_stdin, STDIN_FILENO);
 			xe->stat_loc = 1;
-			xe->flags = RUN;
 			return (handle_execution(xe, fd_in, proc));
 		}
 		if (cur_command->args == NULL)
@@ -150,7 +147,6 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 				return (FD_ERROR);
 			}
 			free_command(cur_command);
-			xe->flags = RUN;
 			return (handle_execution(xe, fd_in, proc));
 		}
 	}
