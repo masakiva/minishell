@@ -60,7 +60,13 @@ static int			err_output(int err_code, t_xe *xe)
 	ft_putstr_fd(": ", STDERR_FILENO); // besoin de faire comme perror?
 	ft_putendl_fd(strerror(errno), STDERR_FILENO); // strerror error?
 	if (err_code == EXT_CMD_ERROR)
-		exit (2);
+	{
+		if (errno == ENOENT)
+			xe->stat_loc = 127;
+		else if (errno == EACCES || errno == ENOEXEC)
+			xe->stat_loc = 126;
+		exit (xe->stat_loc);
+	}
 	return (SUCCESS);
 }
 
