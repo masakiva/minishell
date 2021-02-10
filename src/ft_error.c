@@ -1,7 +1,7 @@
 #include "execution.h"
 #include "parsing.h"
 
-int		parsing_error(int err_code, t_xe *xe)
+int				parsing_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
 		"No matching single quote",
@@ -17,7 +17,7 @@ int		parsing_error(int err_code, t_xe *xe)
 	return (SUCCESS);
 }
 
-int		exec_error(int err_code, t_xe *xe)
+int				exec_error(int err_code, t_xe *xe)
 {
 	const char		*err_msg[] = {
 		"Ambiguous redirection",
@@ -39,7 +39,7 @@ int		exec_error(int err_code, t_xe *xe)
 	return (SUCCESS);
 }
 
-static int			err_output(int err_code, t_xe *xe)
+static int		err_output(int err_code, t_xe *xe)
 {
 	const char	*err_msg[] = {
 		"Memory allocation failure",
@@ -104,10 +104,10 @@ int				clean_and_exit(int err_code, t_xe *xe)
 	}
 }
 
-int					ft_error(int ret, t_xe *xe)
+int				ft_error(int ret, t_xe *xe)
 {
 	if (xe->flags & EXIT_FLAG && !(xe->flags & CHILD))
-		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (ret > _ERRNO_MSG_)
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (ret > _PARSING_ERROR_)
@@ -123,7 +123,7 @@ int					ft_error(int ret, t_xe *xe)
 	return (SUCCESS);
 }
 
-int		error_and_exit(enum e_retcode ret, t_xe *xe)
+int				error_and_exit(enum e_retcode ret, t_xe *xe)
 {
 	ft_error(ret, xe);
 	return (clean_and_exit(ret, xe));
