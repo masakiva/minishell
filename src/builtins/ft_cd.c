@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/10 14:40:20 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/10 14:40:46 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 int		cd_to(char *newpath, t_xe *xe)
@@ -49,7 +61,7 @@ int		ft_cd(char **args, t_xe *xe)
 		ret = MALLOC_ERR;
 	else if (ret == SUCCESS)
 	{
-		ret = cd_to(newpath, xe); 
+		ret = cd_to(newpath, xe);
 		free(newpath);
 	}
 	return (ret);
