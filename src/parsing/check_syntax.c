@@ -98,29 +98,33 @@ int		check_bsl_and_quotes(unsigned int *flags, char c)
 			return (SUCCESS);
 		else if (!(*flags & S_QUOTE))
 			*flags += S_QUOTE;
-		else if (*flags & S_R_REDIR)
-			*flags -= S_R_REDIR;
-		else if (*flags & S_L_REDIR)
-			*flags -= S_L_REDIR;
-		else if (*flags & S_EMPTY)
-			*flags -= S_EMPTY;
 		else
+		{
+			if (*flags & S_R_REDIR)
+				*flags -= S_R_REDIR;
+			else if (*flags & S_L_REDIR)
+				*flags -= S_L_REDIR;
+			else if (*flags & S_EMPTY)
+				*flags -= S_EMPTY;
 			*flags -= S_QUOTE;
+		}
 	}
-	else if (c == '\"')
+	else if (c == '"')
 	{
 		if (*flags & S_QUOTE)
 			return (SUCCESS);
 		else if (!(*flags & S_DQUOTE))
 			*flags += S_DQUOTE;
-		else if (*flags & S_R_REDIR)
-			*flags -= S_R_REDIR;
-		else if (*flags & S_L_REDIR)
-			*flags -= S_L_REDIR;
-		else if (*flags & S_EMPTY)
-			*flags -= S_EMPTY;
 		else
+		{
+			if (*flags & S_R_REDIR)
+				*flags -= S_R_REDIR;
+			else if (*flags & S_L_REDIR)
+				*flags -= S_L_REDIR;
+			else if (*flags & S_EMPTY)
+				*flags -= S_EMPTY;
 			*flags -= S_DQUOTE;
+		}
 	}
 	else
 		return (check_redirs_and_cmdsep(flags, c));
@@ -174,9 +178,9 @@ int		check_syntax(char *line)
 			flags -= S_QUOTE;
 			i++;
 		}
-		else if (flags & S_DQUOTE && (line[i] == '\'' || line[i] == '\"'))
+		else if (flags & S_DQUOTE && (line[i] == '\'' || line[i] == '"'))
 		{
-			if (line[i] == '\"')
+			if (line[i] == '"')
 				flags -= S_DQUOTE;
 			if (line[i] == '\\')
 				flags += S_BACKSL;

@@ -8,7 +8,8 @@ SRC_DIR		+= src/builtins/
 SRC	+= main.c
 SRC	+= signal_handling.c
 
-SRC += check_syntax.c
+SRC += syntax.c
+#SRC += check_syntax.c
 SRC	+= parsing_handler.c
 SRC += parsing_states1.c
 SRC += parsing_states2.c

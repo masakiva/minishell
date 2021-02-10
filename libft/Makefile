@@ -77,6 +77,7 @@ SRCS_CUSTOM	+= blank_str.c
 SRCS_CUSTOM	+= push_int_to_array.c
 SRCS_CUSTOM	+= ft_isnumber.c
 SRCS_CUSTOM	+= skip_spaces.c
+SRCS_CUSTOM	+= ft_set_index.c
 
 VPATH		= part_1:part_2:bonus:custom
 

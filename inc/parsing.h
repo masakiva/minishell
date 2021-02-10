@@ -16,6 +16,8 @@
 # define S_SEMICOL	0x080
 # define S_PIPE		0x100
 
+# define METACHARS	"\\\'\"><;| "
+
 enum	e_state
 {
 	SPACE,
@@ -52,6 +54,7 @@ typedef struct	s_state_machine
 }				t_state_machine;
 
 typedef char	*(*t_parse)(t_state_machine *, char *);
+typedef int		(*t_syntax)(unsigned int *flags);
 
 /*
 **	check_syntax.c

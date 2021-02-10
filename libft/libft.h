@@ -127,4 +127,6 @@ void			sort_str_array(char **array);
 
 int				*push_int_to_array(int *array, size_t array_size, int nb);
 
+int				ft_set_index(char c, char *set);
+
 #endif
