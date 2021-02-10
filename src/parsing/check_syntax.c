@@ -98,6 +98,12 @@ int		check_bsl_and_quotes(unsigned int *flags, char c)
 			return (SUCCESS);
 		else if (!(*flags & S_QUOTE))
 			*flags += S_QUOTE;
+		else if (*flags & S_R_REDIR)
+			*flags -= S_R_REDIR;
+		else if (*flags & S_L_REDIR)
+			*flags -= S_L_REDIR;
+		else if (*flags & S_EMPTY)
+			*flags -= S_EMPTY;
 		else
 			*flags -= S_QUOTE;
 	}
@@ -107,6 +113,12 @@ int		check_bsl_and_quotes(unsigned int *flags, char c)
 			return (SUCCESS);
 		else if (!(*flags & S_DQUOTE))
 			*flags += S_DQUOTE;
+		else if (*flags & S_R_REDIR)
+			*flags -= S_R_REDIR;
+		else if (*flags & S_L_REDIR)
+			*flags -= S_L_REDIR;
+		else if (*flags & S_EMPTY)
+			*flags -= S_EMPTY;
 		else
 			*flags -= S_DQUOTE;
 	}
@@ -157,13 +169,12 @@ int		check_syntax(char *line)
 				flags -= S_L_REDIR;
 			i++;
 		}
-		else if (flags & S_QUOTE)
+		else if (flags & S_QUOTE && line[i] == '\'')
 		{
-			if (line[i] == '\'')
-				flags -= S_QUOTE;
+			flags -= S_QUOTE;
 			i++;
 		}
-		else if (flags & S_DQUOTE)
+		else if (flags & S_DQUOTE && (line[i] == '\'' || line[i] == '\"'))
 		{
 			if (line[i] == '\"')
 				flags -= S_DQUOTE;
