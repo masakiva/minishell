@@ -6,13 +6,13 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:27:03 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/01 13:09:56 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 12:23:26 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-t_byte		check_arg_for_options(char *arg, char *op_chars)
+static t_byte	check_arg_for_options(char *arg, char *op_chars)
 {
 	size_t	i;
 	ssize_t	j;
@@ -35,7 +35,7 @@ t_byte		check_arg_for_options(char *arg, char *op_chars)
 	return (options);
 }
 
-t_byte		shift_options(char ***args, char *op_chars)
+t_byte			shift_options(char ***args, char *op_chars)
 {
 	t_byte	cur_options;
 	t_byte	options;

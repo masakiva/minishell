@@ -6,13 +6,13 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/10 14:40:20 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/10 14:40:46 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 12:22:37 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-int		cd_to(char *newpath, t_xe *xe)
+static int	cd_to(char *newpath, t_xe *xe)
 {
 	char	*oldpwd;
 	char	*full_newpath;
@@ -40,7 +40,7 @@ int		cd_to(char *newpath, t_xe *xe)
 	return (SUCCESS);
 }
 
-int		ft_cd(char **args, t_xe *xe)
+int			ft_cd(char **args, t_xe *xe)
 {
 	int		ret;
 	char	*newpath;

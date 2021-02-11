@@ -6,13 +6,13 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 11:25:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/02 14:21:54 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 12:23:59 by mvidal-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-int			parse_input(char **line, char **env, int stat_loc,
+static int	parse_input(char **line, char **env, int stat_loc,
 		t_command *command)
 {
 	static t_parse	process[NB_STATES - 1] = {space, letter, backslash, dollar,

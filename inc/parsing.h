@@ -63,12 +63,10 @@ int				parsing_error(int err_code, t_xe *xe);
 int				check_syntax(char *line);
 
 /*
-**	main functions
+**	main function
 */
 
 t_command		*parse_one_command(t_xe *xe);
-int				parse_input(char **line, char **env, int stat_loc,
-		t_command *command);
 
 /*
 **	parsing states

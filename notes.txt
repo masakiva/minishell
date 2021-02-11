@@ -9,9 +9,6 @@ wait and waitpid errors
 
 masaki:
 
-a la fin avec rgrep/vimgrep:
-erreurs de ft_put* a terminer
-gestion d'erreurs des fonctions autorisees une a une
 
 static functions
 
