@@ -67,6 +67,8 @@ static int		err_output(int err_code, t_xe *xe)
 			xe->stat_loc = 126;
 		exit(xe->stat_loc);
 	}
+	else if (err_code == FORK_ERROR || err_code == WAIT_ERROR)
+		xe->stat_loc = 1;
 	return (SUCCESS);
 }
 

@@ -1,11 +1,5 @@
 arthur:
 comportement simplifié ^D
-main (redundant check):
-		ret = exec_env_init(xe, env_source);
-		if (ret != SUCCESS)
-			return (error_and_exit(ret, xe));
-wait and waitpid errors
-
 
 masaki:
 
