@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:52:23 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 18:57:29 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/11 23:34:03 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define TRUE		1
 # define FALSE		0
 
-# define FT_PS1			"$ "
+# define FT_PS1			"\033[032m$: \033[0m"
 
 # define SHLVL_STR		"SHLVL"
 
