@@ -51,7 +51,8 @@ static int		err_output(int err_code, t_xe *xe)
 		"Error reading a directory in PATH",
 		"fd issue",
 		"external command error",
-		"fork failure"};
+		"fork failure",
+		"wait failure"};
 
 	(void)xe;
 	ft_putstr_fd("error: ", STDERR_FILENO);

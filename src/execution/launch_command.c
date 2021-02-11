@@ -3,9 +3,13 @@
 
 static int		exec_parent_end(pid_t *pid, t_xe *xe)
 {
+	int	ret;
+
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	waitpid(*pid, &xe->stat_loc, 0);
+	ret = waitpid(*pid, &xe->stat_loc, 0);
+	if (ret == ERROR)
+		return (WAIT_ERROR);
 	if (WIFSIGNALED(xe->stat_loc))
 	{
 		xe->stat_loc = WTERMSIG(xe->stat_loc);

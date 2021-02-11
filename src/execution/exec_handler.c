@@ -54,6 +54,7 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	int			i;
 	int			ret;
 	int			tmp;
+	int			wait_ret;
 
 	ret = SUCCESS;
 	if (fd_in != STDIN_FILENO)
@@ -73,7 +74,9 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	i = 0;
 	while (i < proc)
 	{
-		wait(&xe->stat_loc);
+		wait_ret = wait(&xe->stat_loc);
+		if (wait_ret == ERROR)
+			return (WAIT_ERROR);
 		if (WIFSIGNALED(xe->stat_loc))
 		{
 			xe->stat_loc = WTERMSIG(xe->stat_loc);
