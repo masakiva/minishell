@@ -17,6 +17,8 @@ SRC	+= parsing_utils.c
 
 SRC	+= exec_handler.c
 SRC	+= launch_command.c
+SRC	+= redirs.c
+SRC	+= exec_utils.c
 
 SRC	+= ft_echo.c
 SRC	+= options.c

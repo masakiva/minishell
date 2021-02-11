@@ -17,15 +17,13 @@ int	check_quote(unsigned int *flags)
 	else if (!(*flags & S_QUOTE))
 		*flags += S_QUOTE;
 	else
-	{
-		if (*flags & S_R_REDIR)
-			*flags -= S_R_REDIR;
-		else if (*flags & S_L_REDIR)
-			*flags -= S_L_REDIR;
-		else if (*flags & S_EMPTY)
-			*flags -= S_EMPTY;
 		*flags -= S_QUOTE;
-	}
+	if (*flags & S_R_REDIR)
+		*flags -= S_R_REDIR;
+	else if (*flags & S_L_REDIR)
+		*flags -= S_L_REDIR;
+	else if (*flags & S_EMPTY)
+		*flags -= S_EMPTY;
 	return (SUCCESS);
 }
 
@@ -36,15 +34,13 @@ int	check_dquote(unsigned int *flags)
 	else if (!(*flags & S_DQUOTE))
 		*flags += S_DQUOTE;
 	else
-	{
-		if (*flags & S_R_REDIR)
-			*flags -= S_R_REDIR;
-		else if (*flags & S_L_REDIR)
-			*flags -= S_L_REDIR;
-		else if (*flags & S_EMPTY)
-			*flags -= S_EMPTY;
 		*flags -= S_DQUOTE;
-	}
+	if (*flags & S_R_REDIR)
+		*flags -= S_R_REDIR;
+	else if (*flags & S_L_REDIR)
+		*flags -= S_L_REDIR;
+	else if (*flags & S_EMPTY)
+		*flags -= S_EMPTY;
 	return (SUCCESS);
 }
 

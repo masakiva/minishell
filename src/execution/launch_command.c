@@ -1,45 +1,27 @@
 #include "execution.h"
 #include "builtins.h"
 
-static int	search_path(DIR *dirp, char *name)
+static int		exec_parent_end(pid_t *pid, t_xe *xe)
 {
-	struct dirent	*buf;
-
-	buf = readdir(dirp);
-	while (buf != NULL)
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+	waitpid(*pid, &xe->stat_loc, 0);
+	if (WIFSIGNALED(xe->stat_loc))
 	{
-		if (ft_strcmp(buf->d_name, name) == 0)
-			return (SUCCESS);
-		buf = readdir(dirp);
+		xe->stat_loc = WTERMSIG(xe->stat_loc);
+		if (xe->stat_loc == SIGQUIT)
+			ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO);
+		else if (xe->stat_loc == SIGINT)
+			ft_putstr_fd("\n", STDERR_FILENO);
+		xe->stat_loc += 128;
 	}
-	return (FAILURE);
+	else if (WIFEXITED(xe->stat_loc))
+		xe->stat_loc = WEXITSTATUS(xe->stat_loc);
+	signal_handler();
+	return (SUCCESS);
 }
 
-int	search_exec(char **path, char *name)
-{
-	DIR		*dirp;
-	size_t	i;
-
-	i = 0;
-	while (path[i] != NULL)
-	{
-		if ((dirp = opendir(path[i])) != NULL)
-		{
-			if (search_path(dirp, name) == SUCCESS)
-			{
-				if (closedir(dirp) == ERROR)
-					return (INVALID_PATH_DIR);
-				return (i);
-			}
-			if (closedir(dirp) == ERROR)
-				return (INVALID_PATH_DIR);
-		}
-		i++;
-	}
-	return (NOT_FOUND);
-}
-
-static int	exec_cmd(char *cmd, char **args, t_xe *xe)
+static int		exec_cmd(char *cmd, char **args, t_xe *xe)
 {
 	pid_t	pid;
 
@@ -62,66 +44,13 @@ static int	exec_cmd(char *cmd, char **args, t_xe *xe)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
-		signal(SIGQUIT, SIG_IGN);
-		waitpid(pid, &xe->stat_loc, 0);
-		if (WIFSIGNALED(xe->stat_loc))
-		{
-			xe->stat_loc = WTERMSIG(xe->stat_loc);
-			if (xe->stat_loc == SIGQUIT)
-			{
-				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
-					return (WRITE_ERR);
-			}
-			else if (xe->stat_loc == SIGINT)
-			{
-				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
-					return (WRITE_ERR);
-			}
-			xe->stat_loc += 128;
-		}
-		else if(WIFEXITED(xe->stat_loc))
-			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
-		signal_handler();
-		return (SUCCESS);
+		return (exec_parent_end(&pid, xe));
 	}
 }
 
-static int	create_cmd(char **tmp, char **path, char **args)
-{
-	char	*cmd;
-	char	*dir;
-	int		dir_index;
-
-	dir_index = search_exec(path, args[0]);
-	if (dir_index == NOT_FOUND)
-		return (CMD_NOT_FOUND);
-	dir = ft_strjoin(path[dir_index], "/");
-	cmd = ft_strjoin(dir, args[0]);
-	if (cmd == NULL)
-		return (MALLOC_ERR);
-	free(dir);
-	*tmp = cmd;
-	return (SUCCESS);
-}
-
-static char	*add_path_to_localdir(void)
-{
-	char	*tmp;
-
-	tmp = malloc(sizeof(char) + 2);
-	if (tmp == NULL)
-		return (NULL);
-	tmp[0] = '.';
-	tmp[1] = '/';
-	tmp[2] = '\0';
-	return (tmp);
-}
-
-static int	launch_ext(char **args, t_xe *xe)
+static int		launch_ext(char **args, t_xe *xe)
 {
 	int		ret;
-	char	*tmp;
 	char	*cmd;
 	char	**path;
 
@@ -134,25 +63,9 @@ static int	launch_ext(char **args, t_xe *xe)
 	}
 	else
 	{
-		ret = get_var_pos(xe->env, "PATH", 4);
-		if (ret == NOT_FOUND)
-		{
-			path = malloc((sizeof(char*) * 2));
-			path[0] = add_path_to_localdir();
-			if (path[0] == NULL)
-				return (MALLOC_ERR);
-			path[1] = NULL;
-		}
-		else
-		{
-			tmp = get_var_value(xe->env, "PATH", 4);
-			if (tmp == NULL)
-				return (MALLOC_ERR);
-			path = ft_split(tmp, ':');
-			free(tmp);
-			if (path == NULL)
-				return (MALLOC_ERR);
-		}
+		path = create_path_array(xe);
+		if (path == NULL)
+			return (MALLOC_ERR);
 		ret = create_cmd(&cmd, path, args);
 		free_str_array(path);
 		if (ret != SUCCESS)
@@ -165,6 +78,7 @@ static int	launch_ext(char **args, t_xe *xe)
 
 enum e_cmd_code	get_cmd_code(char *arg)
 {
+	int			i;
 	static char	*cmd_list[] = {
 		"echo",
 		"cd",
@@ -173,7 +87,6 @@ enum e_cmd_code	get_cmd_code(char *arg)
 		"export",
 		"unset",
 		"exit"};
-	int		i;
 
 	i = 0;
 	while (i < 7)
@@ -185,58 +98,8 @@ enum e_cmd_code	get_cmd_code(char *arg)
 	return (ELSE);
 }
 
-int		apply_redir(char *cur_arg, enum e_redir_op redir, t_xe *xe)
-{
-	int			src_fd;
-	int			redir_fd;
-	mode_t		mode;
-	int			flags;
-
-	mode = 0;
-	if (redir == FILEIN)
-	{
-		src_fd = STDIN_FILENO;
-		flags = O_RDONLY;
-	}
-	else
-	{
-		src_fd = STDOUT_FILENO;
-		flags = O_WRONLY | O_CREAT;
-		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
-		if (redir == APPEND)
-			flags |= O_APPEND;
-	}
-	redir_fd = open(cur_arg, flags, mode);
-	if (redir_fd >= 0)
-	{
-		if (dup2(redir_fd, src_fd) == ERROR)
-			return (FD_ERROR);
-	}
-	else
-	{
-		xe->stat_loc = 1;
-		return (FD_ERROR);
-	}
-	return (SUCCESS);
-}
-
-int		apply_redirs(char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
-{
-	int		i;
-	int		ret;
-
-	i = 0;
-	while (redir_paths[i] != NULL)
-	{
-		ret = apply_redir(redir_paths[i], redir_types[i], xe);
-		if (ret != SUCCESS)
-			return (ret);
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
+int				execute_cmd(char **args, char **redir_paths,
+					enum e_redir_op *redir_types, t_xe *xe)
 {
 	int				i;
 	int				ret;
