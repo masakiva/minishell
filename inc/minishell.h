@@ -29,8 +29,6 @@
 # define TRUE		1
 # define FALSE		0
 
-# define _XOPEN_SOURCE // qu'est-ce?
-
 # define FT_PS1			"$ "
 
 # define SHLVL_STR		"SHLVL"

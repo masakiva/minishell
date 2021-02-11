@@ -1,4 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirs.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 18:15:30 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:15:33 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
+
+int			find_ambig_redir(char **redir_paths, enum e_redir_op *redir_types)
+{
+	int		i;
+
+	i = 0;
+	while (redir_paths[i] != NULL)
+	{
+		if (redir_types[i] == AMBIG)
+			return (FAILURE);
+		i++;
+	}
+	return (SUCCESS);
+}
 
 static void	create_fd(char *cur_arg, enum e_redir_op redir,
 						int *src_fd, int *redir_fd)
@@ -42,7 +68,8 @@ int			apply_redir(char *cur_arg, enum e_redir_op redir, t_xe *xe)
 	return (SUCCESS);
 }
 
-int			apply_redirs(char **redir_paths, enum e_redir_op *redir_types, t_xe *xe)
+int			apply_redirs(char **redir_paths, enum e_redir_op *redir_types,
+							t_xe *xe)
 {
 	int		i;
 	int		ret;

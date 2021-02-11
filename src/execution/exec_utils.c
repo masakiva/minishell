@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 18:16:01 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:16:23 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "execution.h"
 
 static int	search_path(DIR *dirp, char *name)
@@ -38,7 +50,7 @@ static int	search_exec(char **path, char *name)
 	return (NOT_FOUND);
 }
 
-int	create_cmd(char **tmp, char **path, char **args)
+int			create_cmd(char **tmp, char **path, char **args)
 {
 	char	*cmd;
 	char	*dir;
@@ -69,7 +81,7 @@ static char	*add_path_to_localdir(void)
 	return (tmp);
 }
 
-char	**create_path_array(t_xe *xe)
+char		**create_path_array(t_xe *xe)
 {
 	int		ret;
 	char	*tmp;

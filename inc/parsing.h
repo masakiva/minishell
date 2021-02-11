@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 18:36:35 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:36:37 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 # define PARSING_H
 
@@ -59,8 +71,28 @@ typedef int		(*t_syntax)(unsigned int *flags);
 /*
 **	check_syntax.c
 */
+
 int				parsing_error(int err_code, t_xe *xe);
 int				check_syntax(char *line);
+
+/*
+**	syntax_utils_1.c
+*/
+
+int				check_backsl(unsigned int *flags);
+int				check_quote(unsigned int *flags);
+int				check_dquote(unsigned int *flags);
+int				check_r_redir(unsigned int *flags);
+int				check_l_redir(unsigned int *flags);
+
+/*
+**	syntax_utils_2.c
+*/
+
+int				check_semicol(unsigned int *flags);
+int				check_pipe(unsigned int *flags);
+int				check_space(unsigned int *flags);
+int				check_others(unsigned int *flags);
 
 /*
 **	main function

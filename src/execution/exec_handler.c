@@ -1,8 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_handler.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 17:52:41 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:13:54 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parsing.h"
 #include "execution.h"
 
-static int		child_setup(const int *fd, int fd_in, t_xe *xe)
+static int	child_pipe(t_command *cur_command, const int *fd,
+							int fd_in, t_xe *xe)
 {
+	int		ret;
+
 	xe->flags += CHILD;
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -11,10 +26,14 @@ static int		child_setup(const int *fd, int fd_in, t_xe *xe)
 	if (fd_in != STDIN_FILENO)
 	{
 		if (dup2(fd_in, STDIN_FILENO) == ERROR || close(fd_in) == ERROR)
-			return (FAILURE);
+			return (FD_ERROR);
 	}
 	if (dup2(fd[1], STDOUT_FILENO) == ERROR || close(fd[1]) == ERROR)
-		return (FAILURE);
+		return (FD_ERROR);
+	ret = execute_cmd(cur_command->args, cur_command->redir_paths,
+						cur_command->redir_types, xe);
+	free_command(cur_command);
+	xe->flags -= RUN;
 	return (SUCCESS);
 }
 
@@ -30,14 +49,7 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	if (xe->gpid == ERROR)
 		return (FORK_ERROR);
 	else if (xe->gpid == 0)
-	{
-		if (child_setup(fd, fd_in, xe) != SUCCESS)
-			return (FD_ERROR);
-		ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);
-		free_command(cur_command);
-		xe->flags -= RUN;
-		return (ret);
-	}
+		return (child_pipe(cur_command, fd, fd_in, xe));
 	else
 	{
 		if (!(xe->flags & CMD_PIPE))
@@ -49,66 +61,8 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	}
 }
 
-int			parent_pipe_end(t_command *cur_command, t_xe *xe, int fd_in, int proc)
-{
-	int			i;
-	int			ret;
-	int			tmp;
-	int			wait_ret;
-
-	ret = SUCCESS;
-	if (fd_in != STDIN_FILENO)
-	{
-		if (dup2(fd_in, STDIN_FILENO) == ERROR || close(fd_in) == ERROR)
-			return (FD_ERROR);
-	}
-	if (dup2(xe->backup_stdout, STDOUT_FILENO) == ERROR)
-		return (FD_ERROR);
-	ret = execute_cmd(cur_command->args, cur_command->redir_paths, cur_command->redir_types, xe);
-	tmp = xe->stat_loc;
-	free_command(cur_command);
-	if (dup2(xe->backup_stdout, STDOUT_FILENO) == ERROR)
-		return (FD_ERROR);
-	if (dup2(xe->backup_stdin, STDIN_FILENO) == ERROR)
-		return (FD_ERROR);
-	i = 0;
-	while (i < proc)
-	{
-		wait_ret = wait(&xe->stat_loc);
-		if (wait_ret == ERROR)
-			return (WAIT_ERROR);
-		if (WIFSIGNALED(xe->stat_loc))
-		{
-			xe->stat_loc = WTERMSIG(xe->stat_loc);
-			if (xe->stat_loc == SIGQUIT)
-			{
-				if (ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO) != WRITE_SUCCESS)
-					return (WRITE_ERR);
-			}
-			else if (xe->stat_loc == SIGINT)
-			{
-				if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
-					return (WRITE_ERR);
-			}
-			xe->stat_loc = (xe->stat_loc % 256) + 128;
-		}
-		else if(WIFEXITED(xe->stat_loc))
-			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
-		i++;
-	}
-	if (xe->flags & EXIT_FLAG || (ret != SUCCESS && ret < _ERRNO_MSG_))
-		return (ret);
-	else
-	{
-		xe->stat_loc = tmp;
-		ft_error(ret, xe);
-		if (ret == EXIT_ARG_ERR)
-			return (SUCCESS);
-		return (handle_execution(xe, STDIN_FILENO, 0));
-	}
-}
-
-int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
+int			handle_command(t_command *cur_command, t_xe *xe,
+								int fd_in, int proc)
 {
 	int			ret;
 
@@ -130,8 +84,37 @@ int			handle_command(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 	}
 }
 
+static int	check_redir_type(t_command *cur_command, t_xe *xe,
+								int fd_in, int proc)
+{
+	if (find_ambig_redir(cur_command->redir_paths,
+							cur_command->redir_types) != SUCCESS)
+	{
+		free_command(cur_command);
+		if (ft_error(AMBIG_REDIR, xe) != SUCCESS)
+			return (FAILURE);
+		dup2(xe->backup_stdout, STDOUT_FILENO);
+		dup2(xe->backup_stdin, STDIN_FILENO);
+		xe->stat_loc = 1;
+		return (handle_execution(xe, fd_in, proc));
+	}
+	if (cur_command->args == NULL)
+	{
+		if (apply_redirs(cur_command->redir_paths,
+							cur_command->redir_types, xe) != SUCCESS)
+		{
+			free_command(cur_command);
+			return (FD_ERROR);
+		}
+		free_command(cur_command);
+		return (handle_execution(xe, fd_in, proc));
+	}
+	return (SUCCESS);
+}
+
 int			handle_execution(t_xe *xe, int fd_in, int proc)
 {
+	int			ret;
 	t_command	*cur_command;
 
 	xe->gpid = -1;
@@ -140,26 +123,9 @@ int			handle_execution(t_xe *xe, int fd_in, int proc)
 		return (MALLOC_ERR);
 	if (cur_command->redir_types != NULL)
 	{
-		if (cur_command->redir_types[0] == AMBIG)
-		{
-			free_command(cur_command);
-			if (ft_error(AMBIG_REDIR, xe) != SUCCESS)
-				return (FAILURE);
-			dup2(xe->backup_stdout, STDOUT_FILENO);
-			dup2(xe->backup_stdin, STDIN_FILENO);
-			xe->stat_loc = 1;
-			return (handle_execution(xe, fd_in, proc));
-		}
-		if (cur_command->args == NULL)
-		{
-			if (apply_redirs(cur_command->redir_paths, cur_command->redir_types, xe) != SUCCESS)
-			{
-				free_command(cur_command);
-				return (FD_ERROR);
-			}
-			free_command(cur_command);
-			return (handle_execution(xe, fd_in, proc));
-		}
+		ret = check_redir_type(cur_command, xe, fd_in, proc);
+		if (ret != KEEP_ON)
+			return (ret);
 	}
 	if (cur_command->args != NULL || cur_command->var_flag == TRUE)
 		return (handle_command(cur_command, xe, fd_in, proc));

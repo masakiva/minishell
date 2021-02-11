@@ -1,126 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_syntax.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 18:31:21 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:35:05 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "parsing.h"
 
-int	check_backsl(unsigned int *flags)
-{
-	if (*flags & S_QUOTE)
-		return (SUCCESS);
-	if (!(*flags & S_BACKSL))
-		*flags += S_BACKSL;
-	return (SUCCESS);
-}
-
-int	check_quote(unsigned int *flags)
-{
-	if (*flags & S_DQUOTE)
-		return (SUCCESS);
-	else if (!(*flags & S_QUOTE))
-		*flags += S_QUOTE;
-	else
-		*flags -= S_QUOTE;
-	if (*flags & S_R_REDIR)
-		*flags -= S_R_REDIR;
-	else if (*flags & S_L_REDIR)
-		*flags -= S_L_REDIR;
-	else if (*flags & S_EMPTY)
-		*flags -= S_EMPTY;
-	return (SUCCESS);
-}
-
-int	check_dquote(unsigned int *flags)
-{
-	if (*flags & S_QUOTE)
-		return (SUCCESS);
-	else if (!(*flags & S_DQUOTE))
-		*flags += S_DQUOTE;
-	else
-		*flags -= S_DQUOTE;
-	if (*flags & S_R_REDIR)
-		*flags -= S_R_REDIR;
-	else if (*flags & S_L_REDIR)
-		*flags -= S_L_REDIR;
-	else if (*flags & S_EMPTY)
-		*flags -= S_EMPTY;
-	return (SUCCESS);
-}
-
-int	check_r_redir(unsigned int *flags)
-{
-	if ((*flags & S_R_REDIR))
-	{
-		*flags += S_APPEND;
-		*flags -= S_R_REDIR;
-	}
-	else if (!(*flags & S_R_REDIR) && !(*flags & S_L_REDIR))
-		*flags += S_R_REDIR;
-	else
-		return (REDIR_PATH_MISSING);
-	return (SUCCESS);
-}
-
-int	check_l_redir(unsigned int *flags)
-{
-	if (!(*flags & S_L_REDIR) && !(*flags & S_R_REDIR))
-		*flags += S_L_REDIR;
-	else
-		return (REDIR_PATH_MISSING);
-	return (SUCCESS);
-}
-
-int	check_semicol(unsigned int *flags)
-{
-	if (!(*flags & S_SEMICOL) && !(*flags & S_PIPE))
-		*flags += S_SEMICOL;
-	else
-		return (EMPTY_CMD);
-	if (*flags & S_R_REDIR || *flags & S_L_REDIR)
-		return (REDIR_PATH_MISSING);
-	if (*flags & S_EMPTY)
-		return (EMPTY_CMD);
-	else
-		*flags += S_EMPTY;
-	return (SUCCESS);
-}
-
-int	check_pipe(unsigned int *flags)
-{
-	if (!(*flags & S_SEMICOL) && !(*flags & S_PIPE))
-		*flags += S_PIPE;
-	else
-		return (EMPTY_CMD);
-	if (*flags & S_R_REDIR || *flags & S_L_REDIR)
-		return (REDIR_PATH_MISSING);
-	if (*flags & S_EMPTY)
-		return (EMPTY_CMD);
-	else
-		*flags += S_EMPTY;
-	return (SUCCESS);
-}
-
-int	check_space(unsigned int *flags)
-{
-	(void)*flags;
-	return (SUCCESS);
-}
-
-int	check_others(unsigned int *flags)
-{
-	if (*flags & S_R_REDIR)
-		*flags -= S_R_REDIR;
-	if (*flags & S_L_REDIR)
-		*flags -= S_L_REDIR;
-	if (*flags & S_APPEND)
-		*flags -= S_APPEND;
-	if (*flags & S_EMPTY)
-		*flags -= S_EMPTY;
-	if (*flags & S_PIPE)
-		*flags -= S_PIPE;
-	if (*flags & S_SEMICOL)
-		*flags -= S_SEMICOL;
-	return (SUCCESS);
-}
-
-int		final_checks(int flags)
+int			final_checks(int flags)
 {
 	if (flags & S_BACKSL)
 		return (ESCAPE_NL);
@@ -139,7 +31,35 @@ int		final_checks(int flags)
 	return (SUCCESS);
 }
 
-int		check_syntax(char *line)
+static void	state_modifiers(unsigned int *flags, char c)
+{
+	if (*flags & S_BACKSL)
+	{
+		*flags -= S_BACKSL;
+		if (*flags & S_EMPTY)
+			*flags -= S_EMPTY;
+		if (*flags & S_APPEND)
+			*flags -= S_APPEND;
+		if (*flags & S_R_REDIR)
+			*flags -= S_R_REDIR;
+		if (*flags & S_L_REDIR)
+			*flags -= S_L_REDIR;
+	}
+	else if (*flags & S_QUOTE)
+	{
+		if (c == '\'')
+			*flags -= S_QUOTE;
+	}
+	else if (*flags & S_DQUOTE)
+	{
+		if (c == '"')
+			*flags -= S_DQUOTE;
+		if (c == '\\')
+			*flags += S_BACKSL;
+	}
+}
+
+int			check_syntax(char *line)
 {
 	int				i;
 	int				ret;
@@ -150,35 +70,10 @@ int		check_syntax(char *line)
 
 	i = 0;
 	flags = S_EMPTY;
-	while (line[i])
+	while (line[i++])
 	{
-		if (flags & S_BACKSL)
-		{
-			flags -= S_BACKSL;
-			if (flags & S_EMPTY)
-				flags -= S_EMPTY;
-			if (flags & S_APPEND)
-				flags -= S_APPEND;
-			if (flags & S_R_REDIR)
-				flags -= S_R_REDIR;
-			if (flags & S_L_REDIR)
-				flags -= S_L_REDIR;
-			i++;
-		}
-		else if (flags & S_QUOTE)
-		{
-			if (line[i] == '\'')
-				flags -= S_QUOTE;
-			i++;
-		}
-		else if (flags & S_DQUOTE)
-		{
-			if (line[i] == '"')
-				flags -= S_DQUOTE;
-			if (line[i] == '\\')
-				flags += S_BACKSL;
-			i++;
-		}
+		if (flags & S_BACKSL || flags & S_QUOTE || flags & S_DQUOTE)
+			state_modifiers(&flags, line[i]);
 		else
 		{
 			ret = ft_set_index(line[i], METACHARS);
@@ -188,7 +83,6 @@ int		check_syntax(char *line)
 				ret = check_others(&flags);
 			if (ret != SUCCESS)
 				return (ret);
-			i++;
 		}
 	}
 	return (final_checks(flags));

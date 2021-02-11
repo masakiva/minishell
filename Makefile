@@ -16,6 +16,7 @@ SRC += parsing_vars_redirs.c
 SRC	+= parsing_utils.c
 
 SRC	+= exec_handler.c
+SRC	+= parent_process.c
 SRC	+= launch_command.c
 SRC	+= redirs.c
 SRC	+= exec_utils.c
