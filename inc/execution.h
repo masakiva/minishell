@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 16:49:21 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 16:55:00 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXECUTION_H
 # define EXECUTION_H
 
-#include <sys/types.h> // waitpid, opendir
-#include <sys/wait.h> // waitpid
-#include <fcntl.h> // open
-#include <dirent.h> // readdir, opendir
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <fcntl.h>
+# include <dirent.h>
 
 # include "minishell.h"
 # include "error.h"
@@ -24,6 +36,8 @@ enum		e_cmd_code
 };
 
 typedef int			(*t_exec)(char **args, t_xe *xe);
+
+int			handle_execution(t_xe *xe, int fd_in, int proc);
 
 /*
 **	main function

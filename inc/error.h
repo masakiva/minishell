@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 16:52:06 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 16:52:07 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef ERROR_H
 # define ERROR_H
 
-#include <string.h>
+# include <string.h>
 
-#include "minishell.h"
+# include "minishell.h"
 
 enum		e_retcode
 {
@@ -39,8 +51,8 @@ enum		e_retcode
 	EMPTY_CMD,
 };
 
-int			clean_and_exit(int ret, t_xe *xe);
-int			ft_error(int ret, t_xe *xe);
-int			error_and_exit(enum e_retcode ret, t_xe *xe);
+int		clean_and_exit(int ret, t_xe *xe);
+int		ft_error(int ret, t_xe *xe);
+int		error_and_exit(enum e_retcode ret, t_xe *xe);
 
 #endif

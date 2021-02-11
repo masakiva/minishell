@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 16:48:07 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 16:49:11 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 # define PARSING_H
 
 # include "minishell.h"
 # include "error.h"
 
-# define BUF_SIZE		4096
+# define BUF_SIZE	4096
 
 # define S_EMPTY	0x001
 # define S_BACKSL	0x002

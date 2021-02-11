@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 16:42:53 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 16:46:44 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILTINS_H
 # define BUILTINS_H
 
@@ -5,7 +17,7 @@
 # include "error.h"
 
 # define ECHO_OPTIONS	"n"
-# define ECHO_N_OPTION	0b00000001
+# define ECHO_N_OPTION	0x01
 
 # define ENTIRE_STR	-1
 
@@ -25,9 +37,9 @@ int		ft_exit(char **args, t_xe *xe);
 **	utils
 */
 
-t_byte		shift_options(char ***args, char *op_chars);
-int			print_export(char **env, char **exported);
-int			ft_env_export(char *var, t_xe *xe, ssize_t equalsign_pos);
-int			check_var_name(char *var, ssize_t name_len);
+t_byte	shift_options(char ***args, char *op_chars);
+int		print_export(char **env, char **exported);
+int		ft_env_export(char *var, t_xe *xe, ssize_t equalsign_pos);
+int		check_var_name(char *var, ssize_t name_len);
 
 #endif
