@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:52:06 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 16:52:07 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 18:53:02 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,21 @@ enum		e_retcode
 	EMPTY_CMD,
 };
 
+/*
+**	ft_error.c
+*/
+
+int		exit_trigger(int ret, t_xe *xe);
 int		clean_and_exit(int ret, t_xe *xe);
 int		ft_error(int ret, t_xe *xe);
 int		error_and_exit(enum e_retcode ret, t_xe *xe);
+
+/*
+**	ft_error.c
+*/
+
+int		parsing_error(int err_code, t_xe *xe);
+int		exec_error(int err_code, t_xe *xe);
+int		err_output(int err_code, t_xe *xe);
 
 #endif

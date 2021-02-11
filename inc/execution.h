@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:49:21 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 16:55:00 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 18:57:12 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,29 @@ enum		e_cmd_code
 	ELSE
 };
 
-typedef int			(*t_exec)(char **args, t_xe *xe);
+typedef int	(*t_exec)(char **args, t_xe *xe);
+
+/*
+**	main function
+*/
 
 int			handle_execution(t_xe *xe, int fd_in, int proc);
 
-/*
-**	main function
-*/
-
 int			parent_pipe_end(t_command *cur_command, t_xe *xe,
-								int fd_in, int proc);
+									int fd_in, int proc);
 
-int		execute_cmd(char **args, char **redir_paths, enum e_redir_op *redir_types, t_xe *xe);
+int			execute_cmd(char **args, char **redir_paths,
+						enum e_redir_op *redir_types, t_xe *xe);
 
-int		apply_redirs(char **redir_paths, enum e_redir_op *redir_types, t_xe *xe);
-int		find_ambig_redir(char **redir_paths, enum e_redir_op *redir_types);
+int			apply_redirs(char **redir_paths,
+							enum e_redir_op *redir_types, t_xe *xe);
+int			find_ambig_redir(char **redir_paths, enum e_redir_op *redir_types);
 
 /*
 **	main function
 */
 
-int		create_cmd(char **tmp, char **path, char **args);
-char	**create_path_array(t_xe *xe);
+int			create_cmd(char **tmp, char **path, char **args);
+char		**create_path_array(t_xe *xe);
 
 #endif

@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 18:47:33 by abenoit           #+#    #+#             */
+/*   Updated: 2021/02/11 18:48:17 by abenoit          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "error.h"
 #include "parsing.h"
 #include "execution.h"
 #include "builtins.h"
 
-static int			get_input(char **line, t_xe *xe)
+static int	get_input(char **line, t_xe *xe)
 {
 	int		ret;
 
@@ -24,7 +36,7 @@ static int			get_input(char **line, t_xe *xe)
 	return (SUCCESS);
 }
 
-static int			main_loop(t_xe *xe)
+static int	main_loop(t_xe *xe)
 {
 	int			ret;
 	char		*line;
@@ -42,7 +54,7 @@ static int			main_loop(t_xe *xe)
 	return (ret);
 }
 
-int		exec_env_init(t_xe *xe, char **env_source)
+int			exec_env_init(t_xe *xe, char **env_source)
 {
 	char	*shlvl;
 	int		tmp;
@@ -70,7 +82,7 @@ int		exec_env_init(t_xe *xe, char **env_source)
 	return (SUCCESS);
 }
 
-int		main(int argc, char **argv, char **env_source)
+int			main(int argc, char **argv, char **env_source)
 {
 	int		ret;
 	t_xe	*xe;

@@ -11,6 +11,8 @@ SRC	+= free_utils.c
 SRC	+= var_utils.c
 
 SRC += check_syntax.c
+SRC += syntax_utils_1.c
+SRC += syntax_utils_2.c
 SRC	+= parsing_handler.c
 SRC += parsing_states1.c
 SRC += parsing_states2.c
@@ -35,6 +37,7 @@ SRC	+= ft_env.c
 SRC	+= ft_exit.c
 
 SRC	+= ft_error.c
+SRC	+= error_utils.c
 
 vpath %.c $(SRC_DIR)
 

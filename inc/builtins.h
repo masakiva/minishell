@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:42:53 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 18:39:06 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/11 18:55:40 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 **	builtins
 */
 
-int			ft_echo(char **args, t_xe *xe);
-int			ft_pwd(char **args, t_xe *xe);
-int			ft_cd(char **args, t_xe *xe);
-int			ft_export(char **args, t_xe *xe);
-int			ft_unset(char **args, t_xe *xe);
-int			ft_env(char **args, t_xe *xe);
-int			ft_exit(char **args, t_xe *xe);
+int		ft_echo(char **args, t_xe *xe);
+int		ft_pwd(char **args, t_xe *xe);
+int		ft_cd(char **args, t_xe *xe);
+int		ft_export(char **args, t_xe *xe);
+int		ft_unset(char **args, t_xe *xe);
+int		ft_env(char **args, t_xe *xe);
+int		ft_exit(char **args, t_xe *xe);
 
 /*
 **	utils

@@ -6,14 +6,12 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:52:23 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 16:57:03 by mvidal-a         ###   ########.fr       */
+/*   Updated: 2021/02/11 18:57:29 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-#include <stdio.h> // temp, for printf
 
 /*
 **	**********************************
