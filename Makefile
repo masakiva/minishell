@@ -7,6 +7,8 @@ SRC_DIR		+= src/builtins/
 
 SRC	+= main.c
 SRC	+= signal_handling.c
+SRC	+= free_utils.c
+SRC	+= var_utils.c
 
 SRC += check_syntax.c
 SRC	+= parsing_handler.c
@@ -29,7 +31,6 @@ SRC	+= ft_export.c
 SRC	+= export_print.c
 SRC	+= export_in_env.c
 SRC	+= ft_unset.c
-SRC	+= var_utils.c
 SRC	+= ft_env.c
 SRC	+= ft_exit.c
 

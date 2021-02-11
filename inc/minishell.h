@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/11 16:52:23 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 16:57:03 by mvidal-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -15,7 +27,6 @@
 # include <signal.h>
 
 # include "libft.h"
-
 
 /*
 **	**********************************
@@ -49,7 +60,7 @@
 **	**********************************
 */
 
-enum	e_redir_op
+enum			e_redir_op
 {
 	NO_REDIR,
 	FILEIN,
@@ -58,7 +69,7 @@ enum	e_redir_op
 	AMBIG
 };
 
-typedef struct		s_command
+typedef struct	s_command
 {
 	char				**args;
 	char				**redir_paths;
@@ -66,9 +77,9 @@ typedef struct		s_command
 	t_byte				pipe_flag;
 	t_byte				var_flag;
 	uint8_t				pad[6];
-}					t_command;
+}				t_command;
 
-typedef struct		s_xe
+typedef struct	s_xe
 {
 	pid_t	gpid;
 	int		backup_stdin;
@@ -79,8 +90,7 @@ typedef struct		s_xe
 	char	**exported;
 	char	flags;
 	uint8_t	pad[7];
-}					t_xe;
-
+}				t_xe;
 
 /*
 **	**********************************
@@ -88,19 +98,23 @@ typedef struct		s_xe
 **	**********************************
 */
 
-void		signal_handler(void);
+/*
+**	signals
+*/
 
-int			handle_execution(t_xe *xe, int fd_in, int proc);
+void			signal_handler(void);
 
-int			env_replace_var(char *var_name, char *value, t_xe *xe);
+/*
+**	env management
+*/
+
+int				env_replace_var(char *var_name, char *value, t_xe *xe);
 
 /*
 **	free utils
 */
 
-void	print_tokens(t_list *tokens); // temp
-void	free_token(void *content);
-void	free_command(void *content);
-void	free_commands(t_list **commands);
+void			free_command(void *content);
+void			free_commands(t_list **commands);
 
 #endif

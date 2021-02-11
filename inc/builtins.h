@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/11 18:37:02 by abenoit           #+#    #+#             */
-/*   Updated: 2021/02/11 18:37:27 by abenoit          ###   ########.fr       */
+/*   Created: 2021/02/11 16:42:53 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 18:39:06 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ int			ft_exit(char **args, t_xe *xe);
 **	utils
 */
 
-t_byte		shift_options(char ***args, char *op_chars);
-int			print_export(char **env, char **exported);
-int			ft_env_export(char *var, t_xe *xe, ssize_t equalsign_pos);
-int			check_var_name(char *var, ssize_t name_len);
+t_byte	shift_options(char ***args, char *op_chars);
+int		print_export(char **env, char **exported);
+int		ft_env_export(char *var, t_xe *xe, ssize_t equalsign_pos);
+int		check_var_name(char *var, ssize_t name_len);
 
 #endif

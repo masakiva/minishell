@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/11 18:36:35 by abenoit           #+#    #+#             */
-/*   Updated: 2021/02/11 18:36:37 by abenoit          ###   ########.fr       */
+/*   Created: 2021/02/11 16:48:07 by mvidal-a          #+#    #+#             */
+/*   Updated: 2021/02/11 18:39:19 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 # include "error.h"
 
-# define BUF_SIZE		4096
+# define BUF_SIZE	4096
 
 # define S_EMPTY	0x001
 # define S_BACKSL	0x002
