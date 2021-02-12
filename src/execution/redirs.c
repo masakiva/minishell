@@ -17,6 +17,8 @@ int			find_ambig_redir(char **redir_paths, enum e_redir_op *redir_types)
 	int		i;
 
 	i = 0;
+	if (redir_paths == NULL || redir_types == NULL)
+		return (FAILURE);
 	while (redir_paths[i] != NULL)
 	{
 		if (redir_types[i] == AMBIG)
