@@ -109,7 +109,7 @@ static int	check_redir_type(t_command *cur_command, t_xe *xe,
 		free_command(cur_command);
 		return (handle_execution(xe, fd_in, proc));
 	}
-	return (SUCCESS);
+	return (KEEP_ON);
 }
 
 int			handle_execution(t_xe *xe, int fd_in, int proc)
