@@ -68,9 +68,9 @@ int			check_syntax(char *line)
 						check_r_redir, check_l_redir, check_semicol,
 						check_pipe, check_space};
 
-	i = 0;
+	i = -1;
 	flags = S_EMPTY;
-	while (line[i++])
+	while (line[++i])
 	{
 		if (flags & S_BACKSL || flags & S_QUOTE || flags & S_DQUOTE)
 			state_modifiers(&flags, line[i]);
