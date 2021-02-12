@@ -47,6 +47,8 @@ static void	create_fd(char *cur_arg, enum e_redir_op redir,
 		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
 		if (redir == APPEND)
 			flags |= O_APPEND;
+		else
+			flags |= O_TRUNC;
 	}
 	*redir_fd = open(cur_arg, flags, mode);
 }

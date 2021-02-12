@@ -38,7 +38,7 @@ int				clean_and_exit(int err_code, t_xe *xe)
 		ret = 1;
 		ft_putstr_fd("minishell takes no argument\n", STDERR_FILENO);
 	}
-	else if (err_code == SUCCESS)
+	else if (err_code == SUCCESS && !(xe->flags &EXIT_FLAGS))
 		ret = EXIT_SUCCESS;
 	else
 	{
