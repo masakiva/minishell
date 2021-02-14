@@ -98,6 +98,12 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe,
 		ft_error(ret, xe);
 		if (ret == EXIT_ARG_ERR)
 			return (SUCCESS);
-		return (handle_execution(xe, STDIN_FILENO, 0));
+		if (!(xe->flags & INTERUPT))
+			return (handle_execution(xe, STDIN_FILENO, 0));
+		else
+		{
+			xe->flags = RUN;
+			return (SUCCESS);
+		}
 	}
 }

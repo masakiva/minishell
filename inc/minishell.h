@@ -51,6 +51,7 @@
 # define CHILD			0x08
 # define EXIT_ABORT		0x10
 # define EXIT_FLAG		0x20
+# define INTERUPT		0x40
 
 /*
 **	**********************************

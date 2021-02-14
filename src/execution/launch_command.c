@@ -28,7 +28,10 @@ static int		exec_parent_end(pid_t *pid, t_xe *xe)
 		if (xe->stat_loc == SIGQUIT)
 			ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO);
 		else if (xe->stat_loc == SIGINT)
+		{
+			xe->flags += INTERUPT;
 			ft_putstr_fd("\n", STDERR_FILENO);
+		}
 		xe->stat_loc += 128;
 	}
 	else if (WIFEXITED(xe->stat_loc))

@@ -57,7 +57,12 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		if (close(fd[1]) == ERROR || close(fd_in) == ERROR)
 			return (FD_ERROR);
 		free_command(cur_command);
-		return (handle_execution(xe, fd[0], proc + 1));
+		if (!(xe->flags & INTERUPT))
+			return (handle_execution(xe, fd[0], proc + 1));
+		else {
+			xe->flags = RUN;
+			return (SUCCESS);
+		}
 	}
 }
 
@@ -72,7 +77,12 @@ int			handle_command(t_command *cur_command, t_xe *xe,
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
-		return (handle_execution(xe, STDIN_FILENO, 0));
+		if (!(xe->flags & INTERUPT))
+			return (handle_execution(xe, STDIN_FILENO, 0));
+		else {
+			xe->flags = RUN;
+			return (SUCCESS);
+		}
 	}
 	else if (cur_command->pipe_flag == TRUE)
 	{
@@ -96,7 +106,12 @@ static int	check_redir_type(t_command *cur_command, t_xe *xe,
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
 		xe->stat_loc = 1;
-		return (handle_execution(xe, fd_in, proc));
+		if (!(xe->flags & INTERUPT))
+			return (handle_execution(xe, fd_in, proc));
+		else {
+			xe->flags = RUN;
+			return (SUCCESS);
+		}
 	}
 	if (cur_command->args == NULL)
 	{
@@ -107,7 +122,12 @@ static int	check_redir_type(t_command *cur_command, t_xe *xe,
 			return (FD_ERROR);
 		}
 		free_command(cur_command);
-		return (handle_execution(xe, fd_in, proc));
+		if (!(xe->flags & INTERUPT))
+			return (handle_execution(xe, fd_in, proc));
+		else {
+			xe->flags = RUN;
+			return (SUCCESS);
+		}
 	}
 	return (KEEP_ON);
 }
