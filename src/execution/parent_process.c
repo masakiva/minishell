@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 18:10:57 by abenoit           #+#    #+#             */
-/*   Updated: 2021/02/11 18:14:59 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/14 22:44:43 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static int	signal_interupt(t_xe *xe)
 	}
 	else if (xe->stat_loc == SIGINT)
 	{
+		xe->flags += INTERUPT;
 		if (ft_putstr_fd("\n", STDERR_FILENO) != WRITE_SUCCESS)
 			return (WRITE_ERR);
 	}
@@ -36,6 +37,8 @@ static int	parent_wait(t_xe *xe, int proc)
 	int			ret;
 
 	i = 0;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	while (i < proc)
 	{
 		ret = wait(&xe->stat_loc);
@@ -51,6 +54,7 @@ static int	parent_wait(t_xe *xe, int proc)
 			xe->stat_loc = WEXITSTATUS(xe->stat_loc);
 		i++;
 	}
+	signal_handler();
 	return (SUCCESS);
 }
 
@@ -98,12 +102,6 @@ int			parent_pipe_end(t_command *cur_command, t_xe *xe,
 		ft_error(ret, xe);
 		if (ret == EXIT_ARG_ERR)
 			return (SUCCESS);
-		if (!(xe->flags & INTERUPT))
-			return (handle_execution(xe, STDIN_FILENO, 0));
-		else
-		{
-			xe->flags = RUN;
-			return (SUCCESS);
-		}
+		return (handle_exec_return(xe, STDIN_FILENO, 0));
 	}
 }

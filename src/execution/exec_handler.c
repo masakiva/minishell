@@ -6,7 +6,7 @@
 /*   By: abenoit <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 17:52:41 by abenoit           #+#    #+#             */
-/*   Updated: 2021/02/11 18:13:54 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/14 22:06:43 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,7 @@ int			handle_pipe(t_command *cur_command, t_xe *xe, int fd_in, int proc)
 		if (close(fd[1]) == ERROR || close(fd_in) == ERROR)
 			return (FD_ERROR);
 		free_command(cur_command);
-		if (!(xe->flags & INTERUPT))
-			return (handle_execution(xe, fd[0], proc + 1));
-		else {
-			xe->flags = RUN;
-			return (SUCCESS);
-		}
+		return (handle_exec_return(xe, fd[0], proc + 1));
 	}
 }
 
@@ -77,12 +72,7 @@ int			handle_command(t_command *cur_command, t_xe *xe,
 		free_command(cur_command);
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
-		if (!(xe->flags & INTERUPT))
-			return (handle_execution(xe, STDIN_FILENO, 0));
-		else {
-			xe->flags = RUN;
-			return (SUCCESS);
-		}
+		return (handle_exec_return(xe, STDIN_FILENO, 0));
 	}
 	else if (cur_command->pipe_flag == TRUE)
 	{
@@ -106,12 +96,7 @@ static int	check_redir_type(t_command *cur_command, t_xe *xe,
 		dup2(xe->backup_stdout, STDOUT_FILENO);
 		dup2(xe->backup_stdin, STDIN_FILENO);
 		xe->stat_loc = 1;
-		if (!(xe->flags & INTERUPT))
-			return (handle_execution(xe, fd_in, proc));
-		else {
-			xe->flags = RUN;
-			return (SUCCESS);
-		}
+		return (handle_exec_return(xe, fd_in, proc));
 	}
 	if (cur_command->args == NULL)
 	{
@@ -122,12 +107,7 @@ static int	check_redir_type(t_command *cur_command, t_xe *xe,
 			return (FD_ERROR);
 		}
 		free_command(cur_command);
-		if (!(xe->flags & INTERUPT))
-			return (handle_execution(xe, fd_in, proc));
-		else {
-			xe->flags = RUN;
-			return (SUCCESS);
-		}
+		return (handle_exec_return(xe, fd_in, proc));
 	}
 	return (KEEP_ON);
 }

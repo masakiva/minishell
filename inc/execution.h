@@ -6,7 +6,7 @@
 /*   By: mvidal-a <mvidal-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/11 16:49:21 by mvidal-a          #+#    #+#             */
-/*   Updated: 2021/02/11 18:57:12 by abenoit          ###   ########.fr       */
+/*   Updated: 2021/02/14 22:07:17 by abenoit          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ typedef int	(*t_exec)(char **args, t_xe *xe);
 /*
 **	main function
 */
+
+int			handle_exec_return(t_xe *xe, int fd_in, int proc);
 
 int			handle_execution(t_xe *xe, int fd_in, int proc);
 

@@ -24,6 +24,7 @@ SRC	+= parent_process.c
 SRC	+= launch_command.c
 SRC	+= redirs.c
 SRC	+= exec_utils.c
+SRC	+= exec_utils_2.c
 
 SRC	+= ft_echo.c
 SRC	+= options.c
