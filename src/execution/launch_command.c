@@ -31,7 +31,7 @@ static int		exec_parent_end(pid_t *pid, t_xe *xe)
 			ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO);
 		else if (xe->stat_loc == SIGINT)
 		{
-			if (!(xe->flags & EXEC_PIPE))
+			if (xe->flags & CHILD)
 			{
 				signal(SIGINT, SIG_DFL);
 				kill(getpid(), SIGINT);
