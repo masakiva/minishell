@@ -12,6 +12,8 @@
 
 #include "execution.h"
 #include "builtins.h"
+#include <sys/types.h>
+#include <unistd.h>
 
 static int		exec_parent_end(pid_t *pid, t_xe *xe)
 {
@@ -29,6 +31,11 @@ static int		exec_parent_end(pid_t *pid, t_xe *xe)
 			ft_putstr_fd("\b\b^\\Quit (core dumped)\n", STDERR_FILENO);
 		else if (xe->stat_loc == SIGINT)
 		{
+			if (!(xe->flags & EXEC_PIPE))
+			{
+				signal(SIGINT, SIG_DFL);
+				kill(getpid(), SIGINT);
+			}
 			xe->flags += INTERUPT;
 			ft_putstr_fd("\n", STDERR_FILENO);
 		}
